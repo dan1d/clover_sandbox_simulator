@@ -1,0 +1,62 @@
+{
+  "modifier_groups": [
+    {
+      "name": "Temperature",
+      "min_required": 0,
+      "max_allowed": 1,
+      "modifiers": [
+        { "name": "Rare", "price": 0 },
+        { "name": "Medium Rare", "price": 0 },
+        { "name": "Medium", "price": 0 },
+        { "name": "Medium Well", "price": 0 },
+        { "name": "Well Done", "price": 0 }
+      ]
+    },
+    {
+      "name": "Add-Ons",
+      "min_required": 0,
+      "max_allowed": 5,
+      "modifiers": [
+        { "name": "Extra Cheese", "price": 150 },
+        { "name": "Bacon", "price": 200 },
+        { "name": "Avocado", "price": 175 },
+        { "name": "Fried Egg", "price": 125 },
+        { "name": "Jalapeños", "price": 75 }
+      ]
+    },
+    {
+      "name": "Side Choice",
+      "min_required": 1,
+      "max_allowed": 1,
+      "modifiers": [
+        { "name": "French Fries", "price": 0 },
+        { "name": "Sweet Potato Fries", "price": 100 },
+        { "name": "Onion Rings", "price": 100 },
+        { "name": "Side Salad", "price": 0 },
+        { "name": "Coleslaw", "price": 0 }
+      ]
+    },
+    {
+      "name": "Dressing",
+      "min_required": 0,
+      "max_allowed": 1,
+      "modifiers": [
+        { "name": "Ranch", "price": 0 },
+        { "name": "Blue Cheese", "price": 0 },
+        { "name": "Caesar", "price": 0 },
+        { "name": "Balsamic Vinaigrette", "price": 0 },
+        { "name": "Honey Mustard", "price": 0 }
+      ]
+    },
+    {
+      "name": "Drink Size",
+      "min_required": 1,
+      "max_allowed": 1,
+      "modifiers": [
+        { "name": "Small", "price": 0 },
+        { "name": "Medium", "price": 50 },
+        { "name": "Large", "price": 100 }
+      ]
+    }
+  ]
+}

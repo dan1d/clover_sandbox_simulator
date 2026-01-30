@@ -1,0 +1,39 @@
+{
+  "categories": [
+    {
+      "name": "Appetizers",
+      "sort_order": 1,
+      "description": "Start your meal right"
+    },
+    {
+      "name": "Entrees",
+      "sort_order": 2,
+      "description": "Main courses"
+    },
+    {
+      "name": "Sides",
+      "sort_order": 3,
+      "description": "Perfect accompaniments"
+    },
+    {
+      "name": "Desserts",
+      "sort_order": 4,
+      "description": "Sweet endings"
+    },
+    {
+      "name": "Drinks",
+      "sort_order": 5,
+      "description": "Non-alcoholic beverages"
+    },
+    {
+      "name": "Alcoholic Beverages",
+      "sort_order": 6,
+      "description": "Beer, wine, and cocktails"
+    },
+    {
+      "name": "Specials",
+      "sort_order": 7,
+      "description": "Chef's daily specials"
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "pos_simulator"
+require "thor"
+
+module PosSimulator
+  # Command-line interface for POS Simulator
+  class CLI < Thor
+    class_option :verbose, type: :boolean, aliases: "-v", desc: "Enable verbose logging"
+
+    desc "setup", "Set up restaurant entities (categories, items, discounts, employees, customers)"
+    option :business_type, type: :string, default: "restaurant", desc: "Business type (restaurant, retail, salon)"
+    def setup
+      configure_logging
+      
+      puts "🍽️  POS Simulator - Entity Setup"
+      puts "=" * 50
+      
+      generator = Generators::EntityGenerator.new(business_type: options[:business_type].to_sym)
+      generator.setup_all
+      
+      puts "\n✅ Setup complete!"
+    end
+
+    desc "generate", "Generate orders for today"
+    option :count, type: :numeric, aliases: "-n", desc: "Number of orders to generate"
+    def generate
+      configure_logging
+      
+      puts "🍽️  POS Simulator - Order Generation"
+      puts "=" * 50
+      
+      generator = Generators::OrderGenerator.new
+      count = options[:count]
+      
+      orders = generator.generate_today(count: count)
+      
+      puts "\n✅ Generated #{orders.size} orders!"
+    end
+
+    desc "day", "Generate a realistic full day of restaurant operations"
+    option :multiplier, type: :numeric, aliases: "-m", default: 1.0, desc: "Order multiplier (0.5 = slow day, 2.0 = busy day)"
+    def day
+      configure_logging
+      
+      puts "🍽️  POS Simulator - Realistic Restaurant Day"
+      puts "=" * 50
+      
+      generator = Generators::OrderGenerator.new
+      orders = generator.generate_realistic_day(multiplier: options[:multiplier])
+      
+      puts "\n✅ Generated #{orders.size} orders!"
+    end
+
+    desc "rush", "Generate a lunch or dinner rush"
+    option :period, type: :string, aliases: "-p", default: "dinner", desc: "Meal period (breakfast, lunch, happy_hour, dinner, late_night)"
+    option :count, type: :numeric, aliases: "-n", default: 15, desc: "Number of orders"
+    def rush
+      configure_logging
+      
+      period = options[:period].to_sym
+      count = options[:count]
+      
+      puts "🍽️  POS Simulator - #{period.to_s.upcase} Rush"
+      puts "=" * 50
+      
+      generator = Generators::OrderGenerator.new
+      data = generator.send(:fetch_required_data)
+      
+      unless data
+        puts "❌ Failed to fetch data. Run setup first."
+        return
+      end
+      
+      orders = []
+      count.times do |i|
+        order = generator.send(:create_realistic_order,
+          period: period,
+          data: data,
+          order_num: i + 1,
+          total_in_period: count
+        )
+        
+        if order
+          orders << order
+          generator.send(:update_stats, order, period)
+        end
+      end
+      
+      generator.send(:print_summary)
+      puts "\n✅ Generated #{orders.size} #{period} orders!"
+    end
+
+    desc "full", "Run full simulation (setup + generate orders)"
+    option :count, type: :numeric, aliases: "-n", desc: "Number of orders to generate"
+    option :business_type, type: :string, default: "restaurant", desc: "Business type"
+    def full
+      configure_logging
+      
+      puts "🍽️  POS Simulator - Full Simulation"
+      puts "=" * 50
+      
+      # Setup entities
+      entity_gen = Generators::EntityGenerator.new(business_type: options[:business_type].to_sym)
+      entity_gen.setup_all
+      
+      puts "\n"
+      
+      # Generate orders
+      order_gen = Generators::OrderGenerator.new
+      orders = order_gen.generate_today(count: options[:count])
+      
+      puts "\n✅ Full simulation complete!"
+      puts "   Orders generated: #{orders.size}"
+    end
+
+    desc "delete", "Delete all entities (use with caution!)"
+    option :confirm, type: :boolean, desc: "Confirm deletion"
+    def delete
+      unless options[:confirm]
+        puts "⚠️  This will delete ALL entities from Clover!"
+        puts "   Run with --confirm to proceed."
+        return
+      end
+
+      configure_logging
+      
+      puts "🗑️  Deleting all entities..."
+      
+      generator = Generators::EntityGenerator.new
+      generator.delete_all
+      
+      puts "\n✅ All entities deleted!"
+    end
+
+    desc "status", "Show current Clover merchant status"
+    def status
+      configure_logging
+      
+      puts "🍽️  POS Simulator - Status"
+      puts "=" * 50
+      
+      services = Services::Clover::ServicesManager.new
+      
+      categories = services.inventory.get_categories
+      items = services.inventory.get_items
+      tenders = services.tender.get_safe_tenders
+      employees = services.employee.get_employees
+      customers = services.customer.get_customers
+      discounts = services.discount.get_discounts
+      
+      puts "Categories:  #{categories.size}"
+      puts "Menu Items:  #{items.size}"
+      puts "Tenders:     #{tenders.size} (sandbox-safe)"
+      puts "Employees:   #{employees.size}"
+      puts "Customers:   #{customers.size}"
+      puts "Discounts:   #{discounts.size}"
+      
+      puts "\n📋 Categories:"
+      categories.each { |c| puts "   - #{c['name']}" }
+      
+      puts "\n💳 Safe Tenders (no credit/debit):"
+      tenders.each { |t| puts "   - #{t['label']}" }
+    end
+
+    desc "version", "Show version"
+    def version
+      puts "POS Simulator v1.0.0"
+    end
+
+    private
+
+    def configure_logging
+      if options[:verbose]
+        PosSimulator.configuration.logger.level = Logger::DEBUG
+      else
+        PosSimulator.configuration.logger.level = Logger::INFO
+      end
+    end
+
+    def print_order_summary(orders)
+      return if orders.empty?
+
+      total_revenue = 0
+      total_tips = 0
+      total_tax = 0
+
+      orders.each do |order|
+        next unless order && order["payments"]&.dig("elements")
+        
+        order["payments"]["elements"].each do |payment|
+          total_revenue += payment["amount"] || 0
+          total_tips += payment["tipAmount"] || 0
+          total_tax += payment["taxAmount"] || 0
+        end
+      end
+
+      puts "\n📊 Summary:"
+      puts "   Revenue:  $#{total_revenue / 100.0}"
+      puts "   Tips:     $#{total_tips / 100.0}"
+      puts "   Tax:      $#{total_tax / 100.0}"
+      puts "   Total:    $#{(total_revenue + total_tips + total_tax) / 100.0}"
+    end
+  end
+end
+
+PosSimulator::CLI.start(ARGV)

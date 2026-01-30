@@ -1,0 +1,238 @@
+{
+  "items": [
+    {
+      "name": "Buffalo Wings",
+      "price": 1299,
+      "category": "Appetizers",
+      "description": "Crispy wings tossed in buffalo sauce"
+    },
+    {
+      "name": "Loaded Nachos",
+      "price": 1099,
+      "category": "Appetizers",
+      "description": "Tortilla chips with cheese, jalapeños, and salsa"
+    },
+    {
+      "name": "Mozzarella Sticks",
+      "price": 899,
+      "category": "Appetizers",
+      "description": "Golden fried with marinara sauce"
+    },
+    {
+      "name": "Spinach Artichoke Dip",
+      "price": 1199,
+      "category": "Appetizers",
+      "description": "Creamy dip with tortilla chips"
+    },
+    {
+      "name": "Calamari",
+      "price": 1399,
+      "category": "Appetizers",
+      "description": "Lightly fried with aioli"
+    },
+    {
+      "name": "Classic Burger",
+      "price": 1499,
+      "category": "Entrees",
+      "description": "8oz beef patty with lettuce, tomato, onion"
+    },
+    {
+      "name": "Bacon Cheeseburger",
+      "price": 1699,
+      "category": "Entrees",
+      "description": "Burger with bacon and cheddar"
+    },
+    {
+      "name": "Grilled Salmon",
+      "price": 2199,
+      "category": "Entrees",
+      "description": "Atlantic salmon with lemon herb butter"
+    },
+    {
+      "name": "NY Strip Steak",
+      "price": 2899,
+      "category": "Entrees",
+      "description": "12oz steak cooked to order"
+    },
+    {
+      "name": "Chicken Parmesan",
+      "price": 1899,
+      "category": "Entrees",
+      "description": "Breaded chicken with marinara and mozzarella"
+    },
+    {
+      "name": "Fettuccine Alfredo",
+      "price": 1599,
+      "category": "Entrees",
+      "description": "Creamy parmesan sauce over pasta"
+    },
+    {
+      "name": "Fish and Chips",
+      "price": 1699,
+      "category": "Entrees",
+      "description": "Beer-battered cod with fries"
+    },
+    {
+      "name": "BBQ Ribs",
+      "price": 2399,
+      "category": "Entrees",
+      "description": "Full rack with house BBQ sauce"
+    },
+    {
+      "name": "Caesar Salad",
+      "price": 1199,
+      "category": "Entrees",
+      "description": "Romaine, parmesan, croutons"
+    },
+    {
+      "name": "Grilled Chicken Salad",
+      "price": 1399,
+      "category": "Entrees",
+      "description": "Mixed greens with grilled chicken"
+    },
+    {
+      "name": "French Fries",
+      "price": 499,
+      "category": "Sides",
+      "description": "Crispy golden fries"
+    },
+    {
+      "name": "Sweet Potato Fries",
+      "price": 599,
+      "category": "Sides",
+      "description": "With honey drizzle"
+    },
+    {
+      "name": "Onion Rings",
+      "price": 549,
+      "category": "Sides",
+      "description": "Beer-battered and fried"
+    },
+    {
+      "name": "Coleslaw",
+      "price": 399,
+      "category": "Sides",
+      "description": "Creamy house-made coleslaw"
+    },
+    {
+      "name": "Mashed Potatoes",
+      "price": 499,
+      "category": "Sides",
+      "description": "Creamy with gravy"
+    },
+    {
+      "name": "Steamed Vegetables",
+      "price": 449,
+      "category": "Sides",
+      "description": "Seasonal vegetables"
+    },
+    {
+      "name": "Chocolate Brownie",
+      "price": 699,
+      "category": "Desserts",
+      "description": "Warm brownie with ice cream"
+    },
+    {
+      "name": "New York Cheesecake",
+      "price": 799,
+      "category": "Desserts",
+      "description": "Classic creamy cheesecake"
+    },
+    {
+      "name": "Apple Pie",
+      "price": 749,
+      "category": "Desserts",
+      "description": "A la mode with vanilla ice cream"
+    },
+    {
+      "name": "Tiramisu",
+      "price": 899,
+      "category": "Desserts",
+      "description": "Italian coffee-flavored dessert"
+    },
+    {
+      "name": "Soft Drink",
+      "price": 299,
+      "category": "Drinks",
+      "description": "Coke, Sprite, Dr Pepper"
+    },
+    {
+      "name": "Iced Tea",
+      "price": 299,
+      "category": "Drinks",
+      "description": "Fresh brewed, sweetened or unsweetened"
+    },
+    {
+      "name": "Lemonade",
+      "price": 349,
+      "category": "Drinks",
+      "description": "Fresh squeezed lemonade"
+    },
+    {
+      "name": "Coffee",
+      "price": 349,
+      "category": "Drinks",
+      "description": "Regular or decaf"
+    },
+    {
+      "name": "Hot Tea",
+      "price": 299,
+      "category": "Drinks",
+      "description": "Assorted flavors"
+    },
+    {
+      "name": "Draft Beer",
+      "price": 599,
+      "category": "Alcoholic Beverages",
+      "description": "Rotating selection of craft beers"
+    },
+    {
+      "name": "Domestic Beer",
+      "price": 499,
+      "category": "Alcoholic Beverages",
+      "description": "Bud Light, Coors, Miller"
+    },
+    {
+      "name": "Import Beer",
+      "price": 649,
+      "category": "Alcoholic Beverages",
+      "description": "Corona, Heineken, Guinness"
+    },
+    {
+      "name": "House Wine",
+      "price": 799,
+      "category": "Alcoholic Beverages",
+      "description": "Red or white by the glass"
+    },
+    {
+      "name": "Premium Wine",
+      "price": 1199,
+      "category": "Alcoholic Beverages",
+      "description": "Cabernet, Chardonnay, Pinot Noir"
+    },
+    {
+      "name": "Margarita",
+      "price": 999,
+      "category": "Alcoholic Beverages",
+      "description": "House or frozen"
+    },
+    {
+      "name": "Long Island Iced Tea",
+      "price": 1099,
+      "category": "Alcoholic Beverages",
+      "description": "Classic cocktail"
+    },
+    {
+      "name": "Chef's Special",
+      "price": 2499,
+      "category": "Specials",
+      "description": "Ask your server for today's special"
+    },
+    {
+      "name": "Soup of the Day",
+      "price": 599,
+      "category": "Specials",
+      "description": "Fresh made daily"
+    }
+  ]
+}

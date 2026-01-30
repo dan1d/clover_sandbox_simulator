@@ -1,0 +1,39 @@
+{
+  "discounts": [
+    {
+      "name": "Happy Hour",
+      "percentage": 15,
+      "description": "15% off during happy hour (3-6 PM)"
+    },
+    {
+      "name": "Senior Discount",
+      "percentage": 10,
+      "description": "10% off for seniors 65+"
+    },
+    {
+      "name": "Military Discount",
+      "percentage": 15,
+      "description": "15% off for active duty and veterans"
+    },
+    {
+      "name": "Employee Discount",
+      "percentage": 25,
+      "description": "25% off for employees"
+    },
+    {
+      "name": "Birthday Special",
+      "percentage": 20,
+      "description": "20% off for birthday celebrations"
+    },
+    {
+      "name": "$5 Off",
+      "amount": 500,
+      "description": "$5 off orders over $30"
+    },
+    {
+      "name": "$10 Off",
+      "amount": 1000,
+      "description": "$10 off orders over $50"
+    }
+  ]
+}
