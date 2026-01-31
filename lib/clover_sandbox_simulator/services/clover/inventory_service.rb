@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PosSimulator
+module CloverSandboxSimulator
   module Services
     module Clover
       # Manages Clover inventory: categories, items, modifiers
@@ -42,7 +42,7 @@ module PosSimulator
         # Create an item
         def create_item(name:, price:, category_id: nil, sku: nil, hidden: false)
           logger.info "Creating item: #{name} ($#{price / 100.0})"
-          
+
           payload = {
             "name" => name,
             "price" => price,
@@ -53,7 +53,7 @@ module PosSimulator
           payload["sku"] = sku if sku
 
           item = request(:post, endpoint("items"), payload: payload)
-          
+
           # Associate with category if provided
           if item && category_id
             associate_item_with_category(item["id"], category_id)
@@ -108,10 +108,10 @@ module PosSimulator
         # Delete all categories and items
         def delete_all
           logger.warn "Deleting all inventory..."
-          
+
           get_items.each { |item| delete_item(item["id"]) }
           get_categories.each { |cat| delete_category(cat["id"]) }
-          
+
           logger.info "All inventory deleted"
         end
       end

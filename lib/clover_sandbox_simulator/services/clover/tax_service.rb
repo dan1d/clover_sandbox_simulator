@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PosSimulator
+module CloverSandboxSimulator
   module Services
     module Clover
       # Manages Clover tax rates
@@ -24,7 +24,7 @@ module PosSimulator
         # Create a tax rate
         def create_tax_rate(name:, rate:, is_default: false)
           logger.info "Creating tax rate: #{name} (#{rate}%)"
-          
+
           # Rate is stored as basis points (8.25% = 825000)
           rate_basis_points = (rate * 100_000).to_i
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PosSimulator
+module CloverSandboxSimulator
   module Services
     module Clover
       # Manages Clover payments

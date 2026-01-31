@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PosSimulator
+module CloverSandboxSimulator
   module Generators
     # Generates realistic restaurant orders and payments
     class OrderGenerator
@@ -50,14 +50,14 @@ module PosSimulator
 
       def initialize(services: nil)
         @services = services || Services::Clover::ServicesManager.new
-        @logger = PosSimulator.logger
+        @logger = CloverSandboxSimulator.logger
         @stats = { orders: 0, revenue: 0, tips: 0, tax: 0, by_period: {}, by_dining: {} }
       end
 
       # Generate a realistic day of restaurant operations
       def generate_realistic_day(date: Date.today, multiplier: 1.0)
         count = (order_count_for_date(date) * multiplier).to_i
-        
+
         logger.info "=" * 60
         logger.info "🍽️  Generating realistic restaurant day: #{date}"
         logger.info "    Target orders: #{count}"
@@ -70,12 +70,12 @@ module PosSimulator
 
         # Distribute orders across meal periods
         period_orders = distribute_orders_by_period(count)
-        
+
         orders = []
         period_orders.each do |period, period_count|
           logger.info "-" * 40
           logger.info "📍 #{period.to_s.upcase} SERVICE: #{period_count} orders"
-          
+
           period_count.times do |i|
             order = create_realistic_order(
               period: period,
@@ -83,7 +83,7 @@ module PosSimulator
               order_num: i + 1,
               total_in_period: period_count
             )
-            
+
             if order
               orders << order
               update_stats(order, period)
@@ -118,14 +118,14 @@ module PosSimulator
           period = weighted_random_period
           logger.info "-" * 40
           logger.info "Creating order #{i + 1}/#{count} (#{period})"
-          
+
           order = create_realistic_order(
             period: period,
             data: data,
             order_num: i + 1,
             total_in_period: count
           )
-          
+
           if order
             orders << order
             update_stats(order, period)
@@ -175,10 +175,10 @@ module PosSimulator
 
       def distribute_orders_by_period(total_count)
         total_weight = MEAL_PERIODS.values.sum { |p| p[:weight] }
-        
+
         distribution = {}
         remaining = total_count
-        
+
         MEAL_PERIODS.each_with_index do |(period, config), index|
           if index == MEAL_PERIODS.size - 1
             distribution[period] = remaining
@@ -188,27 +188,27 @@ module PosSimulator
             remaining -= distribution[period]
           end
         end
-        
+
         distribution
       end
 
       def weighted_random_period
         total_weight = MEAL_PERIODS.values.sum { |p| p[:weight] }
         random = rand(total_weight)
-        
+
         cumulative = 0
         MEAL_PERIODS.each do |period, config|
           cumulative += config[:weight]
           return period if random < cumulative
         end
-        
+
         :dinner # fallback
       end
 
       def create_realistic_order(period:, data:, order_num:, total_in_period:)
         config = MEAL_PERIODS[period]
         employee = data[:employees].sample
-        
+
         # 60% of orders have customer info (regulars, rewards members)
         customer = data[:customers].sample if rand < 0.6
 
@@ -235,12 +235,12 @@ module PosSimulator
 
         # Select items appropriate for the meal period
         selected_items = select_items_for_period(period, data, num_items, party_size)
-        
+
         line_items = selected_items.map do |item|
           # Quantity varies by party size
           quantity = party_size > 2 && rand < 0.3 ? rand(2..3) : 1
           note = random_note if rand < 0.15
-          
+
           {
             item_id: item["id"],
             quantity: quantity,
@@ -289,38 +289,38 @@ module PosSimulator
           tip: tip_amount,
           tax: tax_amount
         }
-        
+
         final_order
       end
 
       def select_dining_option(period)
         distribution = DINING_BY_PERIOD[period]
         random = rand(100)
-        
+
         cumulative = 0
         distribution.each do |option, weight|
           cumulative += weight
           return option if random < cumulative
         end
-        
+
         "HERE"
       end
 
       def select_items_for_period(period, data, count, party_size)
         preferred_categories = CATEGORY_PREFERENCES[period] || CATEGORY_PREFERENCES[:dinner]
-        
+
         # Build weighted item pool
         weighted_items = []
-        
+
         preferred_categories.each do |category|
           items = data[:items_by_category][category] || []
           # Add preferred items with higher weight
           items.each { |item| weighted_items.concat([item] * 3) }
         end
-        
+
         # Add all items with lower weight for variety
         data[:items].each { |item| weighted_items << item }
-        
+
       # For larger parties, ensure variety
       if party_size >= 4
         # Try to get items from different categories
@@ -329,7 +329,7 @@ module PosSimulator
           items = data[:items_by_category][category] || []
           selected << items.sample if items.any? && selected.size < count
         end
-        
+
         # Fill remaining with weighted random (with safeguard against infinite loop)
         unique_items = weighted_items.uniq
         max_attempts = unique_items.size * 2
@@ -339,7 +339,7 @@ module PosSimulator
           selected << item unless selected.include?(item)
           attempts += 1
         end
-        
+
         selected.take(count)
       else
         weighted_items.sample(count).uniq.take(count)
@@ -352,26 +352,26 @@ module PosSimulator
           happy_discount = discounts.find { |d| d["name"]&.downcase&.include?("happy") }
           return happy_discount if happy_discount && rand < 0.5
         end
-        
+
         discounts.sample
       end
 
       def calculate_tip(subtotal, dining, party_size)
         rates = TIP_RATES[dining] || TIP_RATES["HERE"]
-        
+
         # Base tip percentage
         tip_percent = rand(rates[:min]..rates[:max])
-        
+
         # Larger parties sometimes tip less per person but more total
         if party_size >= 6
           tip_percent = [tip_percent, 18].max # Auto-grat for large parties
         end
-        
+
         # Some people don't tip on takeout
         if dining == "TO_GO" && rand < 0.3
           tip_percent = 0
         end
-        
+
         (subtotal * tip_percent / 100.0).round
       end
 
@@ -379,17 +379,17 @@ module PosSimulator
         # Ensure party_size is a valid number
         party_size = party_size.to_i
         party_size = 1 if party_size < 1
-        
+
         # Split payment more likely for larger parties dining in
         split_chance = dining == "HERE" && party_size >= 2 ? 0.25 : 0.05
-        
+
         if rand < split_chance && tenders.size > 1
           num_splits = [party_size, 4, tenders.size].min
           num_splits = num_splits < 2 ? 2 : rand(2..num_splits)
           splits = select_split_tenders(tenders, num_splits)
-          
+
           logger.debug "  Split payment: #{num_splits} ways"
-          
+
           services.payment.process_split_payment(
             order_id: order_id,
             total_amount: subtotal,
@@ -405,7 +405,7 @@ module PosSimulator
                    else
                      tenders.sample
                    end
-          
+
           services.payment.process_payment(
             order_id: order_id,
             amount: subtotal,
@@ -419,11 +419,11 @@ module PosSimulator
 
       def select_split_tenders(tenders, count)
         return [] if tenders.nil? || tenders.empty? || count.nil? || count < 1
-        
+
         actual_count = [count.to_i, tenders.size].min
         selected = tenders.sample(actual_count)
         percentages = generate_split_percentages(selected.size)
-        
+
         selected.zip(percentages).map do |tender, pct|
           { tender: tender, percentage: pct }
         end
@@ -443,7 +443,7 @@ module PosSimulator
         else
           # Random split
           points = Array.new(count - 1) { rand(20..80) }.sort
-          
+
           percentages = []
           prev = 0
           points.each do |point|
@@ -451,7 +451,7 @@ module PosSimulator
             prev = point
           end
           percentages << (100 - prev)
-          
+
           percentages
         end
       end
@@ -469,21 +469,21 @@ module PosSimulator
 
       def update_stats(order, period)
         @stats[:orders] += 1
-        
+
         metadata = order["_metadata"] || {}
         subtotal = order["total"] || 0
         tip = metadata[:tip] || 0
         tax = metadata[:tax] || 0
         dining = metadata[:dining] || "HERE"
-        
+
         @stats[:revenue] += subtotal
         @stats[:tips] += tip
         @stats[:tax] += tax
-        
+
         @stats[:by_period][period] ||= { orders: 0, revenue: 0 }
         @stats[:by_period][period][:orders] += 1
         @stats[:by_period][period][:revenue] += subtotal
-        
+
         @stats[:by_dining][dining] ||= { orders: 0, revenue: 0 }
         @stats[:by_dining][dining][:orders] += 1
         @stats[:by_dining][dining][:revenue] += subtotal

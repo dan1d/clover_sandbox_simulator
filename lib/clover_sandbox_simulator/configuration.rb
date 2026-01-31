@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PosSimulator
+module CloverSandboxSimulator
   class Configuration
     attr_accessor :merchant_id, :api_token, :environment, :log_level, :tax_rate, :business_type
 

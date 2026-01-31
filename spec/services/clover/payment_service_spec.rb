@@ -2,9 +2,9 @@
 
 require "spec_helper"
 
-RSpec.describe PosSimulator::Services::Clover::PaymentService do
+RSpec.describe CloverSandboxSimulator::Services::Clover::PaymentService do
   before { stub_clover_credentials }
-  
+
   let(:service) { described_class.new }
   let(:base_url) { "https://sandbox.dev.clover.com/v3/merchants/TEST_MERCHANT_ID" }
 
@@ -32,7 +32,7 @@ RSpec.describe PosSimulator::Services::Clover::PaymentService do
         tip_amount: 300,
         tax_amount: 124
       )
-      
+
       expect(payment["id"]).to eq("PAY123")
       expect(payment["amount"]).to eq(1500)
     end
@@ -63,7 +63,7 @@ RSpec.describe PosSimulator::Services::Clover::PaymentService do
         employee_id: "EMP1",
         splits: splits
       )
-      
+
       expect(payments.size).to eq(2)
     end
   end
@@ -72,7 +72,7 @@ RSpec.describe PosSimulator::Services::Clover::PaymentService do
     it "generates tip between 15-25% of subtotal" do
       100.times do
         tip = service.generate_tip(10000) # $100 subtotal
-        
+
         expect(tip).to be >= 1500 # 15% min
         expect(tip).to be <= 2500 # 25% max
       end

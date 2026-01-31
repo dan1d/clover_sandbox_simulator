@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe PosSimulator::Services::Clover::TaxService do
+RSpec.describe CloverSandboxSimulator::Services::Clover::TaxService do
   before { stub_clover_credentials }
 
   let(:service) { described_class.new }
@@ -239,7 +239,7 @@ RSpec.describe PosSimulator::Services::Clover::TaxService do
         )
 
       expect { service.delete_tax_rate("INVALID") }
-        .to raise_error(PosSimulator::ApiError, /404/)
+        .to raise_error(CloverSandboxSimulator::ApiError, /404/)
     end
   end
 
@@ -318,7 +318,7 @@ RSpec.describe PosSimulator::Services::Clover::TaxService do
         )
 
       expect { service.get_tax_rates }
-        .to raise_error(PosSimulator::ApiError, /401/)
+        .to raise_error(CloverSandboxSimulator::ApiError, /401/)
     end
 
     it "raises ApiError on 500 Internal Server Error" do
@@ -330,7 +330,7 @@ RSpec.describe PosSimulator::Services::Clover::TaxService do
         )
 
       expect { service.get_tax_rates }
-        .to raise_error(PosSimulator::ApiError, /500/)
+        .to raise_error(CloverSandboxSimulator::ApiError, /500/)
     end
 
     it "raises error on network timeout" do

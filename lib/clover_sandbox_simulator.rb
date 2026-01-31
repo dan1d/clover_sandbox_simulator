@@ -9,7 +9,7 @@ require "dotenv"
 # Load environment variables
 Dotenv.load
 
-module PosSimulator
+module CloverSandboxSimulator
   class Error < StandardError; end
   class ConfigurationError < Error; end
   class ApiError < Error; end

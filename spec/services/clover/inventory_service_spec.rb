@@ -2,9 +2,9 @@
 
 require "spec_helper"
 
-RSpec.describe PosSimulator::Services::Clover::InventoryService do
+RSpec.describe CloverSandboxSimulator::Services::Clover::InventoryService do
   before { stub_clover_credentials }
-  
+
   let(:service) { described_class.new }
   let(:base_url) { "https://sandbox.dev.clover.com/v3/merchants/TEST_MERCHANT_ID" }
 
@@ -18,7 +18,7 @@ RSpec.describe PosSimulator::Services::Clover::InventoryService do
         )
 
       categories = service.get_categories
-      
+
       expect(categories).to be_an(Array)
       expect(categories.first["name"]).to eq("Appetizers")
     end
@@ -32,7 +32,7 @@ RSpec.describe PosSimulator::Services::Clover::InventoryService do
         )
 
       categories = service.get_categories
-      
+
       expect(categories).to eq([])
     end
   end
@@ -48,7 +48,7 @@ RSpec.describe PosSimulator::Services::Clover::InventoryService do
         )
 
       category = service.create_category(name: "Desserts", sort_order: 4)
-      
+
       expect(category["id"]).to eq("CAT2")
       expect(category["name"]).to eq("Desserts")
     end
@@ -71,7 +71,7 @@ RSpec.describe PosSimulator::Services::Clover::InventoryService do
         )
 
       items = service.get_items
-      
+
       expect(items.size).to eq(2)
       expect(items.map { |i| i["name"] }).to contain_exactly("Burger", "Fries")
     end
@@ -93,7 +93,7 @@ RSpec.describe PosSimulator::Services::Clover::InventoryService do
         .to_return(status: 200, body: "{}".to_json)
 
       item = service.create_item(name: "Wings", price: 1299, category_id: "CAT1")
-      
+
       expect(item["id"]).to eq("ITEM1")
       expect(item["name"]).to eq("Wings")
     end

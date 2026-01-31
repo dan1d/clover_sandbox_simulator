@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe PosSimulator::Services::Clover::EmployeeService do
+RSpec.describe CloverSandboxSimulator::Services::Clover::EmployeeService do
   before { stub_clover_credentials }
 
   let(:service) { described_class.new }
@@ -126,7 +126,7 @@ RSpec.describe PosSimulator::Services::Clover::EmployeeService do
 
       expect do
         service.get_employee('NONEXISTENT')
-      end.to raise_error(PosSimulator::ApiError, /404/)
+      end.to raise_error(CloverSandboxSimulator::ApiError, /404/)
     end
   end
 
@@ -373,7 +373,7 @@ RSpec.describe PosSimulator::Services::Clover::EmployeeService do
 
         expect do
           service.ensure_employees(count: 2)
-        end.to raise_error(PosSimulator::ApiError, /400/)
+        end.to raise_error(CloverSandboxSimulator::ApiError, /400/)
       end
     end
 
@@ -473,7 +473,7 @@ RSpec.describe PosSimulator::Services::Clover::EmployeeService do
 
       expect do
         service.delete_employee('NONEXISTENT')
-      end.to raise_error(PosSimulator::ApiError, /404/)
+      end.to raise_error(CloverSandboxSimulator::ApiError, /404/)
     end
 
     it 'makes DELETE request to correct endpoint' do

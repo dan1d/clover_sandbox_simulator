@@ -2,9 +2,9 @@
 
 require "spec_helper"
 
-RSpec.describe PosSimulator::Generators::EntityGenerator do
+RSpec.describe CloverSandboxSimulator::Generators::EntityGenerator do
   before { stub_clover_credentials }
-  
+
   let(:base_url) { "https://sandbox.dev.clover.com/v3/merchants/TEST_MERCHANT_ID" }
   let(:generator) { described_class.new }
 
@@ -31,7 +31,7 @@ RSpec.describe PosSimulator::Generators::EntityGenerator do
           )
 
         categories = generator.setup_categories
-        
+
         expect(categories.size).to eq(7) # From categories.json
       end
     end
@@ -60,7 +60,7 @@ RSpec.describe PosSimulator::Generators::EntityGenerator do
           .to_return(status: 200, body: "{}".to_json)
 
         categories = generator.setup_categories
-        
+
         expect(categories.size).to eq(7)
         expect(create_stub).not_to have_been_requested
       end
@@ -90,7 +90,7 @@ RSpec.describe PosSimulator::Generators::EntityGenerator do
           )
 
         categories = generator.setup_categories
-        
+
         expect(categories.size).to eq(7)
         # Should create 5 missing categories (7 total - 2 existing)
         expect(create_stub).to have_been_requested.times(5)
@@ -146,7 +146,7 @@ RSpec.describe PosSimulator::Generators::EntityGenerator do
           .to_return(status: 200, body: "{}".to_json)
 
         items = generator.setup_items
-        
+
         # Should have 39 items total (from items.json)
         # But only create new ones for items that don't exist
         expect(items.size).to eq(39)
@@ -181,7 +181,7 @@ RSpec.describe PosSimulator::Generators::EntityGenerator do
           .to_return(status: 200, body: "{}".to_json)
 
         discounts = generator.setup_discounts
-        
+
         expect(discounts.size).to eq(7)
         expect(create_stub).not_to have_been_requested
       end
@@ -261,7 +261,7 @@ RSpec.describe PosSimulator::Generators::EntityGenerator do
         )
 
       results = generator.setup_all
-      
+
       expect(results[:categories]).to be_an(Array)
       expect(results[:items]).to be_an(Array)
       expect(results[:discounts]).to be_an(Array)

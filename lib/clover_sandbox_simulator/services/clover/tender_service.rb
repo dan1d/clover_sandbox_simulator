@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PosSimulator
+module CloverSandboxSimulator
   module Services
     module Clover
       # Manages Clover payment tenders (Cash, Gift Card, etc.)
@@ -19,7 +19,7 @@ module PosSimulator
           logger.info "Fetching tenders..."
           response = request(:get, endpoint("tenders"))
           elements = response&.dig("elements") || []
-          
+
           # Filter to enabled tenders only
           enabled = elements.select { |t| t["enabled"] == true }
           logger.info "Found #{enabled.size} enabled tenders"
@@ -29,15 +29,15 @@ module PosSimulator
         # Get sandbox-safe tenders (excludes credit/debit cards)
         def get_safe_tenders
           tenders = get_tenders
-          
+
           safe = tenders.reject do |tender|
             label = tender["label"]&.downcase || ""
             label_key = tender["labelKey"]&.downcase || ""
-            
+
             # Exclude credit and debit cards - they're broken in sandbox
-            label.include?("credit") || 
-              label.include?("debit") || 
-              label_key.include?("credit") || 
+            label.include?("credit") ||
+              label.include?("debit") ||
+              label_key.include?("credit") ||
               label_key.include?("debit")
           end
 
@@ -59,7 +59,7 @@ module PosSimulator
         # Create a custom tender
         def create_tender(label:, label_key: nil, enabled: true, opens_cash_drawer: false)
           logger.info "Creating tender: #{label}"
-          
+
           payload = {
             "label" => label,
             "labelKey" => label_key || "com.clover.tender.#{label.downcase.gsub(/\s+/, '_')}",
@@ -82,7 +82,7 @@ module PosSimulator
 
           # Select random tenders
           selected = tenders.sample(num_splits)
-          
+
           # Generate random split percentages that sum to 100
           percentages = generate_split_percentages(num_splits)
 
@@ -98,7 +98,7 @@ module PosSimulator
 
           # Generate random split points
           points = Array.new(count - 1) { rand(10..90) }.sort
-          
+
           # Calculate percentages from split points
           percentages = []
           prev = 0

@@ -2,7 +2,7 @@
 
 require "faker"
 
-module PosSimulator
+module CloverSandboxSimulator
   module Services
     module Clover
       # Manages Clover customers
@@ -24,7 +24,7 @@ module PosSimulator
         # Create a customer
         def create_customer(first_name:, last_name:, email: nil, phone: nil)
           logger.info "Creating customer: #{first_name} #{last_name}"
-          
+
           payload = {
             "firstName" => first_name,
             "lastName" => last_name

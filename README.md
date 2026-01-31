@@ -1,6 +1,6 @@
-# POS Simulator
+# Clover Sandbox Simulator
 
-A clean Ruby gem for simulating Point of Sale operations in Clover sandbox environments. Generates realistic orders, payments, and transaction data for testing accounting integrations.
+A Ruby gem for simulating Point of Sale operations in Clover sandbox environments. Generates realistic restaurant orders, payments, and transaction data for testing integrations with Clover's API.
 
 ## Features
 
@@ -18,9 +18,22 @@ A clean Ruby gem for simulating Point of Sale operations in Clover sandbox envir
 
 ## Installation
 
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'clover_sandbox_simulator'
+```
+
+And then execute:
+
 ```bash
-cd pos_simulator
 bundle install
+```
+
+Or install it yourself as:
+
+```bash
+gem install clover_sandbox_simulator
 ```
 
 ## Configuration
@@ -179,15 +192,15 @@ Each meal period has different dining option distributions:
 ## Architecture
 
 ```
-pos_simulator/
-├── bin/simulate              # CLI entry point
+clover_sandbox_simulator/
+├── bin/simulate                      # CLI entry point
 ├── lib/
-│   ├── pos_simulator.rb      # Gem entry point
-│   └── pos_simulator/
-│       ├── configuration.rb  # Environment config
+│   ├── clover_sandbox_simulator.rb   # Gem entry point
+│   └── clover_sandbox_simulator/
+│       ├── configuration.rb          # Environment config
 │       ├── services/
 │       │   ├── base_service.rb
-│       │   └── clover/       # Clover API services
+│       │   └── clover/               # Clover API services
 │       │       ├── inventory_service.rb
 │       │       ├── order_service.rb
 │       │       ├── payment_service.rb
@@ -202,13 +215,13 @@ pos_simulator/
 │       │   ├── entity_generator.rb
 │       │   └── order_generator.rb
 │       └── data/
-│           └── restaurant/   # JSON data files
+│           └── restaurant/           # JSON data files
 │               ├── categories.json
 │               ├── items.json
 │               ├── discounts.json
 │               ├── tenders.json
 │               └── modifiers.json
-└── spec/                     # RSpec tests
+└── spec/                             # RSpec tests
 ```
 
 ## Development
@@ -227,7 +240,7 @@ bundle exec rspec spec/services/clover/tender_service_spec.rb
 bundle exec rubocop
 
 # Open console
-bundle exec irb -r ./lib/pos_simulator
+bundle exec irb -r ./lib/clover_sandbox_simulator
 ```
 
 ## Testing
@@ -280,7 +293,7 @@ All setup operations are idempotent - running them multiple times will not creat
 
 ```ruby
 # This is safe to run multiple times
-generator = PosSimulator::Generators::EntityGenerator.new
+generator = CloverSandboxSimulator::Generators::EntityGenerator.new
 generator.setup_all # First run: creates entities
 generator.setup_all # Second run: skips existing, returns same results
 ```

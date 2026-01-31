@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PosSimulator
+module CloverSandboxSimulator
   module Services
     # Base service for all API interactions
     # Provides HTTP client, logging, and error handling
@@ -8,7 +8,7 @@ module PosSimulator
       attr_reader :config, :logger
 
       def initialize(config: nil)
-        @config = config || PosSimulator.configuration
+        @config = config || CloverSandboxSimulator.configuration
         @config.validate!
         @logger = @config.logger
       end
@@ -24,12 +24,12 @@ module PosSimulator
       # @return [Hash, nil] Parsed JSON response
       def request(method, path, payload: nil, params: nil)
         url = build_url(path, params)
-        
+
         log_request(method, url, payload)
         start_time = Time.now
 
         response = execute_request(method, url, payload)
-        
+
         duration_ms = ((Time.now - start_time) * 1000).round(2)
         log_response(response, duration_ms)
 

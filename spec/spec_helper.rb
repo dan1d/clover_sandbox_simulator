@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "bundler/setup"
-require "pos_simulator"
+require "clover_sandbox_simulator"
 require "webmock/rspec"
 require "vcr"
 
@@ -13,11 +13,11 @@ VCR.configure do |config|
   config.cassette_library_dir = "spec/cassettes"
   config.hook_into :webmock
   config.configure_rspec_metadata!
-  
+
   # Filter sensitive data
   config.filter_sensitive_data("<CLOVER_API_TOKEN>") { ENV["CLOVER_API_TOKEN"] }
   config.filter_sensitive_data("<CLOVER_MERCHANT_ID>") { ENV["CLOVER_MERCHANT_ID"] }
-  
+
   # Allow re-recording cassettes
   config.default_cassette_options = {
     record: :new_episodes,
@@ -39,7 +39,7 @@ end
 
 # Create a test configuration that doesn't require env vars
 def create_test_config
-  config = PosSimulator::Configuration.allocate
+  config = CloverSandboxSimulator::Configuration.allocate
   config.instance_variable_set(:@merchant_id, "TEST_MERCHANT_ID")
   config.instance_variable_set(:@api_token, "TEST_API_TOKEN")
   config.instance_variable_set(:@environment, "https://sandbox.dev.clover.com/")
@@ -52,5 +52,5 @@ end
 # Stub environment variables for tests that need Configuration.new
 def stub_clover_credentials
   # Set the global configuration directly
-  PosSimulator.configuration = create_test_config
+  CloverSandboxSimulator.configuration = create_test_config
 end

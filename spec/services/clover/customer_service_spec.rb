@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe PosSimulator::Services::Clover::CustomerService do
+RSpec.describe CloverSandboxSimulator::Services::Clover::CustomerService do
   before { stub_clover_credentials }
 
   let(:service) { described_class.new }
@@ -10,7 +10,7 @@ RSpec.describe PosSimulator::Services::Clover::CustomerService do
 
   let(:sample_customers) do
     [
-      { "id" => "CUST1", "firstName" => "John", "lastName" => "Doe", 
+      { "id" => "CUST1", "firstName" => "John", "lastName" => "Doe",
         "emailAddresses" => [{ "emailAddress" => "john.doe@example.com" }] },
       { "id" => "CUST2", "firstName" => "Jane", "lastName" => "Smith",
         "phoneNumbers" => [{ "phoneNumber" => "555-1234" }] },
@@ -499,7 +499,7 @@ RSpec.describe PosSimulator::Services::Clover::CustomerService do
 
       expect {
         service.get_customer("INVALID")
-      }.to raise_error(PosSimulator::ApiError, /404/)
+      }.to raise_error(CloverSandboxSimulator::ApiError, /404/)
     end
 
     it "raises ApiError on HTTP 401" do
@@ -512,7 +512,7 @@ RSpec.describe PosSimulator::Services::Clover::CustomerService do
 
       expect {
         service.get_customers
-      }.to raise_error(PosSimulator::ApiError, /401/)
+      }.to raise_error(CloverSandboxSimulator::ApiError, /401/)
     end
 
     it "raises ApiError on HTTP 500" do
@@ -525,7 +525,7 @@ RSpec.describe PosSimulator::Services::Clover::CustomerService do
 
       expect {
         service.create_customer(first_name: "Test", last_name: "User")
-      }.to raise_error(PosSimulator::ApiError, /500/)
+      }.to raise_error(CloverSandboxSimulator::ApiError, /500/)
     end
   end
 end

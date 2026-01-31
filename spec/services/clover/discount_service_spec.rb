@@ -2,9 +2,9 @@
 
 require "spec_helper"
 
-RSpec.describe PosSimulator::Services::Clover::DiscountService do
+RSpec.describe CloverSandboxSimulator::Services::Clover::DiscountService do
   before { stub_clover_credentials }
-  
+
   let(:service) { described_class.new }
   let(:base_url) { "https://sandbox.dev.clover.com/v3/merchants/TEST_MERCHANT_ID" }
 
@@ -27,7 +27,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       discounts = service.get_discounts
-      
+
       expect(discounts).to be_an(Array)
       expect(discounts.size).to eq(4)
       expect(discounts.first["id"]).to eq("D1")
@@ -42,7 +42,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       discounts = service.get_discounts
-      
+
       expect(discounts).to eq([])
     end
 
@@ -55,7 +55,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       discounts = service.get_discounts
-      
+
       expect(discounts).to eq([])
     end
 
@@ -68,7 +68,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       discounts = service.get_discounts
-      
+
       expect(discounts).to eq([])
     end
   end
@@ -76,7 +76,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
   describe "#get_discount" do
     it "fetches a specific discount by ID" do
       discount_data = { "id" => "D1", "name" => "10% Off", "percentage" => 10 }
-      
+
       stub_request(:get, "#{base_url}/discounts/D1")
         .to_return(
           status: 200,
@@ -85,7 +85,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       discount = service.get_discount("D1")
-      
+
       expect(discount["id"]).to eq("D1")
       expect(discount["name"]).to eq("10% Off")
       expect(discount["percentage"]).to eq(10)
@@ -100,7 +100,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       expect { service.get_discount("NONEXISTENT") }
-        .to raise_error(PosSimulator::ApiError, /404.*Discount not found/)
+        .to raise_error(CloverSandboxSimulator::ApiError, /404.*Discount not found/)
     end
   end
 
@@ -118,7 +118,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       discount = service.create_percentage_discount(name: "Summer Sale", percentage: 20)
-      
+
       expect(discount["id"]).to eq("D_NEW")
       expect(discount["name"]).to eq("Summer Sale")
       expect(discount["percentage"]).to eq(20)
@@ -137,7 +137,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       discount = service.create_percentage_discount(name: "Tiny Discount", percentage: 1)
-      
+
       expect(discount["percentage"]).to eq(1)
     end
 
@@ -154,7 +154,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       discount = service.create_percentage_discount(name: "Free Item", percentage: 100)
-      
+
       expect(discount["percentage"]).to eq(100)
     end
 
@@ -171,7 +171,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       discount = service.create_percentage_discount(name: "Decimal Discount", percentage: 12.5)
-      
+
       expect(discount["percentage"]).to eq(12.5)
     end
   end
@@ -190,7 +190,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       discount = service.create_fixed_discount(name: "$5 Off", amount: 500)
-      
+
       expect(discount["id"]).to eq("D_FIXED")
       expect(discount["name"]).to eq("$5 Off")
       expect(discount["amount"]).to eq(-500)
@@ -206,7 +206,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       service.create_fixed_discount(name: "$10 Off", amount: 1000)
-      
+
       expect(WebMock).to have_requested(:post, "#{base_url}/discounts")
         .with(body: hash_including("amount" => -1000))
     end
@@ -221,7 +221,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       discount = service.create_fixed_discount(name: "$7.50 Off", amount: -750)
-      
+
       expect(discount["amount"]).to eq(-750)
     end
 
@@ -238,7 +238,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       discount = service.create_fixed_discount(name: "$0.25 Off", amount: 25)
-      
+
       expect(discount["amount"]).to eq(-25)
     end
 
@@ -255,7 +255,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       discount = service.create_fixed_discount(name: "$100 Off", amount: 10000)
-      
+
       expect(discount["amount"]).to eq(-10000)
     end
   end
@@ -270,7 +270,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       result = service.delete_discount("D1")
-      
+
       expect(WebMock).to have_requested(:delete, "#{base_url}/discounts/D1")
     end
 
@@ -283,7 +283,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       expect { service.delete_discount("NONEXISTENT") }
-        .to raise_error(PosSimulator::ApiError, /404.*Discount not found/)
+        .to raise_error(CloverSandboxSimulator::ApiError, /404.*Discount not found/)
     end
 
     it "handles deletion with special characters in ID" do
@@ -295,7 +295,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       service.delete_discount("D-123_ABC")
-      
+
       expect(WebMock).to have_requested(:delete, "#{base_url}/discounts/D-123_ABC")
     end
   end
@@ -312,34 +312,34 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
 
     it "returns nil approximately 70% of the time" do
       allow_any_instance_of(Kernel).to receive(:rand).and_return(0.5)
-      
+
       result = service.random_discount
-      
+
       expect(result).to be_nil
     end
 
     it "returns a discount when rand is >= 0.7" do
       allow_any_instance_of(Kernel).to receive(:rand).and_return(0.8)
-      
+
       result = service.random_discount
-      
+
       expect(result).not_to be_nil
       expect(sample_discounts.map { |d| d["id"] }).to include(result["id"])
     end
 
     it "returns nil when rand is exactly 0.69" do
       allow_any_instance_of(Kernel).to receive(:rand).and_return(0.69)
-      
+
       result = service.random_discount
-      
+
       expect(result).to be_nil
     end
 
     it "returns a discount when rand is exactly 0.7" do
       allow_any_instance_of(Kernel).to receive(:rand).and_return(0.7)
-      
+
       result = service.random_discount
-      
+
       expect(result).not_to be_nil
     end
 
@@ -350,11 +350,11 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
           body: { elements: [] }.to_json,
           headers: { "Content-Type" => "application/json" }
         )
-      
+
       allow_any_instance_of(Kernel).to receive(:rand).and_return(0.9)
-      
+
       result = service.random_discount
-      
+
       expect(result).to be_nil
     end
 
@@ -399,7 +399,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       expect { service.get_discounts }
-        .to raise_error(PosSimulator::ApiError, /401.*Unauthorized/)
+        .to raise_error(CloverSandboxSimulator::ApiError, /401.*Unauthorized/)
     end
 
     it "raises ApiError for 500 internal server error" do
@@ -411,7 +411,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       expect { service.get_discounts }
-        .to raise_error(PosSimulator::ApiError, /500.*Internal Server Error/)
+        .to raise_error(CloverSandboxSimulator::ApiError, /500.*Internal Server Error/)
     end
 
     it "raises error on network timeout" do
@@ -430,7 +430,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       expect { service.get_discounts }
-        .to raise_error(PosSimulator::ApiError, /Invalid JSON response/)
+        .to raise_error(CloverSandboxSimulator::ApiError, /Invalid JSON response/)
     end
   end
 
@@ -444,7 +444,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       service.get_discounts
-      
+
       expect(WebMock).to have_requested(:get, "#{base_url}/discounts")
     end
 
@@ -457,7 +457,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       service.create_percentage_discount(name: "Test", percentage: 10)
-      
+
       expect(WebMock).to have_requested(:post, "#{base_url}/discounts")
     end
 
@@ -470,7 +470,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       service.delete_discount("D1")
-      
+
       expect(WebMock).to have_requested(:delete, "#{base_url}/discounts/D1")
     end
   end
@@ -487,7 +487,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         "createdTime" => 1609459200000,
         "modifiedTime" => 1609459200000
       }
-      
+
       stub_request(:get, "#{base_url}/discounts/D_FULL")
         .to_return(
           status: 200,
@@ -496,7 +496,7 @@ RSpec.describe PosSimulator::Services::Clover::DiscountService do
         )
 
       discount = service.get_discount("D_FULL")
-      
+
       expect(discount["id"]).to eq("D_FULL")
       expect(discount["name"]).to eq("Full Discount")
       expect(discount["percentage"]).to eq(15)

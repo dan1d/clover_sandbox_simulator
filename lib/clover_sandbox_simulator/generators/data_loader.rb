@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PosSimulator
+module CloverSandboxSimulator
   module Generators
     # Loads data from JSON files for different business types
     class DataLoader
@@ -38,7 +38,7 @@ module PosSimulator
 
       def load_json(filename)
         path = File.join(data_path, "#{filename}.json")
-        
+
         unless File.exist?(path)
           raise Error, "Data file not found: #{path}"
         end
@@ -47,7 +47,7 @@ module PosSimulator
       end
 
       def data_path
-        File.join(PosSimulator.root, "lib", "pos_simulator", "data", business_type.to_s)
+        File.join(CloverSandboxSimulator.root, "lib", "clover_sandbox_simulator", "data", business_type.to_s)
       end
     end
   end

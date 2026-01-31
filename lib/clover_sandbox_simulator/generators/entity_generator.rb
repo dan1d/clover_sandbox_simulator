@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PosSimulator
+module CloverSandboxSimulator
   module Generators
     # Creates restaurant entities in Clover (categories, items, discounts, etc.)
     class EntityGenerator
@@ -9,7 +9,7 @@ module PosSimulator
       def initialize(services: nil, business_type: :restaurant)
         @services = services || Services::Clover::ServicesManager.new
         @data = DataLoader.new(business_type: business_type)
-        @logger = PosSimulator.logger
+        @logger = CloverSandboxSimulator.logger
       end
 
       # Set up all entities (categories, items, discounts, etc.)
@@ -41,7 +41,7 @@ module PosSimulator
       # Create categories from data file
       def setup_categories
         logger.info "Setting up categories..."
-        
+
         existing = services.inventory.get_categories
         existing_names = existing.map { |c| c["name"] }
 
@@ -83,7 +83,7 @@ module PosSimulator
             created << existing.find { |i| i["name"] == item_data["name"] }
           else
             category_id = category_lookup[item_data["category"]]
-            
+
             item = services.inventory.create_item(
               name: item_data["name"],
               price: item_data["price"],
@@ -152,7 +152,7 @@ module PosSimulator
         logger.warn "=" * 60
 
         services.inventory.delete_all
-        
+
         services.discount.get_discounts.each do |d|
           services.discount.delete_discount(d["id"])
         end

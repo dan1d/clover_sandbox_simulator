@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PosSimulator
+module CloverSandboxSimulator
   module Services
     module Clover
       # Manages Clover discounts
@@ -22,7 +22,7 @@ module PosSimulator
         # Create a fixed amount discount
         def create_fixed_discount(name:, amount:)
           logger.info "Creating fixed discount: #{name} ($#{amount / 100.0})"
-          
+
           request(:post, endpoint("discounts"), payload: {
             "name" => name,
             "amount" => -amount.abs # Clover expects negative for discounts
@@ -32,7 +32,7 @@ module PosSimulator
         # Create a percentage discount
         def create_percentage_discount(name:, percentage:)
           logger.info "Creating percentage discount: #{name} (#{percentage}%)"
-          
+
           request(:post, endpoint("discounts"), payload: {
             "name" => name,
             "percentage" => percentage

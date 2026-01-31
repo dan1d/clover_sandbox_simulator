@@ -2,15 +2,15 @@
 
 require "spec_helper"
 
-RSpec.describe PosSimulator::Services::Clover::ServicesManager do
+RSpec.describe CloverSandboxSimulator::Services::Clover::ServicesManager do
   before { stub_clover_credentials }
 
   let(:manager) { described_class.new }
 
   describe "#initialize" do
     context "with default configuration" do
-      it "uses the global PosSimulator configuration" do
-        expect(manager.config).to eq(PosSimulator.configuration)
+      it "uses the global CloverSandboxSimulator configuration" do
+        expect(manager.config).to eq(CloverSandboxSimulator.configuration)
       end
     end
 
@@ -37,14 +37,14 @@ RSpec.describe PosSimulator::Services::Clover::ServicesManager do
   describe "#config" do
     it "exposes the config via attr_reader" do
       expect(manager).to respond_to(:config)
-      expect(manager.config).to be_a(PosSimulator::Configuration)
+      expect(manager.config).to be_a(CloverSandboxSimulator::Configuration)
     end
   end
 
   describe "service accessors" do
     describe "#inventory" do
       it "returns an InventoryService instance" do
-        expect(manager.inventory).to be_a(PosSimulator::Services::Clover::InventoryService)
+        expect(manager.inventory).to be_a(CloverSandboxSimulator::Services::Clover::InventoryService)
       end
 
       it "passes the config to the service" do
@@ -61,7 +61,7 @@ RSpec.describe PosSimulator::Services::Clover::ServicesManager do
 
     describe "#tender" do
       it "returns a TenderService instance" do
-        expect(manager.tender).to be_a(PosSimulator::Services::Clover::TenderService)
+        expect(manager.tender).to be_a(CloverSandboxSimulator::Services::Clover::TenderService)
       end
 
       it "passes the config to the service" do
@@ -78,7 +78,7 @@ RSpec.describe PosSimulator::Services::Clover::ServicesManager do
 
     describe "#tax" do
       it "returns a TaxService instance" do
-        expect(manager.tax).to be_a(PosSimulator::Services::Clover::TaxService)
+        expect(manager.tax).to be_a(CloverSandboxSimulator::Services::Clover::TaxService)
       end
 
       it "passes the config to the service" do
@@ -95,7 +95,7 @@ RSpec.describe PosSimulator::Services::Clover::ServicesManager do
 
     describe "#discount" do
       it "returns a DiscountService instance" do
-        expect(manager.discount).to be_a(PosSimulator::Services::Clover::DiscountService)
+        expect(manager.discount).to be_a(CloverSandboxSimulator::Services::Clover::DiscountService)
       end
 
       it "passes the config to the service" do
@@ -112,7 +112,7 @@ RSpec.describe PosSimulator::Services::Clover::ServicesManager do
 
     describe "#order" do
       it "returns an OrderService instance" do
-        expect(manager.order).to be_a(PosSimulator::Services::Clover::OrderService)
+        expect(manager.order).to be_a(CloverSandboxSimulator::Services::Clover::OrderService)
       end
 
       it "passes the config to the service" do
@@ -129,7 +129,7 @@ RSpec.describe PosSimulator::Services::Clover::ServicesManager do
 
     describe "#payment" do
       it "returns a PaymentService instance" do
-        expect(manager.payment).to be_a(PosSimulator::Services::Clover::PaymentService)
+        expect(manager.payment).to be_a(CloverSandboxSimulator::Services::Clover::PaymentService)
       end
 
       it "passes the config to the service" do
@@ -146,7 +146,7 @@ RSpec.describe PosSimulator::Services::Clover::ServicesManager do
 
     describe "#employee" do
       it "returns an EmployeeService instance" do
-        expect(manager.employee).to be_a(PosSimulator::Services::Clover::EmployeeService)
+        expect(manager.employee).to be_a(CloverSandboxSimulator::Services::Clover::EmployeeService)
       end
 
       it "passes the config to the service" do
@@ -163,7 +163,7 @@ RSpec.describe PosSimulator::Services::Clover::ServicesManager do
 
     describe "#customer" do
       it "returns a CustomerService instance" do
-        expect(manager.customer).to be_a(PosSimulator::Services::Clover::CustomerService)
+        expect(manager.customer).to be_a(CloverSandboxSimulator::Services::Clover::CustomerService)
       end
 
       it "passes the config to the service" do
@@ -261,7 +261,7 @@ RSpec.describe PosSimulator::Services::Clover::ServicesManager do
       fresh_manager.inventory
 
       expect(fresh_manager.instance_variable_get(:@inventory)).to be_a(
-        PosSimulator::Services::Clover::InventoryService
+        CloverSandboxSimulator::Services::Clover::InventoryService
       )
     end
 
@@ -289,14 +289,14 @@ RSpec.describe PosSimulator::Services::Clover::ServicesManager do
   describe "complete service coverage" do
     let(:expected_services) do
       {
-        inventory: PosSimulator::Services::Clover::InventoryService,
-        tender: PosSimulator::Services::Clover::TenderService,
-        tax: PosSimulator::Services::Clover::TaxService,
-        discount: PosSimulator::Services::Clover::DiscountService,
-        order: PosSimulator::Services::Clover::OrderService,
-        payment: PosSimulator::Services::Clover::PaymentService,
-        employee: PosSimulator::Services::Clover::EmployeeService,
-        customer: PosSimulator::Services::Clover::CustomerService
+        inventory: CloverSandboxSimulator::Services::Clover::InventoryService,
+        tender: CloverSandboxSimulator::Services::Clover::TenderService,
+        tax: CloverSandboxSimulator::Services::Clover::TaxService,
+        discount: CloverSandboxSimulator::Services::Clover::DiscountService,
+        order: CloverSandboxSimulator::Services::Clover::OrderService,
+        payment: CloverSandboxSimulator::Services::Clover::PaymentService,
+        employee: CloverSandboxSimulator::Services::Clover::EmployeeService,
+        customer: CloverSandboxSimulator::Services::Clover::CustomerService
       }
     end
 

@@ -2,11 +2,11 @@
 
 require "spec_helper"
 
-RSpec.describe PosSimulator::Generators::OrderGenerator do
+RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
   before { stub_clover_credentials }
 
   let(:base_url) { "https://sandbox.dev.clover.com/v3/merchants/TEST_MERCHANT_ID" }
-  
+
   # Use a stub services manager to avoid slow HTTP initialization
   let(:mock_services_base) { double("ServicesManager") }
   let(:generator) { described_class.new(services: mock_services_base) }

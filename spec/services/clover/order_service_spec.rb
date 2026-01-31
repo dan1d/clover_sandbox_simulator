@@ -2,9 +2,9 @@
 
 require "spec_helper"
 
-RSpec.describe PosSimulator::Services::Clover::OrderService do
+RSpec.describe CloverSandboxSimulator::Services::Clover::OrderService do
   before { stub_clover_credentials }
-  
+
   let(:service) { described_class.new }
   let(:base_url) { "https://sandbox.dev.clover.com/v3/merchants/TEST_MERCHANT_ID" }
 
@@ -19,7 +19,7 @@ RSpec.describe PosSimulator::Services::Clover::OrderService do
         )
 
       order = service.create_order(employee_id: "EMP1")
-      
+
       expect(order["id"]).to eq("ORDER123")
     end
 
@@ -40,7 +40,7 @@ RSpec.describe PosSimulator::Services::Clover::OrderService do
         )
 
       order = service.create_order(employee_id: "EMP1", customer_id: "CUST1")
-      
+
       expect(order["id"]).to eq("ORDER123")
     end
   end
@@ -59,7 +59,7 @@ RSpec.describe PosSimulator::Services::Clover::OrderService do
         )
 
       line_item = service.add_line_item("ORDER123", item_id: "ITEM1", quantity: 2)
-      
+
       expect(line_item["id"]).to eq("LI1")
     end
 
@@ -73,7 +73,7 @@ RSpec.describe PosSimulator::Services::Clover::OrderService do
         )
 
       line_item = service.add_line_item("ORDER123", item_id: "ITEM1", note: "No onions")
-      
+
       expect(line_item["note"]).to eq("No onions")
     end
   end
@@ -89,7 +89,7 @@ RSpec.describe PosSimulator::Services::Clover::OrderService do
         )
 
       result = service.set_dining_option("ORDER123", "TO_GO")
-      
+
       expect(result["diningOption"]).to eq("TO_GO")
     end
 
@@ -121,7 +121,7 @@ RSpec.describe PosSimulator::Services::Clover::OrderService do
         )
 
       total = service.calculate_total("ORDER123")
-      
+
       # (1299 * 2) + (599 * 1) = 3197
       expect(total).to eq(3197)
     end
@@ -150,7 +150,7 @@ RSpec.describe PosSimulator::Services::Clover::OrderService do
         )
 
       total = service.calculate_total("ORDER123")
-      
+
       expect(total).to eq(900) # 1000 - 100
     end
   end

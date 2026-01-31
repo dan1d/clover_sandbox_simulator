@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 Gem::Specification.new do |spec|
-  spec.name          = "pos_simulator"
+  spec.name          = "clover_sandbox_simulator"
   spec.version       = "1.0.0"
-  spec.authors       = ["TheOwnerStack"]
-  spec.email         = ["dev@theownerstack.com"]
+  spec.authors       = ["dan1d"]
+  spec.email         = ["dan1d@users.noreply.github.com"]
 
-  spec.summary       = "POS Simulator for generating realistic restaurant/retail data"
-  spec.description   = "A clean Ruby gem for simulating Point of Sale operations in Clover, Square, and Stripe sandbox environments. Generates realistic orders, payments, and transaction data for testing accounting integrations."
-  spec.homepage      = "https://github.com/theownerstack/pos_simulator"
+  spec.summary       = "Clover Sandbox Simulator for generating realistic restaurant data"
+  spec.description   = "A Ruby gem for simulating Point of Sale operations in Clover sandbox environments. Generates realistic restaurant orders, payments, and transaction data for testing integrations with Clover's API."
+  spec.homepage      = "https://github.com/dan1d/clover_sandbox_simulator"
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 3.0.0"
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PosSimulator
+module CloverSandboxSimulator
   module Services
     module Clover
       # Central manager for all Clover services
@@ -9,7 +9,7 @@ module PosSimulator
         attr_reader :config
 
         def initialize(config: nil)
-          @config = config || PosSimulator.configuration
+          @config = config || CloverSandboxSimulator.configuration
         end
 
         def inventory

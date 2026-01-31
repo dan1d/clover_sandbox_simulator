@@ -2,7 +2,7 @@
 
 require "faker"
 
-module PosSimulator
+module CloverSandboxSimulator
   module Services
     module Clover
       # Manages Clover employees
@@ -29,7 +29,7 @@ module PosSimulator
         # Create an employee
         def create_employee(name:, email: nil, role: "EMPLOYEE", pin: nil)
           logger.info "Creating employee: #{name}"
-          
+
           payload = {
             "name" => name,
             "role" => role

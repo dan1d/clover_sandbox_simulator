@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PosSimulator
+module CloverSandboxSimulator
   module Services
     module Clover
       # Manages Clover orders and line items
@@ -12,7 +12,7 @@ module PosSimulator
           logger.info "Fetching orders..."
           params = { limit: limit, offset: offset }
           params[:filter] = filter if filter
-          
+
           response = request(:get, endpoint("orders"), params: params)
           response&.dig("elements") || []
         end
@@ -27,12 +27,12 @@ module PosSimulator
         # Create an order shell
         def create_order(employee_id: nil, customer_id: nil)
           logger.info "Creating order..."
-          
+
           payload = {}
           payload["employee"] = { "id" => employee_id } if employee_id
-          
+
           order = request(:post, endpoint("orders"), payload: payload)
-          
+
           if order && customer_id
             add_customer_to_order(order["id"], customer_id)
           end
@@ -43,7 +43,7 @@ module PosSimulator
         # Add line item to order
         def add_line_item(order_id, item_id:, quantity: 1, note: nil)
           logger.debug "Adding item #{item_id} to order #{order_id}"
-          
+
           payload = {
             "item" => { "id" => item_id },
             "quantity" => quantity
@@ -56,7 +56,7 @@ module PosSimulator
         # Batch add line items (adds one by one as Clover doesn't support bulk)
         def add_line_items(order_id, items)
           logger.info "Adding #{items.size} items to order #{order_id}"
-          
+
           line_items = []
           items.each do |item|
             line_item = add_line_item(
@@ -67,18 +67,18 @@ module PosSimulator
             )
             line_items << line_item if line_item
           end
-          
+
           line_items
         end
 
         # Apply discount to order
         def apply_discount(order_id, discount_id:, calculated_amount: nil)
           logger.info "Applying discount #{discount_id} to order #{order_id}"
-          
+
           # Fetch discount details
           discount_service = DiscountService.new(config: config)
           discount = discount_service.get_discount(discount_id)
-          
+
           return nil unless discount
 
           payload = { "name" => discount["name"] }
