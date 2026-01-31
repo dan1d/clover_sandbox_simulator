@@ -7,7 +7,8 @@ module PosSimulator
     module Clover
       # Manages Clover employees
       class EmployeeService < BaseService
-        ROLES = %w[OWNER ADMIN MANAGER EMPLOYEE].freeze
+        # Note: OWNER and ADMIN roles may not be available in sandbox
+        ROLES = %w[MANAGER EMPLOYEE].freeze
 
         # Fetch all employees
         def get_employees
