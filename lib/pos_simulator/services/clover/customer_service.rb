@@ -45,10 +45,14 @@ module PosSimulator
 
           new_customers = []
           needed.times do
+            first = Faker::Name.first_name
+            last = Faker::Name.last_name
+            # Use example.com domain - Clover rejects .test domains
+            safe_email = "#{first.downcase}.#{last.downcase}@example.com".gsub(/[^a-z0-9.@]/, "")
             customer = create_customer(
-              first_name: Faker::Name.first_name,
-              last_name: Faker::Name.last_name,
-              email: Faker::Internet.email,
+              first_name: first,
+              last_name: last,
+              email: safe_email,
               phone: Faker::PhoneNumber.cell_phone
             )
             new_customers << customer if customer

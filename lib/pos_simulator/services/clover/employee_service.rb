@@ -50,9 +50,12 @@ module PosSimulator
           new_employees = []
           needed.times do
             name = Faker::Name.name
+            # Use example.com domain - Clover rejects .test domains
+            # Remove special chars, collapse dots, strip leading/trailing dots
+            safe_name = name.downcase.gsub(/[^a-z0-9]/, ".").gsub(/\.+/, ".").gsub(/^\.|\.$/, "")
             employee = create_employee(
               name: name,
-              email: Faker::Internet.email(name: name),
+              email: "#{safe_name}@example.com",
               role: ROLES.sample
             )
             new_employees << employee if employee
