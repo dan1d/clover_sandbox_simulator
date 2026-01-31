@@ -4,13 +4,17 @@ A clean Ruby gem for simulating Point of Sale operations in Clover sandbox envir
 
 ## Features
 
-- **Realistic Restaurant Data**: Complete menu with appetizers, entrees, sides, desserts, drinks, and alcoholic beverages
-- **Safe Sandbox Payments**: Uses Cash, Check, Gift Card, External Payment, Mobile Payment, Store Credit (avoids broken Credit/Debit cards)
-- **Split Payments**: Supports 1-3 tender splits per order
-- **Realistic Patterns**: Different order counts for weekdays, Friday, Saturday, Sunday
-- **Tips & Taxes**: Automatic tip generation (15-25%) and tax calculation
-- **Discounts**: Percentage and fixed-amount discounts
-- **Employees & Customers**: Auto-generated with realistic data
+- **Realistic Restaurant Data**: Complete menu with 39 items across 7 categories (appetizers, entrees, sides, desserts, drinks, alcoholic beverages, specials)
+- **Safe Sandbox Payments**: Uses Cash, Check, Gift Card, and other safe tenders (avoids broken Credit/Debit cards in Clover sandbox)
+- **Split Payments**: Supports 1-4 tender splits per order, more common for larger parties
+- **Meal Period Simulation**: Orders distributed across breakfast, lunch, happy hour, dinner, and late night with realistic weights
+- **Dining Options**: Dine-in, To-Go, and Delivery with period-appropriate distributions
+- **Dynamic Order Volume**: Different order counts for weekdays, Friday, Saturday, Sunday (40-120 orders/day)
+- **Tips & Taxes**: Variable tip rates by dining option (15-25% dine-in, 0-15% takeout, 10-20% delivery)
+- **Discounts**: 7 discount types including Happy Hour, Senior, Military, Employee, Birthday, and fixed amounts
+- **Employees & Customers**: Auto-generated with realistic names and contact info
+- **Party Size Variation**: 1-6 guests affecting item counts and split payment probability
+- **Order Notes**: Random special instructions (allergies, modifications, VIP customers)
 
 ## Installation
 
@@ -53,11 +57,24 @@ Run a full simulation (setup + generate orders):
 # Set up restaurant entities (categories, items, discounts, etc.)
 ./bin/simulate setup
 
-# Generate orders for today
+# Generate orders for today (random count based on day of week)
 ./bin/simulate generate
 
 # Generate a specific number of orders
 ./bin/simulate generate -n 25
+
+# Generate a realistic full day of restaurant operations
+./bin/simulate day
+
+# Generate a busy day (2x normal volume)
+./bin/simulate day -m 2.0
+
+# Generate a slow day (0.5x normal volume)
+./bin/simulate day -m 0.5
+
+# Generate a lunch or dinner rush
+./bin/simulate rush -p lunch -n 20
+./bin/simulate rush -p dinner -n 30
 
 # Run full simulation (setup + orders)
 ./bin/simulate full
@@ -102,21 +119,62 @@ Run a full simulation (setup + generate orders):
 **IMPORTANT**: Credit Card and Debit Card are **broken** in Clover sandbox. This gem intentionally avoids them.
 
 Safe tenders used:
-- Cash (30% weight)
-- Check (5% weight)
-- Gift Card (15% weight)
-- External Payment (10% weight)
-- Mobile Payment (20% weight)
-- Store Credit (10% weight)
+- Cash (preferred for orders under $20)
+- Check
+- Gift Card
+- External Payment
+- Mobile Payment
+- Store Credit
+
+The simulator uses whatever safe tenders are available in the Clover merchant account.
+
+## Tips
+
+Tips vary by dining option to simulate realistic customer behavior:
+
+| Dining Option | Min Tip | Max Tip |
+|---------------|---------|---------|
+| Dine-In (HERE) | 15% | 25% |
+| To-Go | 0% | 15% |
+| Delivery | 10% | 20% |
+
+- Large parties (6+) automatically receive 18% auto-gratuity
+- Split payments divide tips proportionally across tenders
 
 ## Order Patterns
 
+### Daily Volume
+
 | Day | Min Orders | Max Orders |
 |-----|------------|------------|
-| Weekday | 15 | 25 |
-| Friday | 25 | 40 |
-| Saturday | 30 | 50 |
-| Sunday | 20 | 35 |
+| Weekday | 40 | 60 |
+| Friday | 70 | 100 |
+| Saturday | 80 | 120 |
+| Sunday | 50 | 80 |
+
+### Meal Periods
+
+Orders are distributed across realistic meal periods with weighted distribution:
+
+| Period | Hours | Weight | Avg Items | Avg Party Size |
+|--------|-------|--------|-----------|----------------|
+| Breakfast | 7-10 AM | 15% | 2-4 | 1-2 |
+| Lunch | 11 AM-2 PM | 30% | 2-5 | 1-4 |
+| Happy Hour | 3-5 PM | 10% | 2-4 | 2-4 |
+| Dinner | 5-9 PM | 35% | 3-6 | 2-6 |
+| Late Night | 9-11 PM | 10% | 2-4 | 1-3 |
+
+### Dining Options
+
+Each meal period has different dining option distributions:
+
+| Period | Dine-In | To-Go | Delivery |
+|--------|---------|-------|----------|
+| Breakfast | 40% | 50% | 10% |
+| Lunch | 35% | 45% | 20% |
+| Happy Hour | 80% | 15% | 5% |
+| Dinner | 70% | 15% | 15% |
+| Late Night | 50% | 30% | 20% |
 
 ## Architecture
 
@@ -174,16 +232,47 @@ bundle exec irb -r ./lib/pos_simulator
 
 ## Testing
 
-The gem includes comprehensive RSpec tests with WebMock for HTTP stubbing and VCR for recording API interactions.
+The gem includes comprehensive RSpec tests with WebMock for HTTP stubbing.
 
 ### Test Coverage
 
-- **48 examples, 0 failures**
+- **268 examples, 0 failures**
 - Configuration validation
 - Data loading from JSON files
-- Clover API services (inventory, tender, order, payment)
+- All Clover API services:
+  - InventoryService (categories, items)
+  - OrderService (create, line items, dining options)
+  - PaymentService (single and split payments)
+  - TenderService (safe tenders, split selection)
+  - TaxService (rates, calculation)
+  - DiscountService (percentage and fixed)
+  - EmployeeService (CRUD, random selection)
+  - CustomerService (CRUD, anonymous orders)
+  - ServicesManager (memoization, lazy loading)
 - Entity generator idempotency
-- Split payment calculations
+- Order generator (meal periods, dining options, tips)
+- Edge cases (nil handling, empty arrays, API errors)
+
+### Test Files
+
+```
+spec/
+├── configuration_spec.rb
+├── generators/
+│   ├── data_loader_spec.rb
+│   ├── entity_generator_spec.rb
+│   └── order_generator_spec.rb
+└── services/clover/
+    ├── customer_service_spec.rb
+    ├── discount_service_spec.rb
+    ├── employee_service_spec.rb
+    ├── inventory_service_spec.rb
+    ├── order_service_spec.rb
+    ├── payment_service_spec.rb
+    ├── services_manager_spec.rb
+    ├── tax_service_spec.rb
+    └── tender_service_spec.rb
+```
 
 ### Idempotency Verification
 

@@ -321,25 +321,29 @@ module PosSimulator
         # Add all items with lower weight for variety
         data[:items].each { |item| weighted_items << item }
         
-        # For larger parties, ensure variety
-        if party_size >= 4
-          # Try to get items from different categories
-          selected = []
-          preferred_categories.each do |category|
-            items = data[:items_by_category][category] || []
-            selected << items.sample if items.any? && selected.size < count
-          end
-          
-          # Fill remaining with weighted random
-          while selected.size < count
-            item = weighted_items.sample
-            selected << item unless selected.include?(item)
-          end
-          
-          selected.take(count)
-        else
-          weighted_items.sample(count).uniq.take(count)
+      # For larger parties, ensure variety
+      if party_size >= 4
+        # Try to get items from different categories
+        selected = []
+        preferred_categories.each do |category|
+          items = data[:items_by_category][category] || []
+          selected << items.sample if items.any? && selected.size < count
         end
+        
+        # Fill remaining with weighted random (with safeguard against infinite loop)
+        unique_items = weighted_items.uniq
+        max_attempts = unique_items.size * 2
+        attempts = 0
+        while selected.size < count && attempts < max_attempts
+          item = weighted_items.sample
+          selected << item unless selected.include?(item)
+          attempts += 1
+        end
+        
+        selected.take(count)
+      else
+        weighted_items.sample(count).uniq.take(count)
+      end
       end
 
       def select_appropriate_discount(discounts, period)
