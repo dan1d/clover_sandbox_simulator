@@ -372,12 +372,16 @@ module PosSimulator
       end
 
       def process_order_payment(order_id:, subtotal:, tax_amount:, tip_amount:, employee_id:, tenders:, dining:, party_size:)
+        # Ensure party_size is a valid number
+        party_size = party_size.to_i
+        party_size = 1 if party_size < 1
+        
         # Split payment more likely for larger parties dining in
         split_chance = dining == "HERE" && party_size >= 2 ? 0.25 : 0.05
         
         if rand < split_chance && tenders.size > 1
           num_splits = [party_size, 4, tenders.size].min
-          num_splits = rand(2..num_splits)
+          num_splits = num_splits < 2 ? 2 : rand(2..num_splits)
           splits = select_split_tenders(tenders, num_splits)
           
           logger.debug "  Split payment: #{num_splits} ways"
@@ -410,7 +414,10 @@ module PosSimulator
       end
 
       def select_split_tenders(tenders, count)
-        selected = tenders.sample([count, tenders.size].min)
+        return [] if tenders.nil? || tenders.empty? || count.nil? || count < 1
+        
+        actual_count = [count.to_i, tenders.size].min
+        selected = tenders.sample(actual_count)
         percentages = generate_split_percentages(selected.size)
         
         selected.zip(percentages).map do |tender, pct|
