@@ -177,6 +177,23 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::ServicesManager do
         expect(first_call).to be(second_call)
       end
     end
+
+    describe "#refund" do
+      it "returns a RefundService instance" do
+        expect(manager.refund).to be_a(CloverSandboxSimulator::Services::Clover::RefundService)
+      end
+
+      it "passes the config to the service" do
+        expect(manager.refund.instance_variable_get(:@config)).to eq(manager.config)
+      end
+
+      it "memoizes the service instance" do
+        first_call = manager.refund
+        second_call = manager.refund
+
+        expect(first_call).to be(second_call)
+      end
+    end
   end
 
   describe "service isolation" do
@@ -196,7 +213,8 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::ServicesManager do
         manager.order,
         manager.payment,
         manager.employee,
-        manager.customer
+        manager.customer,
+        manager.refund
       ]
 
       configs = services.map { |s| s.instance_variable_get(:@config) }
@@ -250,6 +268,7 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::ServicesManager do
       expect(fresh_manager.instance_variable_get(:@discount)).to be_nil
       expect(fresh_manager.instance_variable_get(:@employee)).to be_nil
       expect(fresh_manager.instance_variable_get(:@customer)).to be_nil
+      expect(fresh_manager.instance_variable_get(:@refund)).to be_nil
     end
 
     it "instantiates service only after first access" do
@@ -283,6 +302,7 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::ServicesManager do
       expect(fresh_manager.instance_variable_get(:@discount)).to be_nil
       expect(fresh_manager.instance_variable_get(:@employee)).to be_nil
       expect(fresh_manager.instance_variable_get(:@customer)).to be_nil
+      expect(fresh_manager.instance_variable_get(:@refund)).to be_nil
     end
   end
 
@@ -296,7 +316,9 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::ServicesManager do
         order: CloverSandboxSimulator::Services::Clover::OrderService,
         payment: CloverSandboxSimulator::Services::Clover::PaymentService,
         employee: CloverSandboxSimulator::Services::Clover::EmployeeService,
-        customer: CloverSandboxSimulator::Services::Clover::CustomerService
+        customer: CloverSandboxSimulator::Services::Clover::CustomerService,
+        refund: CloverSandboxSimulator::Services::Clover::RefundService,
+        gift_card: CloverSandboxSimulator::Services::Clover::GiftCardService
       }
     end
 
@@ -307,10 +329,10 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::ServicesManager do
       end
     end
 
-    it "provides exactly 8 services" do
-      service_methods = %i[inventory tender tax discount order payment employee customer]
+    it "provides exactly 10 services" do
+      service_methods = %i[inventory tender tax discount order payment employee customer refund gift_card]
 
-      expect(service_methods.size).to eq(8)
+      expect(service_methods.size).to eq(10)
       service_methods.each do |method|
         expect(manager).to respond_to(method)
       end

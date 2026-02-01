@@ -1,0 +1,82 @@
+{
+  "gift_cards": [
+    {
+      "card_number": "6012345678901234",
+      "initial_balance": 2500,
+      "current_balance": 2500,
+      "status": "ACTIVE",
+      "description": "$25 Gift Card - Full balance"
+    },
+    {
+      "card_number": "6023456789012345",
+      "initial_balance": 5000,
+      "current_balance": 5000,
+      "status": "ACTIVE",
+      "description": "$50 Gift Card - Full balance"
+    },
+    {
+      "card_number": "6034567890123456",
+      "initial_balance": 10000,
+      "current_balance": 10000,
+      "status": "ACTIVE",
+      "description": "$100 Gift Card - Full balance"
+    },
+    {
+      "card_number": "6045678901234567",
+      "initial_balance": 5000,
+      "current_balance": 3250,
+      "status": "ACTIVE",
+      "description": "$50 Gift Card - Partially used ($32.50 remaining)"
+    },
+    {
+      "card_number": "6056789012345678",
+      "initial_balance": 2500,
+      "current_balance": 875,
+      "status": "ACTIVE",
+      "description": "$25 Gift Card - Low balance ($8.75 remaining)"
+    },
+    {
+      "card_number": "6067890123456789",
+      "initial_balance": 7500,
+      "current_balance": 7500,
+      "status": "ACTIVE",
+      "description": "$75 Gift Card - Full balance"
+    },
+    {
+      "card_number": "6078901234567890",
+      "initial_balance": 2000,
+      "current_balance": 2000,
+      "status": "ACTIVE",
+      "description": "$20 Gift Card - Full balance"
+    },
+    {
+      "card_number": "6089012345678901",
+      "initial_balance": 5000,
+      "current_balance": 0,
+      "status": "DEPLETED",
+      "description": "$50 Gift Card - Fully redeemed"
+    },
+    {
+      "card_number": "6090123456789012",
+      "initial_balance": 10000,
+      "current_balance": 1500,
+      "status": "ACTIVE",
+      "description": "$100 Gift Card - Almost depleted ($15 remaining)"
+    },
+    {
+      "card_number": "6101234567890123",
+      "initial_balance": 5000,
+      "current_balance": 5000,
+      "status": "INACTIVE",
+      "description": "$50 Gift Card - Not yet activated"
+    }
+  ],
+  "purchase_denominations": [
+    { "amount": 2000, "label": "$20 Gift Card" },
+    { "amount": 2500, "label": "$25 Gift Card" },
+    { "amount": 5000, "label": "$50 Gift Card" },
+    { "amount": 7500, "label": "$75 Gift Card" },
+    { "amount": 10000, "label": "$100 Gift Card" }
+  ],
+  "note": "Sample gift cards for simulation. ACTIVE cards can be used for payments, DEPLETED have zero balance, INACTIVE need activation."
+}

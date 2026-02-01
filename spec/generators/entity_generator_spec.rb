@@ -159,14 +159,28 @@ RSpec.describe CloverSandboxSimulator::Generators::EntityGenerator do
   describe "#setup_discounts" do
     context "when discounts already exist" do
       it "is idempotent - does not create duplicates" do
+        # All discounts from the expanded discounts.json
         existing_discounts = [
           { "id" => "D1", "name" => "Happy Hour", "percentage" => 15 },
-          { "id" => "D2", "name" => "Senior Discount", "percentage" => 10 },
-          { "id" => "D3", "name" => "Military Discount", "percentage" => 15 },
-          { "id" => "D4", "name" => "Employee Discount", "percentage" => 25 },
-          { "id" => "D5", "name" => "Birthday Special", "percentage" => 20 },
-          { "id" => "D6", "name" => "$5 Off", "amount" => -500 },
-          { "id" => "D7", "name" => "$10 Off", "amount" => -1000 }
+          { "id" => "D2", "name" => "Lunch Special", "percentage" => 10 },
+          { "id" => "D3", "name" => "Early Bird", "percentage" => 12 },
+          { "id" => "D4", "name" => "Senior Discount", "percentage" => 10 },
+          { "id" => "D5", "name" => "Military Discount", "percentage" => 15 },
+          { "id" => "D6", "name" => "Employee Discount", "percentage" => 25 },
+          { "id" => "D7", "name" => "Birthday Special", "percentage" => 20 },
+          { "id" => "D8", "name" => "$5 Off", "amount" => -500 },
+          { "id" => "D9", "name" => "$10 Off", "amount" => -1000 },
+          { "id" => "D10", "name" => "$20 Off", "amount" => -2000 },
+          { "id" => "D11", "name" => "Loyalty - Bronze", "percentage" => 5 },
+          { "id" => "D12", "name" => "Loyalty - Silver", "percentage" => 10 },
+          { "id" => "D13", "name" => "Loyalty - Gold", "percentage" => 15 },
+          { "id" => "D14", "name" => "Loyalty - Platinum", "percentage" => 20 },
+          { "id" => "D15", "name" => "Appetizer 50% Off", "percentage" => 50 },
+          { "id" => "D16", "name" => "Drink Discount", "percentage" => 25 },
+          { "id" => "D17", "name" => "Dessert $2 Off", "amount" => -200 },
+          { "id" => "D18", "name" => "Happy Hour Drinks", "percentage" => 30 },
+          { "id" => "D19", "name" => "Free Side", "percentage" => 100 },
+          { "id" => "D20", "name" => "First Order Discount", "percentage" => 15 }
         ]
 
         stub_request(:get, "#{base_url}/discounts")
@@ -182,7 +196,7 @@ RSpec.describe CloverSandboxSimulator::Generators::EntityGenerator do
 
         discounts = generator.setup_discounts
 
-        expect(discounts.size).to eq(7)
+        expect(discounts.size).to eq(20)
         expect(create_stub).not_to have_been_requested
       end
     end

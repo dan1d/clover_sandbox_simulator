@@ -26,13 +26,15 @@ module CloverSandboxSimulator
 
     desc "generate", "Generate orders for today"
     option :count, type: :numeric, aliases: "-n", desc: "Number of orders to generate"
+    option :refund_percentage, type: :numeric, aliases: "-r", default: 5,
+           desc: "Percentage of orders to refund (0-100, default 5)"
     def generate
       configure_logging
 
       puts "🍽️  Clover Sandbox Simulator - Order Generation"
       puts "=" * 50
 
-      generator = Generators::OrderGenerator.new
+      generator = Generators::OrderGenerator.new(refund_percentage: options[:refund_percentage])
       count = options[:count]
 
       orders = generator.generate_today(count: count)
@@ -42,13 +44,15 @@ module CloverSandboxSimulator
 
     desc "day", "Generate a realistic full day of restaurant operations"
     option :multiplier, type: :numeric, aliases: "-m", default: 1.0, desc: "Order multiplier (0.5 = slow day, 2.0 = busy day)"
+    option :refund_percentage, type: :numeric, aliases: "-r", default: 5,
+           desc: "Percentage of orders to refund (0-100, default 5)"
     def day
       configure_logging
 
       puts "🍽️  Clover Sandbox Simulator - Realistic Restaurant Day"
       puts "=" * 50
 
-      generator = Generators::OrderGenerator.new
+      generator = Generators::OrderGenerator.new(refund_percentage: options[:refund_percentage])
       orders = generator.generate_realistic_day(multiplier: options[:multiplier])
 
       puts "\n✅ Generated #{orders.size} orders!"
@@ -96,6 +100,8 @@ module CloverSandboxSimulator
     desc "full", "Run full simulation (setup + generate orders)"
     option :count, type: :numeric, aliases: "-n", desc: "Number of orders to generate"
     option :business_type, type: :string, default: "restaurant", desc: "Business type"
+    option :refund_percentage, type: :numeric, aliases: "-r", default: 5,
+           desc: "Percentage of orders to refund (0-100, default 5)"
     def full
       configure_logging
 
@@ -109,7 +115,7 @@ module CloverSandboxSimulator
       puts "\n"
 
       # Generate orders
-      order_gen = Generators::OrderGenerator.new
+      order_gen = Generators::OrderGenerator.new(refund_percentage: options[:refund_percentage])
       orders = order_gen.generate_today(count: options[:count])
 
       puts "\n✅ Full simulation complete!"
@@ -150,6 +156,7 @@ module CloverSandboxSimulator
       employees = services.employee.get_employees
       customers = services.customer.get_customers
       discounts = services.discount.get_discounts
+      refunds = services.refund.fetch_refunds
 
       puts "Categories:  #{categories.size}"
       puts "Menu Items:  #{items.size}"
@@ -157,6 +164,7 @@ module CloverSandboxSimulator
       puts "Employees:   #{employees.size}"
       puts "Customers:   #{customers.size}"
       puts "Discounts:   #{discounts.size}"
+      puts "Refunds:     #{refunds.size}"
 
       puts "\n📋 Categories:"
       categories.each { |c| puts "   - #{c['name']}" }
@@ -165,12 +173,244 @@ module CloverSandboxSimulator
       tenders.each { |t| puts "   - #{t['label']}" }
     end
 
+    desc "refunds", "List all refunds"
+    option :limit, type: :numeric, aliases: "-l", desc: "Maximum number of refunds to show"
+    def refunds
+      configure_logging
+
+      puts "🍽️  Clover Sandbox Simulator - Refunds"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+      refunds = services.refund.fetch_refunds(limit: options[:limit])
+
+      if refunds.empty?
+        puts "No refunds found."
+        return
+      end
+
+      puts "Found #{refunds.size} refunds:\n\n"
+
+      total_amount = 0
+      refunds.each do |refund|
+        amount = refund["amount"] || 0
+        total_amount += amount
+        payment_id = refund.dig("payment", "id") || "N/A"
+        created_at = refund["createdTime"] ? Time.at(refund["createdTime"] / 1000).strftime("%Y-%m-%d %H:%M") : "N/A"
+
+        puts "  ID: #{refund['id']}"
+        puts "     Amount:     $#{'%.2f' % (amount / 100.0)}"
+        puts "     Payment:    #{payment_id}"
+        puts "     Created:    #{created_at}"
+        puts ""
+      end
+
+      puts "-" * 40
+      puts "Total refunded: $#{'%.2f' % (total_amount / 100.0)}"
+    end
+
+    desc "refund", "Create a refund for a payment"
+    option :payment_id, type: :string, aliases: "-p", required: true, desc: "Payment ID to refund"
+    option :amount, type: :numeric, aliases: "-a", desc: "Amount in cents (omit for full refund)"
+    option :reason, type: :string, aliases: "-r", default: "customer_request",
+           desc: "Refund reason (customer_request, quality_issue, wrong_order, duplicate_charge)"
+    def refund
+      configure_logging
+
+      puts "🍽️  Clover Sandbox Simulator - Create Refund"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+
+      if options[:amount]
+        puts "Creating partial refund of $#{'%.2f' % (options[:amount] / 100.0)}..."
+        result = services.refund.create_partial_refund(
+          payment_id: options[:payment_id],
+          amount: options[:amount],
+          reason: options[:reason]
+        )
+      else
+        puts "Creating full refund..."
+        result = services.refund.create_full_refund(
+          payment_id: options[:payment_id],
+          reason: options[:reason]
+        )
+      end
+
+      if result && result["id"]
+        puts "\n✅ Refund created successfully!"
+        puts "   Refund ID: #{result['id']}"
+        puts "   Amount:    $#{'%.2f' % ((result['amount'] || 0) / 100.0)}"
+      else
+        puts "\n❌ Failed to create refund."
+      end
+    end
+
     desc "version", "Show version"
     def version
       puts "Clover Sandbox Simulator v1.0.0"
     end
 
+    # ============================================
+    # Gift Card Commands
+    # ============================================
+
+    desc "gift_cards", "List all gift cards and their balances"
+    def gift_cards
+      configure_logging
+
+      puts "🎁 Clover Sandbox Simulator - Gift Cards"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+      cards = services.gift_card.fetch_gift_cards
+
+      if cards.empty?
+        puts "No gift cards found."
+        puts "\nCreate one with: simulate gift_card_create --amount 5000"
+        return
+      end
+
+      puts "\n#{'ID'.ljust(20)} #{'Card Number'.ljust(20)} #{'Balance'.rjust(12)} #{'Status'.ljust(10)}"
+      puts "-" * 65
+
+      total_balance = 0
+      cards.each do |card|
+        id = card["id"] || "N/A"
+        number = mask_card_number(card["cardNumber"] || "Unknown")
+        balance = card["balance"] || 0
+        status = card["status"] || "UNKNOWN"
+
+        total_balance += balance if status == "ACTIVE"
+
+        balance_str = "$#{'%.2f' % (balance / 100.0)}"
+        puts "#{id.ljust(20)} #{number.ljust(20)} #{balance_str.rjust(12)} #{status.ljust(10)}"
+      end
+
+      puts "-" * 65
+      puts "Total Active Balance: $#{'%.2f' % (total_balance / 100.0)}"
+      puts "\n✅ Found #{cards.size} gift cards"
+    end
+
+    desc "gift_card_create", "Create a new gift card"
+    option :amount, type: :numeric, aliases: "-a", required: true, desc: "Initial balance in cents (e.g., 5000 for $50)"
+    option :card_number, type: :string, aliases: "-n", desc: "Optional 16-digit card number"
+    def gift_card_create
+      configure_logging
+
+      puts "🎁 Clover Sandbox Simulator - Create Gift Card"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+
+      amount = options[:amount]
+      card_number = options[:card_number]
+
+      puts "Creating gift card with balance: $#{'%.2f' % (amount / 100.0)}"
+
+      result = services.gift_card.create_gift_card(
+        amount: amount,
+        card_number: card_number
+      )
+
+      if result && result["id"]
+        puts "\n✅ Gift card created successfully!"
+        puts "   ID:          #{result['id']}"
+        puts "   Card Number: #{mask_card_number(result['cardNumber'])}"
+        puts "   Balance:     $#{'%.2f' % ((result['balance'] || amount) / 100.0)}"
+        puts "   Status:      #{result['status']}"
+      else
+        puts "\n❌ Failed to create gift card"
+      end
+    end
+
+    desc "gift_card_balance", "Check gift card balance"
+    option :id, type: :string, aliases: "-i", required: true, desc: "Gift card ID"
+    def gift_card_balance
+      configure_logging
+
+      puts "🎁 Clover Sandbox Simulator - Gift Card Balance"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+
+      card = services.gift_card.get_gift_card(options[:id])
+
+      if card
+        puts "\nGift Card Details:"
+        puts "   ID:          #{card['id']}"
+        puts "   Card Number: #{mask_card_number(card['cardNumber'])}"
+        puts "   Balance:     $#{'%.2f' % ((card['balance'] || 0) / 100.0)}"
+        puts "   Status:      #{card['status']}"
+      else
+        puts "\n❌ Gift card not found: #{options[:id]}"
+      end
+    end
+
+    desc "gift_card_reload", "Add balance to a gift card"
+    option :id, type: :string, aliases: "-i", required: true, desc: "Gift card ID"
+    option :amount, type: :numeric, aliases: "-a", required: true, desc: "Amount to add in cents"
+    def gift_card_reload
+      configure_logging
+
+      puts "🎁 Clover Sandbox Simulator - Reload Gift Card"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+
+      gc_id = options[:id]
+      amount = options[:amount]
+
+      puts "Adding $#{'%.2f' % (amount / 100.0)} to gift card #{gc_id}"
+
+      result = services.gift_card.reload_gift_card(gc_id, amount: amount)
+
+      if result
+        puts "\n✅ Gift card reloaded successfully!"
+        puts "   New Balance: $#{'%.2f' % ((result['balance'] || 0) / 100.0)}"
+      else
+        puts "\n❌ Failed to reload gift card"
+      end
+    end
+
+    desc "gift_card_redeem", "Redeem/use balance from a gift card"
+    option :id, type: :string, aliases: "-i", required: true, desc: "Gift card ID"
+    option :amount, type: :numeric, aliases: "-a", required: true, desc: "Amount to redeem in cents"
+    def gift_card_redeem
+      configure_logging
+
+      puts "🎁 Clover Sandbox Simulator - Redeem Gift Card"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+
+      gc_id = options[:id]
+      amount = options[:amount]
+
+      puts "Redeeming $#{'%.2f' % (amount / 100.0)} from gift card #{gc_id}"
+
+      result = services.gift_card.redeem_gift_card(gc_id, amount: amount)
+
+      if result[:success]
+        puts "\n✅ Redemption successful!"
+        puts "   Amount Redeemed:   $#{'%.2f' % (result[:amount_redeemed] / 100.0)}"
+        puts "   Remaining Balance: $#{'%.2f' % (result[:remaining_balance] / 100.0)}"
+
+        if result[:shortfall] > 0
+          puts "   ⚠️  Shortfall:       $#{'%.2f' % (result[:shortfall] / 100.0)} (insufficient balance)"
+        end
+      else
+        puts "\n❌ Redemption failed: #{result[:message]}"
+      end
+    end
+
     private
+
+    def mask_card_number(card_number)
+      return card_number if card_number.nil? || card_number.length < 8
+
+      "#{card_number[0..3]}********#{card_number[-4..]}"
+    end
 
     def configure_logging
       if options[:verbose]

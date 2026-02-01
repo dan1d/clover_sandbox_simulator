@@ -1,0 +1,242 @@
+{
+  "combos": [
+    {
+      "id": "classic_meal",
+      "name": "Classic Meal Deal",
+      "description": "Entree + Side + Drink for a discount",
+      "discount_type": "percentage",
+      "discount_value": 15,
+      "required_components": [
+        {
+          "category": "Entrees",
+          "quantity": 1
+        },
+        {
+          "category": "Sides",
+          "quantity": 1
+        },
+        {
+          "category": "Drinks",
+          "quantity": 1
+        }
+      ],
+      "applies_to": "total",
+      "max_discount_amount": null,
+      "active": true
+    },
+    {
+      "id": "family_feast",
+      "name": "Family Feast",
+      "description": "2 Entrees + 2 Sides + 2 Drinks",
+      "discount_type": "percentage",
+      "discount_value": 20,
+      "required_components": [
+        {
+          "category": "Entrees",
+          "quantity": 2
+        },
+        {
+          "category": "Sides",
+          "quantity": 2
+        },
+        {
+          "category": "Drinks",
+          "quantity": 2
+        }
+      ],
+      "applies_to": "total",
+      "max_discount_amount": 2000,
+      "active": true
+    },
+    {
+      "id": "appetizer_sampler",
+      "name": "Appetizer Sampler",
+      "description": "Any 3 appetizers for 25% off",
+      "discount_type": "percentage",
+      "discount_value": 25,
+      "required_components": [
+        {
+          "category": "Appetizers",
+          "quantity": 3
+        }
+      ],
+      "applies_to": "matching_items",
+      "max_discount_amount": null,
+      "active": true
+    },
+    {
+      "id": "happy_hour_combo",
+      "name": "Happy Hour Combo",
+      "description": "Appetizer + 2 Drinks during happy hour",
+      "discount_type": "percentage",
+      "discount_value": 30,
+      "required_components": [
+        {
+          "category": "Appetizers",
+          "quantity": 1
+        },
+        {
+          "category": "Alcoholic Beverages",
+          "quantity": 2
+        }
+      ],
+      "applies_to": "total",
+      "time_restricted": true,
+      "time_rules": {
+        "start_hour": 15,
+        "end_hour": 18
+      },
+      "max_discount_amount": 1500,
+      "active": true
+    },
+    {
+      "id": "date_night",
+      "name": "Date Night Special",
+      "description": "2 Entrees + 1 Appetizer + 2 Drinks + 1 Dessert",
+      "discount_type": "fixed",
+      "discount_value": 1500,
+      "required_components": [
+        {
+          "category": "Entrees",
+          "quantity": 2
+        },
+        {
+          "category": "Appetizers",
+          "quantity": 1
+        },
+        {
+          "category": "Drinks",
+          "quantity": 2
+        },
+        {
+          "category": "Desserts",
+          "quantity": 1
+        }
+      ],
+      "applies_to": "total",
+      "max_discount_amount": null,
+      "active": true
+    },
+    {
+      "id": "burger_meal",
+      "name": "Burger Meal",
+      "description": "Any burger + fries + drink",
+      "discount_type": "percentage",
+      "discount_value": 12,
+      "required_components": [
+        {
+          "items": ["Classic Burger", "Bacon Cheeseburger"],
+          "quantity": 1
+        },
+        {
+          "items": ["French Fries", "Sweet Potato Fries", "Onion Rings"],
+          "quantity": 1
+        },
+        {
+          "category": "Drinks",
+          "quantity": 1
+        }
+      ],
+      "applies_to": "matching_items",
+      "max_discount_amount": null,
+      "active": true
+    },
+    {
+      "id": "dessert_duo",
+      "name": "Dessert Duo",
+      "description": "Any 2 desserts for 20% off",
+      "discount_type": "percentage",
+      "discount_value": 20,
+      "required_components": [
+        {
+          "category": "Desserts",
+          "quantity": 2
+        }
+      ],
+      "applies_to": "matching_items",
+      "max_discount_amount": null,
+      "active": true
+    },
+    {
+      "id": "lunch_special_combo",
+      "name": "Lunch Special Combo",
+      "description": "Entree + Soup of the Day + Drink",
+      "discount_type": "fixed",
+      "discount_value": 300,
+      "required_components": [
+        {
+          "category": "Entrees",
+          "quantity": 1
+        },
+        {
+          "items": ["Soup of the Day"],
+          "quantity": 1
+        },
+        {
+          "category": "Drinks",
+          "quantity": 1
+        }
+      ],
+      "applies_to": "total",
+      "time_restricted": true,
+      "time_rules": {
+        "start_hour": 11,
+        "end_hour": 14
+      },
+      "max_discount_amount": null,
+      "active": true
+    },
+    {
+      "id": "steak_night",
+      "name": "Steak Night",
+      "description": "Steak + Side + Wine for $10 off",
+      "discount_type": "fixed",
+      "discount_value": 1000,
+      "required_components": [
+        {
+          "items": ["NY Strip Steak"],
+          "quantity": 1
+        },
+        {
+          "category": "Sides",
+          "quantity": 1
+        },
+        {
+          "items": ["House Wine", "Premium Wine"],
+          "quantity": 1
+        }
+      ],
+      "applies_to": "total",
+      "day_restricted": true,
+      "valid_days": [1, 2, 3],
+      "max_discount_amount": null,
+      "active": true
+    },
+    {
+      "id": "kids_meal",
+      "name": "Kids Meal",
+      "description": "Side + Drink free with entree (kids under 12)",
+      "discount_type": "percentage",
+      "discount_value": 100,
+      "required_components": [
+        {
+          "category": "Entrees",
+          "quantity": 1
+        },
+        {
+          "category": "Sides",
+          "quantity": 1
+        },
+        {
+          "category": "Drinks",
+          "quantity": 1
+        }
+      ],
+      "applies_to": "cheapest_items",
+      "max_items_discounted": 2,
+      "requires_kid": true,
+      "max_discount_amount": 898,
+      "active": true
+    }
+  ]
+}

@@ -1,39 +1,198 @@
 {
   "discounts": [
     {
+      "id": "happy_hour",
       "name": "Happy Hour",
       "percentage": 15,
-      "description": "15% off during happy hour (3-6 PM)"
+      "description": "15% off during happy hour (3-6 PM)",
+      "type": "time_based",
+      "time_rules": {
+        "start_hour": 15,
+        "end_hour": 18
+      },
+      "auto_apply": true
     },
     {
+      "id": "lunch_special",
+      "name": "Lunch Special",
+      "percentage": 10,
+      "description": "10% off during lunch (11 AM - 2 PM)",
+      "type": "time_based",
+      "time_rules": {
+        "start_hour": 11,
+        "end_hour": 14
+      },
+      "auto_apply": true
+    },
+    {
+      "id": "early_bird",
+      "name": "Early Bird",
+      "percentage": 12,
+      "description": "12% off for orders before 6 PM",
+      "type": "time_based",
+      "time_rules": {
+        "start_hour": 0,
+        "end_hour": 18
+      },
+      "auto_apply": false
+    },
+    {
+      "id": "senior_discount",
       "name": "Senior Discount",
       "percentage": 10,
-      "description": "10% off for seniors 65+"
+      "description": "10% off for seniors 65+",
+      "type": "customer",
+      "auto_apply": false
     },
     {
+      "id": "military_discount",
       "name": "Military Discount",
       "percentage": 15,
-      "description": "15% off for active duty and veterans"
+      "description": "15% off for active duty and veterans",
+      "type": "customer",
+      "auto_apply": false
     },
     {
+      "id": "employee_discount",
       "name": "Employee Discount",
       "percentage": 25,
-      "description": "25% off for employees"
+      "description": "25% off for employees",
+      "type": "customer",
+      "auto_apply": false
     },
     {
+      "id": "birthday_special",
       "name": "Birthday Special",
       "percentage": 20,
-      "description": "20% off for birthday celebrations"
+      "description": "20% off for birthday celebrations",
+      "type": "customer",
+      "auto_apply": false
     },
     {
+      "id": "five_off",
       "name": "$5 Off",
       "amount": 500,
-      "description": "$5 off orders over $30"
+      "description": "$5 off orders over $30",
+      "type": "threshold",
+      "min_order_amount": 3000,
+      "auto_apply": false
     },
     {
+      "id": "ten_off",
       "name": "$10 Off",
       "amount": 1000,
-      "description": "$10 off orders over $50"
+      "description": "$10 off orders over $50",
+      "type": "threshold",
+      "min_order_amount": 5000,
+      "auto_apply": false
+    },
+    {
+      "id": "twenty_off",
+      "name": "$20 Off",
+      "amount": 2000,
+      "description": "$20 off orders over $100",
+      "type": "threshold",
+      "min_order_amount": 10000,
+      "auto_apply": false
+    },
+    {
+      "id": "loyalty_bronze",
+      "name": "Loyalty - Bronze",
+      "percentage": 5,
+      "description": "5% off for 5+ visits",
+      "type": "loyalty",
+      "min_visits": 5,
+      "auto_apply": true
+    },
+    {
+      "id": "loyalty_silver",
+      "name": "Loyalty - Silver",
+      "percentage": 10,
+      "description": "10% off for 10+ visits",
+      "type": "loyalty",
+      "min_visits": 10,
+      "auto_apply": true
+    },
+    {
+      "id": "loyalty_gold",
+      "name": "Loyalty - Gold",
+      "percentage": 15,
+      "description": "15% off for 25+ visits",
+      "type": "loyalty",
+      "min_visits": 25,
+      "auto_apply": true
+    },
+    {
+      "id": "loyalty_platinum",
+      "name": "Loyalty - Platinum",
+      "percentage": 20,
+      "description": "20% off for 50+ visits",
+      "type": "loyalty",
+      "min_visits": 50,
+      "auto_apply": true
+    },
+    {
+      "id": "appetizer_half_off",
+      "name": "Appetizer 50% Off",
+      "percentage": 50,
+      "description": "50% off any appetizer with entree purchase",
+      "type": "line_item",
+      "applicable_categories": ["Appetizers"],
+      "requires_category": ["Entrees"],
+      "auto_apply": false
+    },
+    {
+      "id": "drink_discount",
+      "name": "Drink Discount",
+      "percentage": 25,
+      "description": "25% off drinks with any food purchase",
+      "type": "line_item",
+      "applicable_categories": ["Drinks", "Alcoholic Beverages"],
+      "requires_category": ["Entrees", "Appetizers"],
+      "auto_apply": false
+    },
+    {
+      "id": "dessert_dollar_off",
+      "name": "Dessert $2 Off",
+      "amount": 200,
+      "description": "$2 off any dessert",
+      "type": "line_item",
+      "applicable_categories": ["Desserts"],
+      "auto_apply": false
+    },
+    {
+      "id": "happy_hour_drinks",
+      "name": "Happy Hour Drinks",
+      "percentage": 30,
+      "description": "30% off alcoholic beverages during happy hour",
+      "type": "line_item_time_based",
+      "applicable_categories": ["Alcoholic Beverages"],
+      "time_rules": {
+        "start_hour": 15,
+        "end_hour": 18
+      },
+      "auto_apply": true
+    },
+    {
+      "id": "free_side",
+      "name": "Free Side",
+      "percentage": 100,
+      "description": "Free side with entree purchase",
+      "type": "line_item",
+      "applicable_categories": ["Sides"],
+      "requires_category": ["Entrees"],
+      "max_items": 1,
+      "auto_apply": false
+    },
+    {
+      "id": "first_order",
+      "name": "First Order Discount",
+      "percentage": 15,
+      "description": "15% off your first order",
+      "type": "loyalty",
+      "min_visits": 0,
+      "max_visits": 1,
+      "auto_apply": true
     }
   ]
 }

@@ -117,4 +117,226 @@ RSpec.describe CloverSandboxSimulator::Generators::DataLoader do
       expect(appetizers.all? { |i| i["category"] == "Appetizers" }).to be true
     end
   end
+
+  # ============================================
+  # COUPON CODES TESTS
+  # ============================================
+
+  describe "#coupon_codes" do
+    it "loads coupon codes from JSON file" do
+      coupons = loader.coupon_codes
+
+      expect(coupons).to be_an(Array)
+      expect(coupons).not_to be_empty
+    end
+
+    it "includes coupons with required fields" do
+      coupons = loader.coupon_codes
+
+      coupons.each do |coupon|
+        expect(coupon).to have_key("code")
+        expect(coupon).to have_key("discount_type")
+        expect(coupon).to have_key("discount_value")
+        expect(coupon).to have_key("valid_from")
+        expect(coupon).to have_key("valid_until")
+        expect(coupon).to have_key("active")
+      end
+    end
+
+    it "includes both percentage and fixed discount types" do
+      coupons = loader.coupon_codes
+
+      has_percentage = coupons.any? { |c| c["discount_type"] == "percentage" }
+      has_fixed = coupons.any? { |c| c["discount_type"] == "fixed" }
+
+      expect(has_percentage).to be true
+      expect(has_fixed).to be true
+    end
+  end
+
+  describe "#active_coupon_codes" do
+    it "returns only active coupon codes" do
+      active = loader.active_coupon_codes
+
+      expect(active).to be_an(Array)
+      expect(active.all? { |c| c["active"] == true }).to be true
+    end
+
+    it "excludes inactive coupon codes" do
+      active = loader.active_coupon_codes
+      codes = active.map { |c| c["code"] }
+
+      expect(codes).not_to include("INACTIVE")
+    end
+  end
+
+  describe "#find_coupon" do
+    it "finds coupon by code" do
+      coupon = loader.find_coupon("SAVE10")
+
+      expect(coupon).not_to be_nil
+      expect(coupon["code"]).to eq("SAVE10")
+    end
+
+    it "finds coupon case-insensitively" do
+      coupon = loader.find_coupon("save10")
+
+      expect(coupon).not_to be_nil
+      expect(coupon["code"]).to eq("SAVE10")
+    end
+
+    it "returns nil for non-existent coupon" do
+      coupon = loader.find_coupon("NONEXISTENT")
+
+      expect(coupon).to be_nil
+    end
+  end
+
+  # ============================================
+  # COMBO TESTS
+  # ============================================
+
+  describe "#combos" do
+    it "loads combos from JSON file" do
+      combos = loader.combos
+
+      expect(combos).to be_an(Array)
+      expect(combos).not_to be_empty
+    end
+
+    it "includes combos with required fields" do
+      combos = loader.combos
+
+      combos.each do |combo|
+        expect(combo).to have_key("id")
+        expect(combo).to have_key("name")
+        expect(combo).to have_key("discount_type")
+        expect(combo).to have_key("discount_value")
+        expect(combo).to have_key("required_components")
+        expect(combo).to have_key("active")
+      end
+    end
+
+    it "includes required_components with category or items" do
+      combos = loader.combos
+
+      combos.each do |combo|
+        combo["required_components"].each do |component|
+          has_category = component.key?("category")
+          has_items = component.key?("items")
+          expect(has_category || has_items).to be true
+          expect(component).to have_key("quantity")
+        end
+      end
+    end
+  end
+
+  describe "#active_combos" do
+    it "returns only active combos" do
+      active = loader.active_combos
+
+      expect(active).to be_an(Array)
+      expect(active.all? { |c| c["active"] == true }).to be true
+    end
+  end
+
+  describe "#find_combo" do
+    it "finds combo by ID" do
+      combo = loader.find_combo("classic_meal")
+
+      expect(combo).not_to be_nil
+      expect(combo["id"]).to eq("classic_meal")
+      expect(combo["name"]).to eq("Classic Meal Deal")
+    end
+
+    it "returns nil for non-existent combo" do
+      combo = loader.find_combo("nonexistent_combo")
+
+      expect(combo).to be_nil
+    end
+  end
+
+  # ============================================
+  # DISCOUNT TYPE FILTERS
+  # ============================================
+
+  describe "#discounts_by_type" do
+    it "filters discounts by type" do
+      time_based = loader.discounts_by_type("time_based")
+
+      expect(time_based).to be_an(Array)
+      expect(time_based.all? { |d| d["type"] == "time_based" }).to be true
+    end
+
+    it "returns empty array for non-existent type" do
+      result = loader.discounts_by_type("nonexistent")
+
+      expect(result).to eq([])
+    end
+  end
+
+  describe "#time_based_discounts" do
+    it "returns time-based discounts" do
+      discounts = loader.time_based_discounts
+
+      expect(discounts).to be_an(Array)
+      expect(discounts).not_to be_empty
+
+      discounts.each do |discount|
+        expect(discount["type"]).to eq("time_based")
+        expect(discount).to have_key("time_rules")
+      end
+    end
+  end
+
+  describe "#line_item_discounts" do
+    it "returns line-item discounts" do
+      discounts = loader.line_item_discounts
+
+      expect(discounts).to be_an(Array)
+      expect(discounts).not_to be_empty
+
+      discounts.each do |discount|
+        expect(discount["type"]).to start_with("line_item")
+      end
+    end
+  end
+
+  describe "#loyalty_discounts" do
+    it "returns loyalty discounts" do
+      discounts = loader.loyalty_discounts
+
+      expect(discounts).to be_an(Array)
+      expect(discounts).not_to be_empty
+
+      discounts.each do |discount|
+        expect(discount["type"]).to eq("loyalty")
+        expect(discount).to have_key("min_visits")
+      end
+    end
+
+    it "includes all loyalty tiers" do
+      discounts = loader.loyalty_discounts
+      names = discounts.map { |d| d["name"] }
+
+      expect(names).to include("Loyalty - Bronze")
+      expect(names).to include("Loyalty - Silver")
+      expect(names).to include("Loyalty - Gold")
+      expect(names).to include("Loyalty - Platinum")
+    end
+  end
+
+  describe "#threshold_discounts" do
+    it "returns threshold discounts" do
+      discounts = loader.threshold_discounts
+
+      expect(discounts).to be_an(Array)
+      expect(discounts).not_to be_empty
+
+      discounts.each do |discount|
+        expect(discount["type"]).to eq("threshold")
+        expect(discount).to have_key("min_order_amount")
+      end
+    end
+  end
 end

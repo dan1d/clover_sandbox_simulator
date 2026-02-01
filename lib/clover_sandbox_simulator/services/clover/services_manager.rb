@@ -43,6 +43,14 @@ module CloverSandboxSimulator
         def customer
           @customer ||= CustomerService.new(config: config)
         end
+
+        def refund
+          @refund ||= RefundService.new(config: config)
+        end
+
+        def gift_card
+          @gift_card ||= GiftCardService.new(config: config)
+        end
       end
     end
   end

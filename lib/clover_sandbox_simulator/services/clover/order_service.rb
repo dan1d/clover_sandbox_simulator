@@ -94,6 +94,23 @@ module CloverSandboxSimulator
           request(:post, endpoint("orders/#{order_id}/discounts"), payload: payload)
         end
 
+        # Apply an inline discount without requiring a pre-existing discount ID
+        def apply_inline_discount(order_id, name:, percentage: nil, amount: nil)
+          logger.info "Applying inline discount '#{name}' to order #{order_id}"
+
+          payload = { "name" => name }
+
+          if percentage
+            payload["percentage"] = percentage.to_s
+          elsif amount
+            payload["amount"] = -amount.abs
+          else
+            raise ArgumentError, "Must provide either percentage or amount"
+          end
+
+          request(:post, endpoint("orders/#{order_id}/discounts"), payload: payload)
+        end
+
         # Set dining option
         def set_dining_option(order_id, option)
           unless DINING_OPTIONS.include?(option)

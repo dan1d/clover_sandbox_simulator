@@ -452,6 +452,7 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
     let(:mock_order) { double("OrderService") }
     let(:mock_tax) { double("TaxService") }
     let(:mock_payment) { double("PaymentService") }
+    let(:mock_gift_card) { double("GiftCardService") }
 
     let(:generator_with_mocks) { described_class.new(services: mock_services) }
 
@@ -479,6 +480,10 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
       [{ "id" => "DISC1", "name" => "Happy Hour", "percentage" => 10 }]
     end
 
+    let(:sample_gift_cards) do
+      [{ "id" => "GC1", "balance" => 5000, "status" => "ACTIVE" }]
+    end
+
     before do
       allow(mock_services).to receive(:inventory).and_return(mock_inventory)
       allow(mock_services).to receive(:employee).and_return(mock_employee)
@@ -488,9 +493,29 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
       allow(mock_services).to receive(:order).and_return(mock_order)
       allow(mock_services).to receive(:tax).and_return(mock_tax)
       allow(mock_services).to receive(:payment).and_return(mock_payment)
+      allow(mock_services).to receive(:gift_card).and_return(mock_gift_card)
+      allow(mock_gift_card).to receive(:fetch_gift_cards).and_return(sample_gift_cards)
     end
 
     context "with specific count" do
+      before do
+        # Discount service method mocks for enhanced discount support
+        allow(mock_discount).to receive(:apply_promo_code).and_return(nil)
+        allow(mock_discount).to receive(:apply_line_item_discount).and_return(nil)
+        allow(mock_discount).to receive(:apply_threshold_discount).and_return(nil)
+        allow(mock_discount).to receive(:apply_time_based_discount).and_return(nil)
+        allow(mock_discount).to receive(:apply_combo_discount).and_return(nil)
+        allow(mock_discount).to receive(:apply_loyalty_discount).and_return(nil)
+
+        # Gift card redemption mock
+        allow(mock_gift_card).to receive(:redeem_gift_card).and_return({
+          success: true,
+          amount_redeemed: 2500,
+          remaining_balance: 2500,
+          shortfall: 0
+        })
+      end
+
       it "generates the specified number of orders" do
         allow(mock_inventory).to receive(:get_items).and_return(sample_items)
         allow(mock_employee).to receive(:get_employees).and_return(sample_employees)
@@ -500,7 +525,7 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
 
         allow(mock_order).to receive(:create_order).and_return({ "id" => "ORDER_#{rand(1000)}" })
         allow(mock_order).to receive(:set_dining_option)
-        allow(mock_order).to receive(:add_line_items)
+        allow(mock_order).to receive(:add_line_items).and_return([{ "id" => "LI1", "price" => 1000 }])
         allow(mock_order).to receive(:apply_discount)
         allow(mock_order).to receive(:calculate_total).and_return(2500)
         allow(mock_order).to receive(:update_total)
@@ -571,6 +596,7 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
     let(:mock_order) { double("OrderService") }
     let(:mock_tax) { double("TaxService") }
     let(:mock_payment) { double("PaymentService") }
+    let(:mock_gift_card) { double("GiftCardService") }
 
     let(:generator_with_mocks) { described_class.new(services: mock_services) }
 
@@ -594,6 +620,7 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
     let(:sample_customers) { [{ "id" => "CUST1", "firstName" => "Jane" }] }
     let(:sample_tenders) { [{ "id" => "TENDER1", "label" => "Cash" }] }
     let(:sample_discounts) { [] }
+    let(:sample_gift_cards) { [{ "id" => "GC1", "balance" => 5000, "status" => "ACTIVE" }] }
 
     before do
       allow(mock_services).to receive(:inventory).and_return(mock_inventory)
@@ -604,16 +631,18 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
       allow(mock_services).to receive(:order).and_return(mock_order)
       allow(mock_services).to receive(:tax).and_return(mock_tax)
       allow(mock_services).to receive(:payment).and_return(mock_payment)
+      allow(mock_services).to receive(:gift_card).and_return(mock_gift_card)
 
       allow(mock_inventory).to receive(:get_items).and_return(sample_items)
       allow(mock_employee).to receive(:get_employees).and_return(sample_employees)
       allow(mock_customer).to receive(:get_customers).and_return(sample_customers)
       allow(mock_tender).to receive(:get_safe_tenders).and_return(sample_tenders)
       allow(mock_discount).to receive(:get_discounts).and_return(sample_discounts)
+      allow(mock_gift_card).to receive(:fetch_gift_cards).and_return(sample_gift_cards)
 
       allow(mock_order).to receive(:create_order).and_return({ "id" => "ORDER_#{rand(1000)}" })
       allow(mock_order).to receive(:set_dining_option)
-      allow(mock_order).to receive(:add_line_items)
+      allow(mock_order).to receive(:add_line_items).and_return([{ "id" => "LI1", "price" => 1000 }])
       allow(mock_order).to receive(:apply_discount)
       allow(mock_order).to receive(:calculate_total).and_return(2500)
       allow(mock_order).to receive(:update_total)
@@ -624,6 +653,28 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
 
       allow(mock_payment).to receive(:process_payment)
       allow(mock_payment).to receive(:process_split_payment)
+
+      # Discount service method mocks for enhanced discount support
+      allow(mock_discount).to receive(:apply_promo_code).and_return(nil)
+      allow(mock_discount).to receive(:apply_line_item_discount).and_return(nil)
+      allow(mock_discount).to receive(:apply_threshold_discount).and_return(nil)
+      allow(mock_discount).to receive(:apply_time_based_discount).and_return(nil)
+      allow(mock_discount).to receive(:apply_combo_discount).and_return(nil)
+      allow(mock_discount).to receive(:apply_loyalty_discount).and_return(nil)
+      allow(mock_discount).to receive(:get_loyalty_discount).and_return(nil)
+      allow(mock_discount).to receive(:get_combo_discount).and_return(nil)
+      allow(mock_discount).to receive(:get_time_based_discounts).and_return([])
+      allow(mock_discount).to receive(:detect_combos).and_return([])
+      allow(mock_discount).to receive(:load_discount_definitions).and_return([])
+      allow(mock_discount).to receive(:get_coupon_codes).and_return([])
+
+      # Gift card service mock (gift card redemption may be called)
+      allow(mock_gift_card).to receive(:redeem_gift_card).and_return({
+        success: true,
+        amount_redeemed: 2500,
+        remaining_balance: 2500,
+        shortfall: 0
+      })
     end
 
     it "distributes orders across meal periods" do
