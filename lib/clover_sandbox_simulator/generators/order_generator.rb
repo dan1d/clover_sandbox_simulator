@@ -392,6 +392,14 @@ module CloverSandboxSimulator
 
         added_line_items = services.order.add_line_items(order_id, line_items)
 
+        # Validate that at least one line item was added
+        # Payments should not be created for orders without items
+        if added_line_items.empty?
+          logger.warn "Order #{order_id}: No line items added, skipping payment creation"
+          services.order.update_state(order_id, "open")
+          return nil
+        end
+
         # Enrich line items with category data for discount processing
         enriched_items = enrich_line_items(added_line_items, selected_items)
 

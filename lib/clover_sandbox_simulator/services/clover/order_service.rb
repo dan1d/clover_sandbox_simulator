@@ -54,10 +54,16 @@ module CloverSandboxSimulator
         end
 
         # Batch add line items (adds one by one as Clover doesn't support bulk)
-        def add_line_items(order_id, items)
+        # @param order_id [String] The order ID to add items to
+        # @param items [Array<Hash>] Array of items with :item_id, :quantity, :note
+        # @param raise_on_empty [Boolean] If true, raises an error when no items are added
+        # @return [Array] Successfully added line items
+        def add_line_items(order_id, items, raise_on_empty: false)
           logger.info "Adding #{items.size} items to order #{order_id}"
 
           line_items = []
+          failed_count = 0
+
           items.each do |item|
             line_item = add_line_item(
               order_id,
@@ -65,7 +71,21 @@ module CloverSandboxSimulator
               quantity: item[:quantity] || 1,
               note: item[:note]
             )
-            line_items << line_item if line_item
+
+            if line_item
+              line_items << line_item
+            else
+              failed_count += 1
+              logger.debug "Failed to add item #{item[:item_id]} to order #{order_id}"
+            end
+          end
+
+          if line_items.empty? && items.any?
+            message = "All #{items.size} line items failed to be added to order #{order_id}"
+            logger.warn message
+            raise StandardError, message if raise_on_empty
+          elsif failed_count > 0
+            logger.warn "#{failed_count} of #{items.size} line items failed to be added to order #{order_id}"
           end
 
           line_items
