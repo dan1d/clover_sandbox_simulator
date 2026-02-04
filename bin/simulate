@@ -9,6 +9,32 @@ module CloverSandboxSimulator
   # Command-line interface for Clover Sandbox Simulator
   class CLI < Thor
     class_option :verbose, type: :boolean, aliases: "-v", desc: "Enable verbose logging"
+    class_option :merchant, type: :string, aliases: "-m", desc: "Merchant ID to use (from .env.json)"
+    class_option :merchant_index, type: :numeric, aliases: "-i", desc: "Merchant index to use (0-based, from .env.json)"
+
+    desc "merchants", "List available merchants from .env.json"
+    def merchants
+      puts "🍽️  Clover Sandbox Simulator - Available Merchants"
+      puts "=" * 60
+
+      config = CloverSandboxSimulator.configuration
+      merchants = config.available_merchants
+
+      if merchants.empty?
+        puts "No merchants found in .env.json"
+        return
+      end
+
+      puts "\n#{'Index'.ljust(6)} #{'Merchant ID'.ljust(16)} #{'Name'.ljust(25)} #{'eComm'}"
+      puts "-" * 60
+
+      merchants.each_with_index do |m, idx|
+        ecomm = m[:has_ecommerce] ? "✓" : "-"
+        puts "#{idx.to_s.ljust(6)} #{m[:id].ljust(16)} #{m[:name][0..23].ljust(25)} #{ecomm}"
+      end
+
+      puts "\nUse: simulate <command> -i <index> or -m <merchant_id>"
+    end
 
     desc "setup", "Set up restaurant entities (categories, items, discounts, employees, customers)"
     option :business_type, type: :string, default: "restaurant", desc: "Business type (restaurant, retail, salon)"
@@ -43,7 +69,7 @@ module CloverSandboxSimulator
     end
 
     desc "day", "Generate a realistic full day of restaurant operations"
-    option :multiplier, type: :numeric, aliases: "-m", default: 1.0, desc: "Order multiplier (0.5 = slow day, 2.0 = busy day)"
+    option :multiplier, type: :numeric, aliases: "-x", default: 1.0, desc: "Order multiplier (0.5 = slow day, 2.0 = busy day)"
     option :refund_percentage, type: :numeric, aliases: "-r", default: 5,
            desc: "Percentage of orders to refund (0-100, default 5)"
     def day
@@ -413,11 +439,22 @@ module CloverSandboxSimulator
     end
 
     def configure_logging
+      config = CloverSandboxSimulator.configuration
+
       if options[:verbose]
-        CloverSandboxSimulator.configuration.logger.level = Logger::DEBUG
+        config.logger.level = Logger::DEBUG
       else
-        CloverSandboxSimulator.configuration.logger.level = Logger::INFO
+        config.logger.level = Logger::INFO
       end
+
+      # Load specific merchant if specified
+      if options[:merchant]
+        config.load_merchant(merchant_id: options[:merchant])
+      elsif options[:merchant_index]
+        config.load_merchant(index: options[:merchant_index])
+      end
+
+      puts "Using merchant: #{config.merchant_name} (#{config.merchant_id})"
     end
 
     def print_order_summary(orders)

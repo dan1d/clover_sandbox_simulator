@@ -10,7 +10,7 @@ module CloverSandboxSimulator
       #
       # Usage:
       #   oauth = OauthService.new
-      #   
+      #
       #   # Check if token needs refresh
       #   if oauth.token_expired?
       #     new_token = oauth.refresh_token

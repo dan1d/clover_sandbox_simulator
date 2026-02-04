@@ -7,7 +7,7 @@ module CloverSandboxSimulator
   #
   # Usage:
   #   executor = ParallelExecutor.new
-  #   
+  #
   #   # Run a block for each merchant
   #   results = executor.run_all do |services, merchant|
   #     charge = services.ecommerce.create_test_charge(amount: 1000)
