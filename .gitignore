@@ -6,6 +6,7 @@ Gemfile.lock
 # Environment
 .env
 .env.local
+.env.json
 
 # IDE
 .idea/
