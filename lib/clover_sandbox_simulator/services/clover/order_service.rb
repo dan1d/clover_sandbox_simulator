@@ -250,6 +250,74 @@ module CloverSandboxSimulator
           logger.info "Deleting order: #{order_id}"
           request(:delete, endpoint("orders/#{order_id}"))
         end
+
+        # Delete all orders for today
+        # @param batch_size [Integer] Number of orders to fetch per batch
+        # @return [Integer] Total number of orders deleted
+        def delete_all_orders(batch_size: 100)
+          logger.warn "Deleting all orders..."
+          total_deleted = 0
+          offset = 0
+
+          loop do
+            orders = get_orders(limit: batch_size, offset: 0)
+            break if orders.empty?
+
+            orders.each do |order|
+              begin
+                delete_order(order["id"])
+                total_deleted += 1
+                logger.debug "Deleted order #{order['id']}"
+              rescue StandardError => e
+                logger.warn "Failed to delete order #{order['id']}: #{e.message}"
+              end
+            end
+
+            # Safety: if we got fewer than batch_size, we're done
+            break if orders.size < batch_size
+          end
+
+          logger.info "Deleted #{total_deleted} orders"
+          total_deleted
+        end
+
+        # Delete orders created within a time range
+        # @param since [Time] Start time (default: beginning of today)
+        # @param until_time [Time] End time (default: now)
+        # @return [Integer] Total number of orders deleted
+        def delete_orders_since(since: nil, until_time: nil)
+          since ||= Time.now.to_date.to_time
+          until_time ||= Time.now
+
+          logger.warn "Deleting orders from #{since} to #{until_time}..."
+
+          # Clover uses millisecond timestamps
+          since_ms = (since.to_f * 1000).to_i
+          until_ms = (until_time.to_f * 1000).to_i
+
+          total_deleted = 0
+
+          loop do
+            # Filter by createdTime
+            filter = "createdTime>=#{since_ms}&createdTime<=#{until_ms}"
+            orders = get_orders(limit: 100, filter: filter)
+            break if orders.empty?
+
+            orders.each do |order|
+              begin
+                delete_order(order["id"])
+                total_deleted += 1
+              rescue StandardError => e
+                logger.warn "Failed to delete order #{order['id']}: #{e.message}"
+              end
+            end
+
+            break if orders.size < 100
+          end
+
+          logger.info "Deleted #{total_deleted} orders"
+          total_deleted
+        end
       end
     end
   end

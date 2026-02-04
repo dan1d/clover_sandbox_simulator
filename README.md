@@ -160,6 +160,14 @@ Run a full simulation (setup + generate orders):
 ./bin/simulate cash_open_drawer -a 10000     # Open drawer with $100 starting cash
 ./bin/simulate cash_close_drawer -e EMP_ID   # Close drawer for employee
 
+# List recent orders
+./bin/simulate orders
+./bin/simulate orders -l 50              # Show 50 orders
+
+# Reset orders (delete all orders, keep menu/employees)
+./bin/simulate reset_orders --confirm    # Delete today's orders
+./bin/simulate reset_orders --confirm --no-today-only  # Delete ALL orders
+
 # Delete all entities (requires confirmation)
 ./bin/simulate delete --confirm
 

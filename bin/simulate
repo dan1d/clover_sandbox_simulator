@@ -167,6 +167,79 @@ module CloverSandboxSimulator
       puts "\n✅ All entities deleted!"
     end
 
+    desc "reset_orders", "Delete all orders (keeps menu items, employees, etc.)"
+    option :confirm, type: :boolean, desc: "Confirm deletion"
+    option :today_only, type: :boolean, default: true, desc: "Only delete today's orders (default: true)"
+    def reset_orders
+      unless options[:confirm]
+        puts "⚠️  This will delete all orders from Clover!"
+        puts "   Your menu items, employees, customers, and other entities will be kept."
+        puts "   Run with --confirm to proceed."
+        return
+      end
+
+      configure_logging
+
+      puts "🗑️  Clover Sandbox Simulator - Reset Orders"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+
+      # First, show what will be deleted
+      if options[:today_only]
+        puts "Deleting today's orders..."
+        count = services.order.delete_orders_since
+      else
+        puts "Deleting ALL orders..."
+        count = services.order.delete_all_orders
+      end
+
+      puts "\n✅ Deleted #{count} orders!"
+      puts "   Your menu, employees, and customers are still intact."
+      puts "   Run 'simulate generate' to create new orders."
+    end
+
+    desc "orders", "List recent orders"
+    option :limit, type: :numeric, aliases: "-l", default: 20, desc: "Number of orders to show"
+    def orders
+      configure_logging
+
+      puts "📋 Clover Sandbox Simulator - Recent Orders"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+      orders = services.order.get_orders(limit: options[:limit])
+
+      if orders.empty?
+        puts "No orders found."
+        puts "\nRun 'simulate generate' to create orders."
+        return
+      end
+
+      puts "\nFound #{orders.size} orders:\n\n"
+
+      total_revenue = 0
+      orders.each do |order|
+        created = order["createdTime"] ? Time.at(order["createdTime"] / 1000).strftime("%H:%M:%S") : "N/A"
+        total = order["total"] || 0
+        total_revenue += total
+        state = order["state"] || "unknown"
+        title = order["title"] || "Order"
+
+        state_emoji = case state
+                      when "open" then "🟡"
+                      when "locked" then "🔒"
+                      when "paid" then "✅"
+                      else "⚪"
+                      end
+
+        puts "#{state_emoji} #{title} | $#{'%.2f' % (total / 100.0)} | #{created} | #{order['id']}"
+      end
+
+      puts "\n" + "-" * 50
+      puts "Total: $#{'%.2f' % (total_revenue / 100.0)} across #{orders.size} orders"
+    end
+
     desc "status", "Show current Clover merchant status"
     def status
       configure_logging
