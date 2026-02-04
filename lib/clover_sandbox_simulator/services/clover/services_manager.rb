@@ -51,6 +51,29 @@ module CloverSandboxSimulator
         def gift_card
           @gift_card ||= GiftCardService.new(config: config)
         end
+
+        def ecommerce
+          @ecommerce ||= EcommerceService.new(config: config)
+        end
+
+        def oauth
+          @oauth ||= OauthService.new(config: config)
+        end
+
+        # Check if Ecommerce API is available
+        def ecommerce_available?
+          config.ecommerce_enabled?
+        end
+
+        # Check if OAuth is configured
+        def oauth_available?
+          oauth.oauth_configured?
+        end
+
+        # Check if current token is expired
+        def token_expired?
+          oauth.token_expired?
+        end
       end
     end
   end

@@ -575,12 +575,14 @@ module CloverSandboxSimulator
 
             if eligible_items.any?
               item = eligible_items.first
+              item_price = item["price"] || item.dig("item", "price") || 0
               result = discount_service.apply_line_item_discount(
                 order_id,
                 line_item_id: item["id"],
                 name: discount["name"],
                 percentage: discount["percentage"],
-                amount: discount["amount"]
+                amount: discount["amount"],
+                item_price: item_price
               )
               if result
                 applied = { type: :line_item, name: discount["name"] }
@@ -635,12 +637,14 @@ module CloverSandboxSimulator
           return nil if eligible.empty?
 
           eligible.each do |item|
+            item_price = item["price"] || item.dig("item", "price") || 0
             services.discount.apply_line_item_discount(
               order_id,
               line_item_id: item["id"],
               name: discount["name"],
               percentage: discount["percentage"],
-              amount: discount["amount"]
+              amount: discount["amount"],
+              item_price: item_price
             )
           end
           true

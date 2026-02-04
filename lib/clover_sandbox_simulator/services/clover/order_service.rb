@@ -92,6 +92,8 @@ module CloverSandboxSimulator
         end
 
         # Apply discount to order
+        # IMPORTANT: Always sends calculated amount, not percentage, so that
+        # the discount amount is correctly returned when fetching the order.
         def apply_discount(order_id, discount_id:, calculated_amount: nil)
           logger.info "Applying discount #{discount_id} to order #{order_id}"
 
@@ -108,22 +110,40 @@ module CloverSandboxSimulator
           elsif discount["amount"]
             payload["amount"] = discount["amount"]
           elsif discount["percentage"]
-            payload["percentage"] = discount["percentage"].to_s
+            # For percentage discounts, we MUST calculate the amount
+            # because Clover returns amount=0 for percentage discounts when fetched
+            order_total = calculate_total(order_id)
+            calculated = (order_total * discount["percentage"] / 100.0).round
+            logger.info "Calculated discount: #{discount["percentage"]}% of #{order_total} = #{calculated}"
+            payload["amount"] = -calculated.abs
           end
 
           request(:post, endpoint("orders/#{order_id}/discounts"), payload: payload)
         end
 
         # Apply an inline discount without requiring a pre-existing discount ID
-        def apply_inline_discount(order_id, name:, percentage: nil, amount: nil)
+        # IMPORTANT: For percentage discounts, caller should provide the order_total
+        # so we can calculate the actual amount. Otherwise Clover returns amount=0.
+        def apply_inline_discount(order_id, name:, percentage: nil, amount: nil, order_total: nil)
           logger.info "Applying inline discount '#{name}' to order #{order_id}"
 
           payload = { "name" => name }
 
-          if percentage
-            payload["percentage"] = percentage.to_s
-          elsif amount
+          if amount
             payload["amount"] = -amount.abs
+          elsif percentage
+            # Calculate the actual amount for percentage discounts
+            if order_total
+              calculated = (order_total * percentage / 100.0).round
+              logger.info "Calculated inline discount: #{percentage}% of #{order_total} = #{calculated}"
+              payload["amount"] = -calculated.abs
+            else
+              # Fallback: fetch order total and calculate
+              total = calculate_total(order_id)
+              calculated = (total * percentage / 100.0).round
+              logger.info "Calculated inline discount: #{percentage}% of #{total} = #{calculated}"
+              payload["amount"] = -calculated.abs
+            end
           else
             raise ArgumentError, "Must provide either percentage or amount"
           end

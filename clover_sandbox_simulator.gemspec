@@ -20,9 +20,11 @@ Gem::Specification.new do |spec|
   # Runtime dependencies
   spec.add_dependency "rest-client", "~> 2.1"
   spec.add_dependency "dotenv", "~> 3.0"
-  spec.add_dependency "thor", "~> 1.3"          # CLI framework
-  spec.add_dependency "faker", "~> 3.2"         # Realistic data generation
-  spec.add_dependency "zeitwerk", "~> 2.6"      # Modern autoloading
+  spec.add_dependency "thor", "~> 1.3"                    # CLI framework
+  spec.add_dependency "faker", "~> 3.2"                   # Realistic data generation
+  spec.add_dependency "zeitwerk", "~> 2.6"                # Modern autoloading
+  spec.add_dependency "omniauth-clover-oauth2", "~> 1.1"  # Clover OAuth2 authentication
+  spec.add_dependency "concurrent-ruby", "~> 1.2"         # Parallel execution
 
   # Development dependencies
   spec.add_development_dependency "rspec", "~> 3.12"

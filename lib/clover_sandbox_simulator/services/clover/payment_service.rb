@@ -4,9 +4,16 @@ module CloverSandboxSimulator
   module Services
     module Clover
       # Manages Clover payments
-      # NOTE: Credit/Debit card payments are BROKEN in Clover sandbox
-      # Use Cash, Check, Gift Card, External Payment, Store Credit instead
+      # Supports both Platform API payments (non-card) and Ecommerce API (card payments)
+      #
+      # For card payments, use the Ecommerce API methods which create real charges
+      # that can be properly refunded.
       class PaymentService < BaseService
+        def initialize(config: nil)
+          super
+          @ecommerce_service = nil
+        end
+
         # Fetch all payments
         def get_payments
           logger.info "Fetching payments..."
@@ -116,6 +123,92 @@ module CloverSandboxSimulator
         def generate_tip(subtotal)
           tip_percentage = rand(15..25)
           (subtotal * tip_percentage / 100.0).round
+        end
+
+        # ========== ECOMMERCE API METHODS (Card Payments) ==========
+
+        # Check if Ecommerce API is available for card payments
+        def ecommerce_available?
+          config.ecommerce_enabled?
+        end
+
+        # Process a card payment using Ecommerce API
+        # Creates a real charge that can be refunded
+        #
+        # @param amount [Integer] Amount in cents
+        # @param card_type [Symbol] Type of test card (:visa, :mastercard, :amex, :discover)
+        # @param order_id [String, nil] Optional order ID to link
+        # @return [Hash, nil] Charge response with id
+        def process_card_payment(amount:, card_type: :visa, order_id: nil)
+          unless ecommerce_available?
+            logger.warn "Ecommerce API not configured, cannot process card payment"
+            return nil
+          end
+
+          logger.info "Processing card payment: $#{amount / 100.0} (#{card_type})"
+
+          # Create card token
+          token = ecommerce_service.create_test_card_token(card_type: card_type)
+          return nil unless token && token["id"]
+
+          # Create charge
+          charge = ecommerce_service.create_charge(
+            amount: amount,
+            source: token["id"],
+            order_id: order_id
+          )
+
+          if charge && charge["id"]
+            logger.info "Card payment successful: #{charge['id']} - $#{charge['amount'] / 100.0}"
+          end
+
+          charge
+        end
+
+        # Process a card payment with tip
+        #
+        # @param subtotal [Integer] Subtotal amount in cents
+        # @param tip_amount [Integer] Tip amount in cents
+        # @param card_type [Symbol] Type of test card
+        # @return [Hash, nil] Charge response
+        def process_card_payment_with_tip(subtotal:, tip_amount:, card_type: :visa)
+          total = subtotal + tip_amount
+          logger.info "Processing card payment with tip: $#{subtotal / 100.0} + $#{tip_amount / 100.0} tip"
+
+          charge = process_card_payment(amount: total, card_type: card_type)
+
+          if charge
+            # Add tip info to response for tracking
+            charge["tip_amount"] = tip_amount
+            charge["subtotal"] = subtotal
+          end
+
+          charge
+        end
+
+        # Get the Ecommerce service
+        def ecommerce_service
+          @ecommerce_service ||= EcommerceService.new(config: config)
+        end
+
+        # Create a refund for a card payment
+        #
+        # @param charge_id [String] The charge ID to refund
+        # @param amount [Integer, nil] Amount to refund (nil for full)
+        # @return [Hash, nil] Refund response
+        def refund_card_payment(charge_id:, amount: nil)
+          unless ecommerce_available?
+            logger.warn "Ecommerce API not configured, cannot refund card payment"
+            return nil
+          end
+
+          if amount
+            logger.info "Refunding card payment #{charge_id}: $#{amount / 100.0}"
+          else
+            logger.info "Fully refunding card payment #{charge_id}"
+          end
+
+          ecommerce_service.create_refund(charge_id: charge_id, amount: amount)
         end
       end
     end

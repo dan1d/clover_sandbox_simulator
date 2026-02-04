@@ -75,14 +75,16 @@ module CloverSandboxSimulator
 
         # Apply discount to a specific line item
         # Uses Clover's line item discount API
-        def apply_line_item_discount(order_id, line_item_id:, discount_id: nil, name: nil, percentage: nil, amount: nil)
+        # @param item_price [Integer] Item price in cents (required for percentage discounts)
+        def apply_line_item_discount(order_id, line_item_id:, discount_id: nil, name: nil, percentage: nil, amount: nil, item_price: nil)
           logger.info "Applying line item discount to order #{order_id}, line item #{line_item_id}"
 
           payload = build_discount_payload(
             discount_id: discount_id,
             name: name,
             percentage: percentage,
-            amount: amount
+            amount: amount,
+            item_price: item_price
           )
 
           return nil if payload.empty?
@@ -515,7 +517,10 @@ module CloverSandboxSimulator
 
         private
 
-        def build_discount_payload(discount_id: nil, name: nil, percentage: nil, amount: nil)
+        # Build discount payload for line item discounts
+        # IMPORTANT: For percentage discounts, we need the item_price to calculate
+        # the actual amount. Clover returns amount=0 for percentage discounts.
+        def build_discount_payload(discount_id: nil, name: nil, percentage: nil, amount: nil, item_price: nil)
           if discount_id
             discount = get_discount(discount_id)
             return {} unless discount
@@ -524,14 +529,31 @@ module CloverSandboxSimulator
             if discount["amount"]
               payload["amount"] = discount["amount"]
             elsif discount["percentage"]
-              payload["percentage"] = discount["percentage"].to_s
+              # Calculate actual amount for percentage discounts
+              if item_price
+                calculated = (item_price * discount["percentage"] / 100.0).round
+                payload["amount"] = -calculated.abs
+              else
+                # Fallback to percentage (will result in amount=0 when fetched)
+                logger.warn "No item_price provided for percentage discount - amount may be 0 when fetched"
+                payload["percentage"] = discount["percentage"].to_s
+              end
             end
             payload
           else
             payload = {}
             payload["name"] = name if name
-            payload["amount"] = -amount.abs if amount
-            payload["percentage"] = percentage.to_s if percentage
+            if amount
+              payload["amount"] = -amount.abs
+            elsif percentage && item_price
+              # Calculate actual amount for percentage discounts
+              calculated = (item_price * percentage / 100.0).round
+              payload["amount"] = -calculated.abs
+            elsif percentage
+              # Fallback to percentage (will result in amount=0 when fetched)
+              logger.warn "No item_price provided for percentage discount - amount may be 0 when fetched"
+              payload["percentage"] = percentage.to_s
+            end
             payload
           end
         end
