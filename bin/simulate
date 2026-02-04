@@ -183,17 +183,56 @@ module CloverSandboxSimulator
       customers = services.customer.get_customers
       discounts = services.discount.get_discounts
       refunds = services.refund.fetch_refunds
+      modifier_groups = services.inventory.get_modifier_groups
+      order_types = services.order_type.get_order_types
+      tax_rates = services.tax.get_tax_rates
 
-      puts "Categories:  #{categories.size}"
-      puts "Menu Items:  #{items.size}"
-      puts "Tenders:     #{tenders.size} (sandbox-safe)"
-      puts "Employees:   #{employees.size}"
-      puts "Customers:   #{customers.size}"
-      puts "Discounts:   #{discounts.size}"
-      puts "Refunds:     #{refunds.size}"
+      # Fetch active shifts (may fail gracefully)
+      active_shifts = begin
+        services.shift.get_active_shifts
+      rescue StandardError
+        []
+      end
+
+      # Fetch service charges (may not be supported)
+      service_charges = begin
+        services.service_charge.get_service_charges
+      rescue StandardError
+        []
+      end
+
+      puts "\n📊 Entity Counts:"
+      puts "   Categories:       #{categories.size}"
+      puts "   Menu Items:       #{items.size}"
+      puts "   Modifier Groups:  #{modifier_groups.size}"
+      puts "   Tax Rates:        #{tax_rates.size}"
+      puts "   Order Types:      #{order_types.size}"
+      puts "   Discounts:        #{discounts.size}"
+      puts "   Employees:        #{employees.size}"
+      puts "   Customers:        #{customers.size}"
+      puts "   Tenders:          #{tenders.size} (sandbox-safe)"
+      puts "   Refunds:          #{refunds.size}"
+      puts "   Service Charges:  #{service_charges.size}"
+      puts "   Active Shifts:    #{active_shifts.size}"
 
       puts "\n📋 Categories:"
       categories.each { |c| puts "   - #{c['name']}" }
+
+      puts "\n🍔 Modifier Groups:"
+      modifier_groups.each do |mg|
+        modifier_count = mg.dig("modifiers", "elements")&.size || 0
+        puts "   - #{mg['name']} (#{modifier_count} modifiers)"
+      end
+
+      puts "\n📝 Order Types:"
+      order_types.each { |ot| puts "   - #{ot['label']}" }
+
+      puts "\n💰 Tax Rates:"
+      tax_rates.each do |tr|
+        rate_pct = (tr["rate"] || 0) / 100_000.0
+        default_marker = tr["isDefault"] ? " (default)" : ""
+        puts "   - #{tr['name']}: #{rate_pct}%#{default_marker}"
+      end
 
       puts "\n💳 Safe Tenders (no credit/debit):"
       tenders.each { |t| puts "   - #{t['label']}" }
@@ -275,6 +314,346 @@ module CloverSandboxSimulator
     desc "version", "Show version"
     def version
       puts "Clover Sandbox Simulator v1.0.0"
+    end
+
+    # ============================================
+    # Modifier Group Commands
+    # ============================================
+
+    desc "modifier_groups", "List all modifier groups"
+    def modifier_groups
+      configure_logging
+
+      puts "🍔 Clover Sandbox Simulator - Modifier Groups"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+      groups = services.inventory.get_modifier_groups
+
+      if groups.empty?
+        puts "No modifier groups found."
+        puts "\nRun 'simulate setup' to create default modifier groups."
+        return
+      end
+
+      puts "\nFound #{groups.size} modifier groups:\n\n"
+
+      groups.each do |group|
+        puts "📦 #{group['name']} (ID: #{group['id']})"
+        puts "   Min Required: #{group['minRequired'] || 0}"
+        puts "   Max Allowed:  #{group['maxAllowed'] || 'unlimited'}"
+
+        modifiers = group.dig("modifiers", "elements") || []
+        if modifiers.any?
+          puts "   Modifiers:"
+          modifiers.each do |mod|
+            price = mod["price"] || 0
+            price_str = price > 0 ? " (+$#{'%.2f' % (price / 100.0)})" : ""
+            puts "      - #{mod['name']}#{price_str}"
+          end
+        end
+        puts ""
+      end
+    end
+
+    # ============================================
+    # Order Type Commands
+    # ============================================
+
+    desc "order_types", "List all order types"
+    def order_types
+      configure_logging
+
+      puts "📝 Clover Sandbox Simulator - Order Types"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+      types = services.order_type.get_order_types
+
+      if types.empty?
+        puts "No order types found."
+        puts "\nRun 'simulate setup' to create default order types."
+        return
+      end
+
+      puts "\nFound #{types.size} order types:\n\n"
+
+      puts "#{'Label'.ljust(20)} #{'ID'.ljust(20)} #{'Taxable'}"
+      puts "-" * 50
+
+      types.each do |ot|
+        taxable = ot["taxable"] ? "Yes" : "No"
+        puts "#{(ot['label'] || 'N/A').ljust(20)} #{ot['id'].ljust(20)} #{taxable}"
+      end
+    end
+
+    # ============================================
+    # Tax Rate Commands
+    # ============================================
+
+    desc "tax_rates", "List all tax rates"
+    def tax_rates
+      configure_logging
+
+      puts "💰 Clover Sandbox Simulator - Tax Rates"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+      rates = services.tax.get_tax_rates
+
+      if rates.empty?
+        puts "No tax rates found."
+        puts "\nRun 'simulate setup' to create default tax rates."
+        return
+      end
+
+      puts "\nFound #{rates.size} tax rates:\n\n"
+
+      puts "#{'Name'.ljust(25)} #{'Rate'.rjust(8)} #{'Default'.ljust(10)} ID"
+      puts "-" * 70
+
+      rates.each do |rate|
+        rate_pct = (rate["rate"] || 0) / 100_000.0
+        default_str = rate["isDefault"] ? "Yes" : "No"
+        puts "#{(rate['name'] || 'N/A').ljust(25)} #{'%.3f%' % rate_pct.rjust(8)} #{default_str.ljust(10)} #{rate['id']}"
+      end
+    end
+
+    # ============================================
+    # Service Charge Commands
+    # ============================================
+
+    desc "service_charges", "List all service charges"
+    def service_charges
+      configure_logging
+
+      puts "💵 Clover Sandbox Simulator - Service Charges"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+
+      begin
+        charges = services.service_charge.get_service_charges
+      rescue StandardError => e
+        puts "⚠️  Could not fetch service charges: #{e.message}"
+        puts "\nNote: Service charges may need to be configured in the Clover dashboard."
+        return
+      end
+
+      if charges.empty?
+        puts "No service charges found."
+        puts "\nNote: Service charges must be configured in the Clover dashboard."
+        return
+      end
+
+      puts "\nFound #{charges.size} service charges:\n\n"
+
+      puts "#{'Name'.ljust(25)} #{'Percentage'.rjust(12)} #{'Enabled'.ljust(10)} ID"
+      puts "-" * 70
+
+      charges.each do |charge|
+        pct = charge["percentageDecimal"] ? "#{charge['percentageDecimal'] / 10_000.0}%" : "N/A"
+        enabled = charge["enabled"] ? "Yes" : "No"
+        puts "#{(charge['name'] || 'N/A').ljust(25)} #{pct.rjust(12)} #{enabled.ljust(10)} #{charge['id']}"
+      end
+    end
+
+    # ============================================
+    # Shift Commands
+    # ============================================
+
+    desc "shifts", "List active shifts"
+    def shifts
+      configure_logging
+
+      puts "⏰ Clover Sandbox Simulator - Active Shifts"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+
+      begin
+        active_shifts = services.shift.get_active_shifts
+      rescue StandardError => e
+        puts "⚠️  Could not fetch shifts: #{e.message}"
+        return
+      end
+
+      if active_shifts.empty?
+        puts "No active shifts found."
+        puts "\nUse 'simulate shift_clock_in -e EMPLOYEE_ID' to clock in an employee."
+        return
+      end
+
+      puts "\nFound #{active_shifts.size} active shifts:\n\n"
+
+      active_shifts.each do |shift|
+        employee_name = shift.dig("employee", "name") || "Unknown"
+        employee_id = shift.dig("employee", "id") || "N/A"
+        in_time = shift["inTime"] ? Time.at(shift["inTime"] / 1000).strftime("%Y-%m-%d %H:%M") : "N/A"
+
+        puts "👤 #{employee_name}"
+        puts "   Employee ID: #{employee_id}"
+        puts "   Shift ID:    #{shift['id']}"
+        puts "   Clocked In:  #{in_time}"
+        puts ""
+      end
+    end
+
+    desc "shift_clock_in", "Clock in an employee"
+    option :employee_id, type: :string, aliases: "-e", required: true, desc: "Employee ID to clock in"
+    def shift_clock_in
+      configure_logging
+
+      puts "⏰ Clover Sandbox Simulator - Clock In"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+
+      puts "Clocking in employee: #{options[:employee_id]}"
+
+      begin
+        result = services.shift.clock_in(employee_id: options[:employee_id])
+
+        if result && result["id"]
+          puts "\n✅ Employee clocked in successfully!"
+          puts "   Shift ID:   #{result['id']}"
+          puts "   In Time:    #{Time.at(result['inTime'] / 1000).strftime('%Y-%m-%d %H:%M')}"
+        else
+          puts "\n❌ Failed to clock in employee."
+        end
+      rescue StandardError => e
+        puts "\n❌ Error: #{e.message}"
+      end
+    end
+
+    desc "shift_clock_out", "Clock out an employee"
+    option :employee_id, type: :string, aliases: "-e", required: true, desc: "Employee ID to clock out"
+    def shift_clock_out
+      configure_logging
+
+      puts "⏰ Clover Sandbox Simulator - Clock Out"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+
+      puts "Clocking out employee: #{options[:employee_id]}"
+
+      begin
+        result = services.shift.clock_out(employee_id: options[:employee_id])
+
+        if result && result["id"]
+          in_time = result["inTime"] ? Time.at(result["inTime"] / 1000) : nil
+          out_time = result["outTime"] ? Time.at(result["outTime"] / 1000) : nil
+
+          puts "\n✅ Employee clocked out successfully!"
+          puts "   Shift ID:   #{result['id']}"
+
+          if in_time && out_time
+            duration_minutes = ((out_time - in_time) / 60).round
+            hours = duration_minutes / 60
+            minutes = duration_minutes % 60
+            puts "   Duration:   #{hours}h #{minutes}m"
+          end
+        else
+          puts "\n❌ Failed to clock out employee (no active shift found?)."
+        end
+      rescue StandardError => e
+        puts "\n❌ Error: #{e.message}"
+      end
+    end
+
+    # ============================================
+    # Cash Drawer Commands
+    # ============================================
+
+    desc "cash_open_drawer", "Open cash drawer with starting amount"
+    option :amount, type: :numeric, aliases: "-a", default: 10000, desc: "Starting cash in cents (default: $100)"
+    option :employee_id, type: :string, aliases: "-e", desc: "Employee ID (optional)"
+    def cash_open_drawer
+      configure_logging
+
+      puts "💵 Clover Sandbox Simulator - Open Cash Drawer"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+
+      employee_id = options[:employee_id]
+      unless employee_id
+        employees = services.employee.get_employees
+        employee_id = employees.first&.dig("id")
+      end
+
+      unless employee_id
+        puts "❌ No employee found. Create employees first with 'simulate setup'."
+        return
+      end
+
+      puts "Opening drawer for employee: #{employee_id}"
+      puts "Starting cash: $#{'%.2f' % (options[:amount] / 100.0)}"
+
+      begin
+        result = services.cash_event.open_drawer(employee_id: employee_id, amount: options[:amount])
+
+        if result
+          puts "\n✅ Cash drawer opened!"
+          puts "   Event ID: #{result['id'] || 'simulated'}"
+          puts "   Amount:   $#{'%.2f' % (options[:amount] / 100.0)}"
+
+          if result["simulated"]
+            puts "\n⚠️  Note: Cash events may not be fully supported in sandbox."
+          end
+        else
+          puts "\n❌ Failed to open cash drawer."
+        end
+      rescue StandardError => e
+        puts "\n❌ Error: #{e.message}"
+      end
+    end
+
+    desc "cash_close_drawer", "Close cash drawer"
+    option :amount, type: :numeric, aliases: "-a", desc: "Final cash count in cents"
+    option :employee_id, type: :string, aliases: "-e", desc: "Employee ID (optional)"
+    def cash_close_drawer
+      configure_logging
+
+      puts "💵 Clover Sandbox Simulator - Close Cash Drawer"
+      puts "=" * 50
+
+      services = Services::Clover::ServicesManager.new
+
+      employee_id = options[:employee_id]
+      unless employee_id
+        employees = services.employee.get_employees
+        employee_id = employees.first&.dig("id")
+      end
+
+      unless employee_id
+        puts "❌ No employee found. Create employees first with 'simulate setup'."
+        return
+      end
+
+      puts "Closing drawer for employee: #{employee_id}"
+
+      begin
+        result = services.cash_event.close_drawer(employee_id: employee_id, amount: options[:amount])
+
+        if result
+          puts "\n✅ Cash drawer closed!"
+          puts "   Event ID: #{result['id'] || 'simulated'}"
+
+          if options[:amount]
+            puts "   Final Count: $#{'%.2f' % (options[:amount] / 100.0)}"
+          end
+
+          if result["simulated"]
+            puts "\n⚠️  Note: Cash events may not be fully supported in sandbox."
+          end
+        else
+          puts "\n❌ Failed to close cash drawer."
+        end
+      rescue StandardError => e
+        puts "\n❌ Error: #{e.message}"
+      end
     end
 
     # ============================================

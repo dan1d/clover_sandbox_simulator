@@ -96,16 +96,30 @@ module CloverSandboxSimulator
           request(:post, endpoint("modifier_groups"), payload: payload)
         end
 
-        # Create a modifier within a group
-        def create_modifier(modifier_group_id:, name:, price: 0)
-          logger.info "Creating modifier: #{name} in group #{modifier_group_id}"
-          request(:post, endpoint("modifier_groups/#{modifier_group_id}/modifiers"), payload: {
-            "name" => name,
-            "price" => price
-          })
-        end
+      # Create a modifier within a group
+      def create_modifier(modifier_group_id:, name:, price: 0)
+        logger.info "Creating modifier: #{name} in group #{modifier_group_id}"
+        request(:post, endpoint("modifier_groups/#{modifier_group_id}/modifiers"), payload: {
+          "name" => name,
+          "price" => price
+        })
+      end
 
-        # Delete all categories and items
+      # Associate a modifier group with an item
+      def associate_item_with_modifier_group(item_id, modifier_group_id)
+        logger.debug "Associating item #{item_id} with modifier group #{modifier_group_id}"
+        request(:post, endpoint("item_modifier_groups"), payload: {
+          "elements" => [{ "item" => { "id" => item_id }, "modifierGroup" => { "id" => modifier_group_id } }]
+        })
+      end
+
+      # Delete a modifier group
+      def delete_modifier_group(modifier_group_id)
+        logger.info "Deleting modifier group: #{modifier_group_id}"
+        request(:delete, endpoint("modifier_groups/#{modifier_group_id}"))
+      end
+
+      # Delete all categories and items
         def delete_all
           logger.warn "Deleting all inventory..."
 

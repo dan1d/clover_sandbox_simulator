@@ -1,0 +1,2784 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770240315","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 8034b7cd-24ab-4687-88ae-f592ffac5fb6
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "ATDDZVWNM8G9Y", "name": "VCR Test Group to Delete 1770240315",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:25:16 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/ATDDZVWNM8G9Y
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 738dd5f1-9d27-4cae-a6ed-4c8852322acb
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:25:17 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770240330","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 764305ae-437a-41ed-a189-00c38226daa7
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "R9P6PH8Z5C62W", "name": "VCR Test Group to Delete 1770240330",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:25:31 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/R9P6PH8Z5C62W
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 11ce5df2-e50d-44e2-802f-44fa941e1312
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:25:31 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770240372","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 9fee4408-ee0f-41e1-b98b-bca69ae2fe7d
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "5F3GCYX1XZNF6", "name": "VCR Test Group to Delete 1770240372",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:26:12 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/5F3GCYX1XZNF6
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 47dd9a83-cdfd-4f0e-8649-a9cb9bfe3632
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:26:13 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770240603","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - fc2c42b9-17a0-4a56-baa0-3e82393f9900
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "8KBDZQWC8QMQ2", "name": "VCR Test Group to Delete 1770240603",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:30:04 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/8KBDZQWC8QMQ2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 88aa38de-c1ce-45c5-af5e-48a589466b4e
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:30:05 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770240620","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - b8202784-3b7b-48b4-8d96-7fef8f988fd2
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "3B6ESRHG5TMNY", "name": "VCR Test Group to Delete 1770240620",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:30:21 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/3B6ESRHG5TMNY
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 9cc3ef4a-8743-4275-9db3-e1bc3ab2a539
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:30:22 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770240657","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 70b77ddc-9396-41c9-97ed-a412f590a506
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "9V7XB9A2TV04G", "name": "VCR Test Group to Delete 1770240657",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:30:57 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/9V7XB9A2TV04G
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - a42e20b4-693d-4e43-bda6-78831f8cdc2f
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:30:58 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770240808","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - da08de5d-b7e1-429a-b0e8-572234c59e7f
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "48XV5E734YK9G", "name": "VCR Test Group to Delete 1770240808",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:33:28 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/48XV5E734YK9G
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - abe903a6-c32d-4cf9-8ec4-8f8b01e6e87a
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:33:29 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770240896","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - a7cac451-3d5a-449f-bdb5-aab0900714d0
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "SH5H148SB29C6", "name": "VCR Test Group to Delete 1770240896",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:34:57 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/SH5H148SB29C6
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 9911d5dc-9b3b-471c-af14-4aed7d7b1245
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:34:58 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770240939","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - a4902446-f410-42a3-8922-365f2debec52
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "QJP9J16ECK0WE", "name": "VCR Test Group to Delete 1770240939",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:35:40 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/QJP9J16ECK0WE
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 8abff667-2002-4c9a-9126-389f90b78760
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:35:40 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770241047","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - e2f55b45-7f7f-40a5-bd84-7f85b733e732
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "4VS28TK3TD0ZM", "name": "VCR Test Group to Delete 1770241047",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:37:28 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/4VS28TK3TD0ZM
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - ace50816-7de2-46b4-af12-45eedb7d978a
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:37:28 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770241309","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 22d9d949-f9d7-49b4-a119-c0cd689295b8
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "MQ6Z65EZ38PTE", "name": "VCR Test Group to Delete 1770241309",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:41:50 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/MQ6Z65EZ38PTE
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - f2a5a79d-f65e-4bd6-9f0a-defccb8f3fd5
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:41:51 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770241321","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - c0ecca8b-9e18-421a-bb67-5e1b7d9053c5
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "FVDRWQ85QQCWW", "name": "VCR Test Group to Delete 1770241321",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:42:01 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/FVDRWQ85QQCWW
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - d8f57185-b3bc-4366-992e-3700ebe40551
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:42:02 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770241404","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 308a67b3-a1eb-4071-9493-703297766da0
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "0YWTSX3B1H9YP", "name": "VCR Test Group to Delete 1770241404",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:43:24 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/0YWTSX3B1H9YP
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 76becb56-b367-457c-b977-368630cbac86
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:43:25 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770241461","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - '09593042-c512-477a-8182-5b024667eb77'
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "A32WTWS3J6N00", "name": "VCR Test Group to Delete 1770241461",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:44:21 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/A32WTWS3J6N00
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - d1f2c32a-5c30-4263-a9f0-152e9ef08ae6
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:44:22 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770241554","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - '0484c3e9-9555-4108-8f1f-31b08371979b'
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "N7KZ0RV3CR9ZY", "name": "VCR Test Group to Delete 1770241554",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:45:55 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/N7KZ0RV3CR9ZY
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - dd1658b8-6d67-4af8-8ce2-fa744d2a990c
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:45:56 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770241621","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 1121287d-d38f-4ab5-94b6-3b6b6fb62ad8
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "47S49F2FNVR8A", "name": "VCR Test Group to Delete 1770241621",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:47:02 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/47S49F2FNVR8A
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 3e408ce3-920b-4997-b5b2-b53cb80247b9
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:47:03 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770241655","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - d57b6908-9468-469f-9d40-ec07f6ccd167
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "716XEN5MYM6YG", "name": "VCR Test Group to Delete 1770241655",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:47:36 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/716XEN5MYM6YG
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - d8d8caa7-26aa-45d6-b931-6a9473788440
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:47:37 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770241736","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 7ffd01a5-5e6d-4500-bc08-035f8fc935c2
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "6KJ96Q8055384", "name": "VCR Test Group to Delete 1770241736",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:48:56 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/6KJ96Q8055384
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 2a850fee-59ed-471e-9889-58fc3e4c0d75
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:48:57 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770241764","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 7f79a36f-01df-4821-8542-24a271ea7a65
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "YCCFMWZKFPHVY", "name": "VCR Test Group to Delete 1770241764",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:49:25 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/YCCFMWZKFPHVY
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 7fadc938-0db2-43c2-995d-bbf42f6756c0
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 21:49:25 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770242708","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 0a94c182-ebe0-49ab-9172-f7d34831ab30
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "WA4H550EN0AA4", "name": "VCR Test Group to Delete 1770242708",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 22:05:08 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/WA4H550EN0AA4
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 3cd69c49-1e97-410e-ba71-c6e9b84ce43e
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 22:05:09 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770242738","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 90d89366-1199-4faf-bbd3-70fecf27f243
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "9S02F0MG6Z2CP", "name": "VCR Test Group to Delete 1770242738",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 22:05:39 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/9S02F0MG6Z2CP
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 6a1610ae-f581-4691-81c7-dd7464691417
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 22:05:40 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770242809","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 0fdc25aa-6d09-49da-a77b-eee832e397c9
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "MNVBRH23NWYJ2", "name": "VCR Test Group to Delete 1770242809",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 22:06:50 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/MNVBRH23NWYJ2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 9013ca29-8468-4558-8f83-2067e7592080
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 22:06:51 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770244151","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 14a158b0-e5d9-4131-b7bf-9d4ae235f169
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "340YYCJRD1NVE", "name": "VCR Test Group to Delete 1770244151",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 22:29:12 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/340YYCJRD1NVE
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - da4c08ff-1c41-4ed3-8386-74b14118af06
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 22:29:13 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770244266","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 98e0c4c7-afbf-4849-a7db-eb6b65598f3d
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "6TVYF8AQBD4JG", "name": "VCR Test Group to Delete 1770244266",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 22:31:07 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/6TVYF8AQBD4JG
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 15249568-530b-4ba6-9dd9-c217a480b858
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 22:31:08 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770244320","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - e765cda3-6d97-4e8d-85a8-e623d4886fca
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "RB9PXTAMN1ND6", "name": "VCR Test Group to Delete 1770244320",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 22:32:01 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/RB9PXTAMN1ND6
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 4518cabb-821c-4cab-b61a-6e135d78688b
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 22:32:02 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770244414","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 98100452-3f88-4548-8409-82d0543935bb
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "D92TWX9DXZXZ8", "name": "VCR Test Group to Delete 1770244414",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 22:33:34 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/D92TWX9DXZXZ8
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - d4e598df-d0b8-46aa-b640-8c6c114ded4d
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 22:33:35 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group to Delete 1770245931","minRequired":0,"maxAllowed":1}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '77'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - ee99d654-347b-4241-bf83-6daba36125a2
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "A1J2JRT2Z6PRY", "name": "VCR Test Group to Delete 1770245931",
+        "minRequired": 0, "maxAllowed": 1, "showByDefault": true, "deleted": false}'
+  recorded_at: Wed, 04 Feb 2026 22:58:52 GMT
+- request:
+    method: delete
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/A1J2JRT2Z6PRY
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 5fa02ba6-5715-41c1-b675-a3d0619f6a65
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 22:58:52 GMT
+recorded_with: VCR 6.4.0

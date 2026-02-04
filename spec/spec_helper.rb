@@ -4,9 +4,24 @@ require "bundler/setup"
 require "clover_sandbox_simulator"
 require "webmock/rspec"
 require "vcr"
+require "json"
 
 # Disable real HTTP connections in tests
 WebMock.disable_net_connect!(allow_localhost: true)
+
+# Load .env.json for integration tests
+def load_env_json
+  env_path = File.expand_path("../../.env.json", __FILE__)
+  return [] unless File.exist?(env_path)
+
+  JSON.parse(File.read(env_path))
+end
+
+# Get specific merchant config by name
+def get_merchant_config(name)
+  merchants = load_env_json
+  merchants.find { |m| m["CLOVER_MERCHANT_NAME"] == name }
+end
 
 # VCR configuration
 VCR.configure do |config|
@@ -14,15 +29,34 @@ VCR.configure do |config|
   config.hook_into :webmock
   config.configure_rspec_metadata!
 
-  # Filter sensitive data
+  # Allow HTTP connections when VCR is managing (recording/replaying)
+  config.allow_http_connections_when_no_cassette = false
+
+  # Load all merchants and filter their sensitive data
+  load_env_json.each_with_index do |merchant, idx|
+    config.filter_sensitive_data("<MERCHANT_#{idx}_ID>") { merchant["CLOVER_MERCHANT_ID"] }
+    config.filter_sensitive_data("<MERCHANT_#{idx}_API_TOKEN>") { merchant["CLOVER_API_TOKEN"] }
+    config.filter_sensitive_data("<MERCHANT_#{idx}_ACCESS_TOKEN>") { merchant["CLOVER_ACCESS_TOKEN"] }
+    config.filter_sensitive_data("<MERCHANT_#{idx}_REFRESH_TOKEN>") { merchant["CLOVER_REFRESH_TOKEN"] }
+    config.filter_sensitive_data("<MERCHANT_#{idx}_PUBLIC_TOKEN>") { merchant["PUBLIC_TOKEN"] }
+    config.filter_sensitive_data("<MERCHANT_#{idx}_PRIVATE_TOKEN>") { merchant["PRIVATE_TOKEN"] }
+  end
+
+  # Also filter from ENV variables
   config.filter_sensitive_data("<CLOVER_API_TOKEN>") { ENV["CLOVER_API_TOKEN"] }
   config.filter_sensitive_data("<CLOVER_MERCHANT_ID>") { ENV["CLOVER_MERCHANT_ID"] }
+  config.filter_sensitive_data("<CLOVER_ACCESS_TOKEN>") { ENV["CLOVER_ACCESS_TOKEN"] }
+  config.filter_sensitive_data("<PUBLIC_TOKEN>") { ENV["PUBLIC_TOKEN"] }
+  config.filter_sensitive_data("<PRIVATE_TOKEN>") { ENV["PRIVATE_TOKEN"] }
 
-  # Allow re-recording cassettes
+  # Allow re-recording cassettes - :new_episodes records new requests
   config.default_cassette_options = {
     record: :new_episodes,
     match_requests_on: [:method, :uri, :body]
   }
+
+  # Ignore non-Clover requests (like localhost)
+  config.ignore_localhost = true
 end
 
 RSpec.configure do |config|

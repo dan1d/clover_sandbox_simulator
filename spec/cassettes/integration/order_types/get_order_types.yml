@@ -1,0 +1,55 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/order_types
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Allowed-Filter-Fields:
+      - id, deletedTime
+      X-Clover-Request-Id:
+      - 071bd303-4bdf-4876-9a33-945125f2a056
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"elements": [ ], "href": "http://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/order_types?limit=100"}'
+  recorded_at: Wed, 04 Feb 2026 21:48:06 GMT
+recorded_with: VCR 6.4.0

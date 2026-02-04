@@ -312,9 +312,10 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::CustomerService do
         expect(WebMock).to have_requested(:post, "#{base_url}/customers").times(10)
       end
 
-      it "generates sanitized email addresses" do
+      it "generates sanitized email addresses (non-deterministic mode)" do
         allow(Faker::Name).to receive(:first_name).and_return("Mary-Jane")
         allow(Faker::Name).to receive(:last_name).and_return("O'Connor")
+        allow(Faker::PhoneNumber).to receive(:cell_phone).and_return("555-123-4567")
 
         stub_request(:get, "#{base_url}/customers")
           .to_return(
@@ -334,7 +335,8 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::CustomerService do
             headers: { "Content-Type" => "application/json" }
           )
 
-        service.ensure_customers(count: 1)
+        # Use non-deterministic mode to test Faker name sanitization
+        service.ensure_customers(count: 1, deterministic: false)
 
         expect(WebMock).to have_requested(:post, "#{base_url}/customers")
           .with(body: hash_including("emailAddresses" => [{ "emailAddress" => "maryjane.oconnor@example.com" }]))

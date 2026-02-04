@@ -100,6 +100,44 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::OrderService do
     end
   end
 
+  describe "#add_modifications" do
+    it "adds modifiers to a line item" do
+      stub_request(:post, "#{base_url}/orders/ORDER123/line_items/LI1/modifications")
+        .with(body: hash_including(
+          "modifier" => { "id" => "MOD1" }
+        ))
+        .to_return(
+          status: 200,
+          body: { id: "MODI1", modifier: { id: "MOD1", name: "Extra Cheese", price: 150 } }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      result = service.add_modification("ORDER123", line_item_id: "LI1", modifier_id: "MOD1")
+
+      expect(result["id"]).to eq("MODI1")
+      expect(result.dig("modifier", "name")).to eq("Extra Cheese")
+    end
+
+    it "adds multiple modifiers to a line item" do
+      modifier_ids = %w[MOD1 MOD2]
+
+      modifier_ids.each_with_index do |mod_id, idx|
+        stub_request(:post, "#{base_url}/orders/ORDER123/line_items/LI1/modifications")
+          .with(body: hash_including("modifier" => { "id" => mod_id }))
+          .to_return(
+            status: 200,
+            body: { id: "MODI#{idx + 1}", modifier: { id: mod_id } }.to_json,
+            headers: { "Content-Type" => "application/json" }
+          )
+      end
+
+      results = service.add_modifications("ORDER123", line_item_id: "LI1", modifier_ids: modifier_ids)
+
+      expect(results.size).to eq(2)
+      expect(results.map { |r| r["id"] }).to eq(%w[MODI1 MODI2])
+    end
+  end
+
   describe "#calculate_total" do
     it "calculates total from line items" do
       order_response = {
@@ -152,6 +190,40 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::OrderService do
       total = service.calculate_total("ORDER123")
 
       expect(total).to eq(900) # 1000 - 100
+    end
+
+    it "includes modification prices in total" do
+      order_response = {
+        "id" => "ORDER123",
+        "lineItems" => {
+          "elements" => [
+            {
+              "id" => "LI1",
+              "price" => 1000,
+              "quantity" => 1,
+              "modifications" => {
+                "elements" => [
+                  { "id" => "MODI1", "price" => 150 },  # Extra Cheese
+                  { "id" => "MODI2", "price" => 200 }   # Bacon
+                ]
+              }
+            }
+          ]
+        }
+      }
+
+      stub_request(:get, "#{base_url}/orders/ORDER123")
+        .with(query: { expand: "lineItems,discounts,payments,customers" })
+        .to_return(
+          status: 200,
+          body: order_response.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      total = service.calculate_total("ORDER123")
+
+      # 1000 (base) + 150 (cheese) + 200 (bacon) = 1350
+      expect(total).to eq(1350)
     end
   end
 end

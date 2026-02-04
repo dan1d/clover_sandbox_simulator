@@ -288,21 +288,22 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::EmployeeService do
             headers: { 'Content-Type' => 'application/json' }
           )
 
+        # In deterministic mode, first employee is "Alex Manager"
         stub_request(:post, "#{base_url}/employees")
-          .with(body: hash_including('email' => 'test.person@example.com'))
+          .with(body: hash_including('email' => 'alex.manager@example.com'))
           .to_return(
             status: 200,
-            body: { id: 'EMP_NEW', name: 'Test Person', email: 'test.person@example.com' }.to_json,
+            body: { id: 'EMP_NEW', name: 'Alex Manager', email: 'alex.manager@example.com' }.to_json,
             headers: { 'Content-Type' => 'application/json' }
           )
 
         service.ensure_employees(count: 1)
 
         expect(WebMock).to have_requested(:post, "#{base_url}/employees")
-          .with(body: hash_including('email' => 'test.person@example.com'))
+          .with(body: hash_including('email' => 'alex.manager@example.com'))
       end
 
-      it 'sanitizes special characters in email address' do
+      it 'sanitizes special characters in email address (non-deterministic mode)' do
         allow(Faker::Name).to receive(:name).and_return("O'Brien-Smith III")
 
         stub_request(:get, "#{base_url}/employees")
@@ -320,7 +321,8 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::EmployeeService do
             headers: { 'Content-Type' => 'application/json' }
           )
 
-        service.ensure_employees(count: 1)
+        # Use non-deterministic mode to test Faker name sanitization
+        service.ensure_employees(count: 1, deterministic: false)
 
         # Should convert to safe email without apostrophe or hyphen
         expect(WebMock).to have_requested(:post, "#{base_url}/employees")

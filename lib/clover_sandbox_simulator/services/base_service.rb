@@ -106,6 +106,59 @@ module CloverSandboxSimulator
       def log_response(response, duration_ms)
         logger.debug "← #{response.code} (#{duration_ms}ms)"
       end
+
+      # ============================================
+      # STANDARDIZED ERROR HANDLING HELPERS
+      # ============================================
+
+      # Execute a block with API error fallback
+      # @param fallback [Object] Value to return on error
+      # @param log_level [Symbol] Log level for error (:debug, :warn, :error)
+      # @param reraise_on [Array<Integer>] HTTP codes to reraise instead of fallback
+      # @yield Block to execute
+      # @return [Object] Block result or fallback
+      def with_api_fallback(fallback: nil, log_level: :debug, reraise_on: [])
+        yield
+      rescue ApiError => e
+        # Reraise if it's a critical error code
+        if reraise_on.any? { |code| e.message.include?("HTTP #{code}") }
+          raise
+        end
+
+        logger.send(log_level, "API error (using fallback): #{e.message}")
+        fallback
+      rescue StandardError => e
+        logger.send(log_level, "Error (using fallback): #{e.message}")
+        fallback
+      end
+
+      # Execute a block, handling sandbox limitations (405 errors)
+      # @param simulated_response [Object] Response to return if sandbox doesn't support the operation
+      # @yield Block to execute
+      # @return [Object] Block result or simulated response
+      def with_sandbox_fallback(simulated_response: nil)
+        yield
+      rescue ApiError => e
+        if e.message.include?("405")
+          logger.warn "Operation not supported in sandbox environment"
+          simulated_response
+        else
+          raise
+        end
+      end
+
+      # Safe getter for nested hash values with logging
+      # @param hash [Hash] The hash to extract from
+      # @param keys [Array] Keys to dig into
+      # @param default [Object] Default value if not found
+      # @return [Object] The value or default
+      def safe_dig(hash, *keys, default: nil)
+        return default if hash.nil?
+
+        hash.dig(*keys) || default
+      rescue StandardError
+        default
+      end
     end
   end
 end

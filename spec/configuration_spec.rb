@@ -20,12 +20,29 @@ RSpec.describe CloverSandboxSimulator::Configuration do
       expect { config.validate! }.to raise_error(CloverSandboxSimulator::ConfigurationError, /CLOVER_MERCHANT_ID/)
     end
 
+    it "does not require api_token for basic validation (Ecommerce-only mode)" do
+      config = described_class.allocate
+      config.instance_variable_set(:@merchant_id, "MERCHANT")
+      config.instance_variable_set(:@api_token, nil)
+
+      # validate! only requires merchant_id now (Ecommerce can work without api_token)
+      expect(config.validate!).to be true
+    end
+  end
+
+  describe "#validate_platform!" do
     it "raises error when api_token is missing" do
       config = described_class.allocate
       config.instance_variable_set(:@merchant_id, "MERCHANT")
       config.instance_variable_set(:@api_token, nil)
 
-      expect { config.validate! }.to raise_error(CloverSandboxSimulator::ConfigurationError, /CLOVER_API_TOKEN/)
+      expect { config.validate_platform! }.to raise_error(CloverSandboxSimulator::ConfigurationError, /CLOVER_API_TOKEN/)
+    end
+
+    it "returns true when valid" do
+      config = create_test_config
+
+      expect(config.validate_platform!).to be true
     end
 
     it "returns true when valid" do

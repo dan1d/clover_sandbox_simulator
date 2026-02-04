@@ -8,6 +8,131 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::InventoryService do
   let(:service) { described_class.new }
   let(:base_url) { "https://sandbox.dev.clover.com/v3/merchants/TEST_MERCHANT_ID" }
 
+  # ============================================
+  # Modifier Groups
+  # ============================================
+
+  describe "#get_modifier_groups" do
+    it "fetches modifier groups from Clover API" do
+      stub_request(:get, "#{base_url}/modifier_groups")
+        .with(query: { expand: "modifiers" })
+        .to_return(
+          status: 200,
+          body: {
+            elements: [
+              { id: "MG1", name: "Temperature", modifiers: { elements: [{ id: "M1", name: "Rare" }] } }
+            ]
+          }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      groups = service.get_modifier_groups
+
+      expect(groups).to be_an(Array)
+      expect(groups.first["name"]).to eq("Temperature")
+    end
+
+    it "returns empty array when no modifier groups exist" do
+      stub_request(:get, "#{base_url}/modifier_groups")
+        .with(query: { expand: "modifiers" })
+        .to_return(
+          status: 200,
+          body: { elements: [] }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      groups = service.get_modifier_groups
+
+      expect(groups).to eq([])
+    end
+  end
+
+  describe "#create_modifier_group" do
+    it "creates a new modifier group" do
+      stub_request(:post, "#{base_url}/modifier_groups")
+        .with(body: { name: "Temperature", minRequired: 0, maxAllowed: 1 }.to_json)
+        .to_return(
+          status: 200,
+          body: { id: "MG1", name: "Temperature", minRequired: 0, maxAllowed: 1 }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      group = service.create_modifier_group(name: "Temperature", min_required: 0, max_allowed: 1)
+
+      expect(group["id"]).to eq("MG1")
+      expect(group["name"]).to eq("Temperature")
+    end
+
+    it "creates a modifier group without max_allowed" do
+      stub_request(:post, "#{base_url}/modifier_groups")
+        .with(body: { name: "Add-Ons", minRequired: 0 }.to_json)
+        .to_return(
+          status: 200,
+          body: { id: "MG2", name: "Add-Ons", minRequired: 0 }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      group = service.create_modifier_group(name: "Add-Ons", min_required: 0)
+
+      expect(group["id"]).to eq("MG2")
+    end
+  end
+
+  describe "#create_modifier" do
+    it "creates a modifier within a group" do
+      stub_request(:post, "#{base_url}/modifier_groups/MG1/modifiers")
+        .with(body: { name: "Medium Rare", price: 0 }.to_json)
+        .to_return(
+          status: 200,
+          body: { id: "MOD1", name: "Medium Rare", price: 0 }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      modifier = service.create_modifier(modifier_group_id: "MG1", name: "Medium Rare", price: 0)
+
+      expect(modifier["id"]).to eq("MOD1")
+      expect(modifier["name"]).to eq("Medium Rare")
+    end
+
+    it "creates a modifier with a price" do
+      stub_request(:post, "#{base_url}/modifier_groups/MG2/modifiers")
+        .with(body: { name: "Extra Cheese", price: 150 }.to_json)
+        .to_return(
+          status: 200,
+          body: { id: "MOD2", name: "Extra Cheese", price: 150 }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      modifier = service.create_modifier(modifier_group_id: "MG2", name: "Extra Cheese", price: 150)
+
+      expect(modifier["id"]).to eq("MOD2")
+      expect(modifier["price"]).to eq(150)
+    end
+  end
+
+  describe "#associate_item_with_modifier_group" do
+    it "associates a modifier group with an item" do
+      stub_request(:post, "#{base_url}/item_modifier_groups")
+        .with(body: {
+          elements: [{ item: { id: "ITEM1" }, modifierGroup: { id: "MG1" } }]
+        }.to_json)
+        .to_return(status: 200, body: "{}".to_json)
+
+      result = service.associate_item_with_modifier_group("ITEM1", "MG1")
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  describe "#delete_modifier_group" do
+    it "deletes a modifier group" do
+      stub_request(:delete, "#{base_url}/modifier_groups/MG1")
+        .to_return(status: 200, body: "".to_json)
+
+      expect { service.delete_modifier_group("MG1") }.not_to raise_error
+    end
+  end
+
   describe "#get_categories" do
     it "fetches categories from Clover API" do
       stub_request(:get, "#{base_url}/categories")

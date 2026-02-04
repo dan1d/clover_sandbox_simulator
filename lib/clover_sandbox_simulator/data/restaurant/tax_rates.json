@@ -1,0 +1,35 @@
+{
+  "tax_rates": [
+    {
+      "name": "Sales Tax",
+      "rate": 8.25,
+      "is_default": true,
+      "description": "Standard sales tax for prepared food"
+    },
+    {
+      "name": "Alcohol Tax",
+      "rate": 10.0,
+      "is_default": false,
+      "description": "Additional tax on alcoholic beverages"
+    },
+    {
+      "name": "Prepared Food Tax",
+      "rate": 8.25,
+      "is_default": false,
+      "description": "Tax on restaurant-prepared food items"
+    }
+  ],
+  "category_tax_mapping": {
+    "Alcoholic Beverages": ["Sales Tax", "Alcohol Tax"],
+    "Beer": ["Sales Tax", "Alcohol Tax"],
+    "Wine": ["Sales Tax", "Alcohol Tax"],
+    "Cocktails": ["Sales Tax", "Alcohol Tax"],
+    "Appetizers": ["Sales Tax"],
+    "Entrees": ["Sales Tax"],
+    "Sides": ["Sales Tax"],
+    "Desserts": ["Sales Tax"],
+    "Drinks": ["Sales Tax"],
+    "Specials": ["Sales Tax"],
+    "default": ["Sales Tax"]
+  }
+}

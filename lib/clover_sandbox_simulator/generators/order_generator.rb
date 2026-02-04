@@ -81,8 +81,10 @@ module CloverSandboxSimulator
           by_period: {},
           by_dining: {},
           by_discount_type: {},
+          by_order_type: {},
           gift_cards: { payments: 0, full_payments: 0, partial_payments: 0, purchases: 0, amount_redeemed: 0 },
-          refunds: { total: 0, full: 0, partial: 0, amount: 0 }
+          refunds: { total: 0, full: 0, partial: 0, amount: 0 },
+          cash_events: { payments: 0, amount: 0 }
         }
       end
 
@@ -260,11 +262,27 @@ module CloverSandboxSimulator
         tenders = services.tender.get_safe_tenders
         discounts = services.discount.get_discounts
 
+        # Fetch modifier groups for item customization
+        modifier_groups = begin
+          services.inventory.get_modifier_groups
+        rescue StandardError => e
+          logger.debug "Could not fetch modifier groups: #{e.message}"
+          []
+        end
+
         # Fetch gift cards for payment scenarios
         gift_cards = begin
           services.gift_card.fetch_gift_cards
         rescue StandardError => e
           logger.debug "Could not fetch gift cards: #{e.message}"
+          []
+        end
+
+        # Fetch order types for order categorization
+        order_types = begin
+          services.order_type.get_order_types
+        rescue StandardError => e
+          logger.debug "Could not fetch order types: #{e.message}"
           []
         end
 
@@ -296,8 +314,10 @@ module CloverSandboxSimulator
           customers: customers,
           tenders: tenders,
           discounts: discounts,
+          modifier_groups: modifier_groups,
           gift_cards: gift_cards,
-          gift_card_tender: gift_card_tender
+          gift_card_tender: gift_card_tender,
+          order_types: order_types
         }
       end
 
@@ -370,6 +390,16 @@ module CloverSandboxSimulator
         services.order.set_dining_option(order_id, dining)
         logger.debug "  Dining: #{dining}"
 
+        # Set order type based on dining option (if available)
+        selected_order_type = nil
+        if data[:order_types]&.any?
+          selected_order_type = select_order_type(dining, data[:order_types])
+          if selected_order_type
+            services.order_type.set_order_type(order_id, selected_order_type["id"])
+            logger.debug "  Order type: #{selected_order_type['label']}"
+          end
+        end
+
         # Party size affects item count
         party_size = rand(config[:avg_party])
         base_items = rand(config[:avg_items])
@@ -400,6 +430,16 @@ module CloverSandboxSimulator
           return nil
         end
 
+        # Apply modifiers to line items (if available)
+        if data[:modifier_groups]&.any?
+          apply_modifiers_to_line_items(
+            order_id: order_id,
+            line_items: added_line_items,
+            items: selected_items,
+            modifier_groups: data[:modifier_groups]
+          )
+        end
+
         # Enrich line items with category data for discount processing
         enriched_items = enrich_line_items(added_line_items, selected_items)
 
@@ -421,9 +461,16 @@ module CloverSandboxSimulator
         subtotal = services.order.calculate_total(order_id)
         services.order.update_total(order_id, subtotal)
 
-        # Calculate tax and tip (tip varies by dining option)
-        tax_amount = services.tax.calculate_tax(subtotal)
-        tip_amount = calculate_tip(subtotal, dining, party_size)
+        # Apply auto-gratuity service charge for large parties (6+)
+        service_charge_applied = nil
+        if party_size >= 6
+          service_charge_applied = apply_auto_gratuity(order_id, subtotal)
+        end
+
+        # Calculate tax (per-item if tax rates are assigned, otherwise flat rate)
+        tax_amount = calculate_order_tax(added_line_items, selected_items, subtotal)
+        # If auto-gratuity was applied, tip is $0 (already included in service charge)
+        tip_amount = service_charge_applied ? 0 : calculate_tip(subtotal, dining, party_size)
 
         # Process payment (may use gift card ~10% of the time)
         process_order_payment(
@@ -451,7 +498,8 @@ module CloverSandboxSimulator
           tip: tip_amount,
           tax: tax_amount,
           order_time: order_time,
-          discount_applied: discount_applied
+          discount_applied: discount_applied,
+          order_type: selected_order_type&.dig("label")
         }
 
         final_order
@@ -692,6 +740,29 @@ module CloverSandboxSimulator
         "HERE"
       end
 
+      # Select order type based on dining option
+      # Maps dining options to order type labels
+      ORDER_TYPE_MAPPING = {
+        "HERE" => ["Dine In"],
+        "TO_GO" => ["Takeout", "Curbside Pickup"],
+        "DELIVERY" => ["Delivery"]
+      }.freeze
+
+      def select_order_type(dining, order_types)
+        return nil if order_types.empty?
+
+        preferred_labels = ORDER_TYPE_MAPPING[dining] || ["Dine In"]
+
+        # Try to find a matching order type
+        matching = order_types.select do |ot|
+          label = ot["label"]&.downcase
+          preferred_labels.any? { |pref| label&.include?(pref.downcase) }
+        end
+
+        # Return a random matching type, or a random type if no match
+        matching.any? ? matching.sample : order_types.sample
+      end
+
       def select_items_for_period(period, data, count, party_size)
         preferred_categories = CATEGORY_PREFERENCES[period] || CATEGORY_PREFERENCES[:dinner]
 
@@ -749,6 +820,51 @@ module CloverSandboxSimulator
         end
 
         (subtotal * tip_percent / 100.0).round
+      end
+
+      # Calculate tax for an order
+      # Uses per-item tax rates if assigned, otherwise falls back to flat rate
+      def calculate_order_tax(line_items, selected_items, subtotal)
+        # Build a lookup of item_id -> price for per-item calculation
+        item_prices = {}
+        line_items.each_with_index do |line_item, idx|
+          next unless line_item
+
+          item_id = line_item.dig("item", "id") || selected_items[idx]&.dig("id")
+          next unless item_id
+
+          quantity = line_item["quantity"] || 1
+          price = line_item["price"] || selected_items[idx]&.dig("price") || 0
+          item_prices[item_id] ||= 0
+          item_prices[item_id] += price * quantity
+        end
+
+        # Try to calculate per-item taxes
+        per_item_tax = calculate_per_item_tax(item_prices)
+
+        # If per-item tax works, use it; otherwise fall back to flat rate
+        if per_item_tax > 0
+          logger.debug "  Tax calculated per-item: $#{'%.2f' % (per_item_tax / 100.0)}"
+          per_item_tax
+        else
+          # Fall back to flat rate
+          services.tax.calculate_tax(subtotal)
+        end
+      end
+
+      # Calculate tax for each item based on their assigned tax rates
+      def calculate_per_item_tax(item_prices)
+        return 0 if item_prices.empty?
+
+        # Use the TaxService's cached calculation for efficiency
+        items = item_prices.map { |item_id, amount| { item_id: item_id, amount: amount } }
+
+        begin
+          services.tax.calculate_items_tax(items)
+        rescue StandardError => e
+          logger.debug "Could not calculate per-item tax: #{e.message}"
+          0
+        end
       end
 
       def process_order_payment(order_id:, subtotal:, tax_amount:, tip_amount:, employee_id:, tenders:, dining:, party_size:, gift_cards: [], gift_card_tender: nil)
@@ -811,7 +927,23 @@ module CloverSandboxSimulator
             tip_amount: tip_amount,
             tax_amount: tax_amount
           )
+
+          # Track cash events for cash payments
+          if tender["label"]&.downcase == "cash"
+            record_cash_payment_event(employee_id: employee_id, amount: subtotal + tip_amount + tax_amount)
+          end
         end
+      end
+
+      # Record a cash payment event for cash drawer tracking
+      def record_cash_payment_event(employee_id:, amount:)
+        services.cash_event.record_cash_payment(employee_id: employee_id, amount: amount)
+        @stats[:cash_events] ||= { payments: 0, amount: 0 }
+        @stats[:cash_events][:payments] += 1
+        @stats[:cash_events][:amount] += amount
+        logger.debug "  💵 Cash payment recorded: $#{'%.2f' % (amount / 100.0)}"
+      rescue StandardError => e
+        logger.debug "Could not record cash event: #{e.message}"
       end
 
       # Process payment using a gift card (full or partial)
@@ -963,6 +1095,7 @@ module CloverSandboxSimulator
         tip = metadata[:tip] || 0
         tax = metadata[:tax] || 0
         dining = metadata[:dining] || "HERE"
+        order_type = metadata[:order_type]
 
         @stats[:revenue] += subtotal
         @stats[:tips] += tip
@@ -980,6 +1113,13 @@ module CloverSandboxSimulator
         @stats[:by_dining][dining] ||= { orders: 0, revenue: 0 }
         @stats[:by_dining][dining][:orders] += 1
         @stats[:by_dining][dining][:revenue] += subtotal
+
+        # Track by order type
+        if order_type
+          @stats[:by_order_type][order_type] ||= { orders: 0, revenue: 0 }
+          @stats[:by_order_type][order_type][:orders] += 1
+          @stats[:by_order_type][order_type][:revenue] += subtotal
+        end
       end
 
       def print_summary
@@ -1029,6 +1169,31 @@ module CloverSandboxSimulator
           end
         end
 
+        # Print service charge stats
+        if @stats[:service_charges] && @stats[:service_charges][:count] > 0
+          logger.info ""
+          logger.info "SERVICE CHARGES:"
+          logger.info "  Auto-gratuity: #{@stats[:service_charges][:count]} orders"
+          logger.info "  Amount:        $#{'%.2f' % (@stats[:service_charges][:amount] / 100.0)}"
+        end
+
+        # Print order type stats
+        if @stats[:by_order_type].any?
+          logger.info ""
+          logger.info "BY ORDER TYPE:"
+          @stats[:by_order_type].each do |type, data|
+            logger.info "  #{type.to_s.ljust(15)} #{data[:orders].to_s.rjust(3)} orders | $#{'%.2f' % (data[:revenue] / 100.0)}"
+          end
+        end
+
+        # Print cash event stats
+        if @stats[:cash_events] && @stats[:cash_events][:payments] > 0
+          logger.info ""
+          logger.info "CASH EVENTS:"
+          logger.info "  Cash payments: #{@stats[:cash_events][:payments]}"
+          logger.info "  Total amount:  $#{'%.2f' % (@stats[:cash_events][:amount] / 100.0)}"
+        end
+
         # Print refund stats if any refunds occurred
         if @stats[:refunds][:total] > 0
           logger.info ""
@@ -1063,6 +1228,123 @@ module CloverSandboxSimulator
           "Separate checks"
         ]
         notes.sample
+      end
+
+      # Modifier application probability (30% of line items get modifiers when applicable)
+      MODIFIER_PROBABILITY = 0.30
+
+      # Auto-gratuity configuration
+      AUTO_GRATUITY_THRESHOLD = 6   # Party size threshold
+      AUTO_GRATUITY_PERCENTAGE = 18.0  # 18%
+
+      # Apply auto-gratuity service charge to an order
+      # @param order_id [String] The order ID
+      # @param subtotal [Integer] The order subtotal in cents
+      # @return [Hash, nil] The applied service charge or nil if failed
+      def apply_auto_gratuity(order_id, subtotal)
+        logger.info "  💵 Applying auto-gratuity (#{AUTO_GRATUITY_PERCENTAGE}%) for large party"
+
+        begin
+          result = services.service_charge.apply_service_charge_to_order(
+            order_id,
+            name: "Auto Gratuity (#{AUTO_GRATUITY_PERCENTAGE.to_i}%)",
+            percentage: AUTO_GRATUITY_PERCENTAGE
+          )
+
+          if result
+            calculated_amount = (subtotal * AUTO_GRATUITY_PERCENTAGE / 100.0).round
+            @stats[:service_charges] ||= { count: 0, amount: 0 }
+            @stats[:service_charges][:count] += 1
+            @stats[:service_charges][:amount] += calculated_amount
+            logger.info "  💵 Auto-gratuity applied: $#{'%.2f' % (calculated_amount / 100.0)}"
+          end
+
+          result
+        rescue StandardError => e
+          logger.warn "  Failed to apply auto-gratuity: #{e.message}"
+          nil
+        end
+      end
+
+      # Apply modifiers to line items based on item's modifier groups
+      # @param order_id [String] The order ID
+      # @param line_items [Array<Hash>] Line items added to the order
+      # @param items [Array<Hash>] Original items data with modifier group associations
+      # @param modifier_groups [Array<Hash>] All available modifier groups with modifiers
+      # @return [Integer] Number of line items that received modifiers
+      def apply_modifiers_to_line_items(order_id:, line_items:, items:, modifier_groups:)
+        return 0 if line_items.empty? || modifier_groups.empty?
+
+        # Build lookup maps for efficiency
+        items_by_id = items.each_with_object({}) { |item, h| h[item["id"]] = item }
+        modifier_groups_by_id = modifier_groups.each_with_object({}) { |mg, h| h[mg["id"]] = mg }
+
+        modified_count = 0
+
+        line_items.each do |line_item|
+          item_id = line_item.dig("item", "id")
+          next unless item_id
+
+          item = items_by_id[item_id]
+          next unless item
+
+          # Get item's associated modifier groups
+          item_modifier_group_ids = item.dig("modifierGroups", "elements")&.map { |mg| mg["id"] } || []
+          next if item_modifier_group_ids.empty?
+
+          # Probabilistically decide whether to apply modifiers
+          next unless rand < MODIFIER_PROBABILITY
+
+          # Select random modifiers from applicable groups
+          selected_modifier_ids = select_modifiers_for_item(item_modifier_group_ids, modifier_groups_by_id)
+          next if selected_modifier_ids.empty?
+
+          # Apply the modifiers to the line item
+          begin
+            services.order.add_modifications(order_id, line_item_id: line_item["id"], modifier_ids: selected_modifier_ids)
+            modified_count += 1
+            logger.debug "  Applied #{selected_modifier_ids.size} modifier(s) to line item #{line_item['id']}"
+          rescue StandardError => e
+            logger.warn "  Failed to apply modifiers to line item #{line_item['id']}: #{e.message}"
+          end
+        end
+
+        modified_count
+      end
+
+      # Select random modifiers from the item's modifier groups
+      # @param modifier_group_ids [Array<String>] IDs of modifier groups associated with the item
+      # @param modifier_groups_by_id [Hash] Modifier groups indexed by ID
+      # @return [Array<String>] Selected modifier IDs
+      def select_modifiers_for_item(modifier_group_ids, modifier_groups_by_id)
+        selected = []
+
+        modifier_group_ids.each do |mg_id|
+          mg = modifier_groups_by_id[mg_id]
+          next unless mg
+
+          modifiers = mg.dig("modifiers", "elements") || []
+          next if modifiers.empty?
+
+          min_required = mg["minRequired"] || 0
+          max_allowed = mg["maxAllowed"] || modifiers.size
+
+          # Determine how many modifiers to select
+          # For required groups, select at least min_required
+          # For optional groups, randomly decide whether to select any
+          if min_required > 0
+            count = rand(min_required..[min_required + 1, max_allowed].min)
+          else
+            # 50% chance to select modifiers from optional groups
+            count = rand < 0.5 ? rand(1..[2, max_allowed].min) : 0
+          end
+
+          # Select random modifiers
+          selected_mods = modifiers.sample(count)
+          selected.concat(selected_mods.map { |m| m["id"] })
+        end
+
+        selected
       end
     end
   end

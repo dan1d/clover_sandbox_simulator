@@ -1,0 +1,362 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/items?expand=categories,modifierGroups
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Allowed-Filter-Fields:
+      - modifiedTime, hidden, itemCode, available, lowStock, option.id, excludeCashDiscount,
+        type, modifierGroup.id, autoManage, all_categorized_items.item_uuid, price,
+        menuId, id, sku, defaultTaxRates, menuItemEnabled, ageRestricted, tags.id,
+        alternateName, isRevenue, tags.name, deleted, item.id, name, price_type, itemStock.quantity,
+        itemGroup.id
+      X-Clover-Request-Id:
+      - fb153031-40e4-4f58-8be8-8c325376317b
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"elements": [ {"id": "64TSD94BZX1CC", "hidden": false, "available":
+        true, "autoManage": false, "name": "Soup of the Day", "price": 599, "priceType":
+        "FIXED", "defaultTaxRates": true, "isRevenue": true, "modifierGroups": {"elements":
+        [ ]}, "categories": {"elements": [ {"id": "9HXEMGFFVH4Z8", "name": "Specials",
+        "sortOrder": 7, "deleted": false}]}, "modifiedTime": 1770157294000, "deleted":
+        false}, {"id": "RT5NGXYPWKVS4", "hidden": false, "available": true, "autoManage":
+        false, "name": "Chef''s Special", "price": 2499, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "9HXEMGFFVH4Z8", "name": "Specials", "sortOrder": 7,
+        "deleted": false}]}, "modifiedTime": 1770157292000, "deleted": false}, {"id":
+        "CS9YF4ND8VX5E", "hidden": false, "available": true, "autoManage": false,
+        "name": "Long Island Iced Tea", "price": 1099, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "ZACXRPFMGN8YJ", "name": "Alcoholic Beverages", "sortOrder":
+        6, "deleted": false}]}, "modifiedTime": 1770157291000, "deleted": false},
+        {"id": "E1YCK2A4XGVST", "hidden": false, "available": true, "autoManage":
+        false, "name": "Margarita", "price": 999, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "ZACXRPFMGN8YJ", "name": "Alcoholic Beverages", "sortOrder":
+        6, "deleted": false}]}, "modifiedTime": 1770157289000, "deleted": false},
+        {"id": "AJ56YPC2AWJWT", "hidden": false, "available": true, "autoManage":
+        false, "name": "Premium Wine", "price": 1199, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "ZACXRPFMGN8YJ", "name": "Alcoholic Beverages", "sortOrder":
+        6, "deleted": false}]}, "modifiedTime": 1770157287000, "deleted": false},
+        {"id": "5TV3FEWD7PFPW", "hidden": false, "available": true, "autoManage":
+        false, "name": "House Wine", "price": 799, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "ZACXRPFMGN8YJ", "name": "Alcoholic Beverages", "sortOrder":
+        6, "deleted": false}]}, "modifiedTime": 1770157286000, "deleted": false},
+        {"id": "97MKC0EJR7QKY", "hidden": false, "available": true, "autoManage":
+        false, "name": "Import Beer", "price": 649, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "ZACXRPFMGN8YJ", "name": "Alcoholic Beverages", "sortOrder":
+        6, "deleted": false}]}, "modifiedTime": 1770157284000, "deleted": false},
+        {"id": "NJQA27RS391T6", "hidden": false, "available": true, "autoManage":
+        false, "name": "Domestic Beer", "price": 499, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "ZACXRPFMGN8YJ", "name": "Alcoholic Beverages", "sortOrder":
+        6, "deleted": false}]}, "modifiedTime": 1770157283000, "deleted": false},
+        {"id": "CY0CAG7XJ6GFJ", "hidden": false, "available": true, "autoManage":
+        false, "name": "Draft Beer", "price": 599, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "ZACXRPFMGN8YJ", "name": "Alcoholic Beverages", "sortOrder":
+        6, "deleted": false}]}, "modifiedTime": 1770157281000, "deleted": false},
+        {"id": "S9TKJ5AB89RV6", "hidden": false, "available": true, "autoManage":
+        false, "name": "Hot Tea", "price": 299, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "Z0EKFDXMBRFBT", "name": "Drinks", "sortOrder": 5, "deleted":
+        false}]}, "modifiedTime": 1770157279000, "deleted": false}, {"id": "6DCGJQ0FQY7F8",
+        "hidden": false, "available": true, "autoManage": false, "name": "Coffee",
+        "price": 349, "priceType": "FIXED", "defaultTaxRates": true, "isRevenue":
+        true, "modifierGroups": {"elements": [ ]}, "categories": {"elements": [ {"id":
+        "Z0EKFDXMBRFBT", "name": "Drinks", "sortOrder": 5, "deleted": false}]}, "modifiedTime":
+        1770157278000, "deleted": false}, {"id": "PTMRCJX5VYKZ4", "hidden": false,
+        "available": true, "autoManage": false, "name": "Lemonade", "price": 349,
+        "priceType": "FIXED", "defaultTaxRates": true, "isRevenue": true, "modifierGroups":
+        {"elements": [ ]}, "categories": {"elements": [ {"id": "Z0EKFDXMBRFBT", "name":
+        "Drinks", "sortOrder": 5, "deleted": false}]}, "modifiedTime": 1770157276000,
+        "deleted": false}, {"id": "AY2ACJ2GAZY8W", "hidden": false, "available": true,
+        "autoManage": false, "name": "Iced Tea", "price": 299, "priceType": "FIXED",
+        "defaultTaxRates": true, "isRevenue": true, "modifierGroups": {"elements":
+        [ ]}, "categories": {"elements": [ {"id": "Z0EKFDXMBRFBT", "name": "Drinks",
+        "sortOrder": 5, "deleted": false}]}, "modifiedTime": 1770157275000, "deleted":
+        false}, {"id": "KP7VG8G05PXEM", "hidden": false, "available": true, "autoManage":
+        false, "name": "Soft Drink", "price": 299, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "Z0EKFDXMBRFBT", "name": "Drinks", "sortOrder": 5, "deleted":
+        false}]}, "modifiedTime": 1770157273000, "deleted": false}, {"id": "7VVPBRYCVKC50",
+        "hidden": false, "available": true, "autoManage": false, "name": "Tiramisu",
+        "price": 899, "priceType": "FIXED", "defaultTaxRates": true, "isRevenue":
+        true, "modifierGroups": {"elements": [ ]}, "categories": {"elements": [ {"id":
+        "1ZSWWYV3YSREC", "name": "Desserts", "sortOrder": 4, "deleted": false}]},
+        "modifiedTime": 1770157271000, "deleted": false}, {"id": "FHVY0DA69KPNE",
+        "hidden": false, "available": true, "autoManage": false, "name": "Apple Pie",
+        "price": 749, "priceType": "FIXED", "defaultTaxRates": true, "isRevenue":
+        true, "modifierGroups": {"elements": [ ]}, "categories": {"elements": [ {"id":
+        "1ZSWWYV3YSREC", "name": "Desserts", "sortOrder": 4, "deleted": false}]},
+        "modifiedTime": 1770157270000, "deleted": false}, {"id": "Z2AFSTTGGC5D0",
+        "hidden": false, "available": true, "autoManage": false, "name": "New York
+        Cheesecake", "price": 799, "priceType": "FIXED", "defaultTaxRates": true,
+        "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories": {"elements":
+        [ {"id": "1ZSWWYV3YSREC", "name": "Desserts", "sortOrder": 4, "deleted": false}]},
+        "modifiedTime": 1770157268000, "deleted": false}, {"id": "FQQZ9672535MT",
+        "hidden": false, "available": true, "autoManage": false, "name": "Chocolate
+        Brownie", "price": 699, "priceType": "FIXED", "defaultTaxRates": true, "isRevenue":
+        true, "modifierGroups": {"elements": [ ]}, "categories": {"elements": [ {"id":
+        "1ZSWWYV3YSREC", "name": "Desserts", "sortOrder": 4, "deleted": false}]},
+        "modifiedTime": 1770157267000, "deleted": false}, {"id": "BB3A8DKSNDDE8",
+        "hidden": false, "available": true, "autoManage": false, "name": "Steamed
+        Vegetables", "price": 449, "priceType": "FIXED", "defaultTaxRates": true,
+        "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories": {"elements":
+        [ {"id": "PXQVFG7PBDNJ2", "name": "Sides", "sortOrder": 3, "deleted": false}]},
+        "modifiedTime": 1770157265000, "deleted": false}, {"id": "50V65E2J41GCE",
+        "hidden": false, "available": true, "autoManage": false, "name": "Mashed Potatoes",
+        "price": 499, "priceType": "FIXED", "defaultTaxRates": true, "isRevenue":
+        true, "modifierGroups": {"elements": [ ]}, "categories": {"elements": [ {"id":
+        "PXQVFG7PBDNJ2", "name": "Sides", "sortOrder": 3, "deleted": false}]}, "modifiedTime":
+        1770157264000, "deleted": false}, {"id": "3K4FATRGYWMTP", "hidden": false,
+        "available": true, "autoManage": false, "name": "Coleslaw", "price": 399,
+        "priceType": "FIXED", "defaultTaxRates": true, "isRevenue": true, "modifierGroups":
+        {"elements": [ ]}, "categories": {"elements": [ {"id": "PXQVFG7PBDNJ2", "name":
+        "Sides", "sortOrder": 3, "deleted": false}]}, "modifiedTime": 1770157262000,
+        "deleted": false}, {"id": "D3MH2FVAMQG0R", "hidden": false, "available": true,
+        "autoManage": false, "name": "Onion Rings", "price": 549, "priceType": "FIXED",
+        "defaultTaxRates": true, "isRevenue": true, "modifierGroups": {"elements":
+        [ ]}, "categories": {"elements": [ {"id": "PXQVFG7PBDNJ2", "name": "Sides",
+        "sortOrder": 3, "deleted": false}]}, "modifiedTime": 1770157260000, "deleted":
+        false}, {"id": "6E1Q38E8NV730", "hidden": false, "available": true, "autoManage":
+        false, "name": "Sweet Potato Fries", "price": 599, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "PXQVFG7PBDNJ2", "name": "Sides", "sortOrder": 3, "deleted":
+        false}]}, "modifiedTime": 1770157259000, "deleted": false}, {"id": "QM3Q7VEQ72VEP",
+        "hidden": false, "available": true, "autoManage": false, "name": "French Fries",
+        "price": 499, "priceType": "FIXED", "defaultTaxRates": true, "isRevenue":
+        true, "modifierGroups": {"elements": [ ]}, "categories": {"elements": [ {"id":
+        "PXQVFG7PBDNJ2", "name": "Sides", "sortOrder": 3, "deleted": false}]}, "modifiedTime":
+        1770157257000, "deleted": false}, {"id": "CC9XD412YQWCP", "hidden": false,
+        "available": true, "autoManage": false, "name": "Grilled Chicken Salad", "price":
+        1399, "priceType": "FIXED", "defaultTaxRates": true, "isRevenue": true, "modifierGroups":
+        {"elements": [ ]}, "categories": {"elements": [ {"id": "F5HVT27ESFPFJ", "name":
+        "Entrees", "sortOrder": 2, "deleted": false}]}, "modifiedTime": 1770157256000,
+        "deleted": false}, {"id": "R2NBWPCSRVBTA", "hidden": false, "available": true,
+        "autoManage": false, "name": "Caesar Salad", "price": 1199, "priceType": "FIXED",
+        "defaultTaxRates": true, "isRevenue": true, "modifierGroups": {"elements":
+        [ ]}, "categories": {"elements": [ {"id": "F5HVT27ESFPFJ", "name": "Entrees",
+        "sortOrder": 2, "deleted": false}]}, "modifiedTime": 1770157254000, "deleted":
+        false}, {"id": "5EWVNB201NHMT", "hidden": false, "available": true, "autoManage":
+        false, "name": "BBQ Ribs", "price": 2399, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "F5HVT27ESFPFJ", "name": "Entrees", "sortOrder": 2,
+        "deleted": false}]}, "modifiedTime": 1770157252000, "deleted": false}, {"id":
+        "1CR681ZZF2SR4", "hidden": false, "available": true, "autoManage": false,
+        "name": "Fish and Chips", "price": 1699, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "F5HVT27ESFPFJ", "name": "Entrees", "sortOrder": 2,
+        "deleted": false}]}, "modifiedTime": 1770157251000, "deleted": false}, {"id":
+        "E8RRRQ4Q269AE", "hidden": false, "available": true, "autoManage": false,
+        "name": "Fettuccine Alfredo", "price": 1599, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "F5HVT27ESFPFJ", "name": "Entrees", "sortOrder": 2,
+        "deleted": false}]}, "modifiedTime": 1770157249000, "deleted": false}, {"id":
+        "W2716TYRAPP12", "hidden": false, "available": true, "autoManage": false,
+        "name": "Chicken Parmesan", "price": 1899, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "F5HVT27ESFPFJ", "name": "Entrees", "sortOrder": 2,
+        "deleted": false}]}, "modifiedTime": 1770157248000, "deleted": false}, {"id":
+        "EVDFBH310K6Z6", "hidden": false, "available": true, "autoManage": false,
+        "name": "NY Strip Steak", "price": 2899, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "F5HVT27ESFPFJ", "name": "Entrees", "sortOrder": 2,
+        "deleted": false}]}, "modifiedTime": 1770157246000, "deleted": false}, {"id":
+        "645DVBYFWXX92", "hidden": false, "available": true, "autoManage": false,
+        "name": "Grilled Salmon", "price": 2199, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "F5HVT27ESFPFJ", "name": "Entrees", "sortOrder": 2,
+        "deleted": false}]}, "modifiedTime": 1770157244000, "deleted": false}, {"id":
+        "DCP9PNGBKXWWM", "hidden": false, "available": true, "autoManage": false,
+        "name": "Bacon Cheeseburger", "price": 1699, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "F5HVT27ESFPFJ", "name": "Entrees", "sortOrder": 2,
+        "deleted": false}]}, "modifiedTime": 1770157243000, "deleted": false}, {"id":
+        "CG9DN2VH7SX0J", "hidden": false, "available": true, "autoManage": false,
+        "name": "Classic Burger", "price": 1499, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "F5HVT27ESFPFJ", "name": "Entrees", "sortOrder": 2,
+        "deleted": false}]}, "modifiedTime": 1770157241000, "deleted": false}, {"id":
+        "7B0YHHTA7T12R", "hidden": false, "available": true, "autoManage": false,
+        "name": "Calamari", "price": 1399, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "5H2Y77NW7J4NG", "name": "Appetizers", "sortOrder":
+        1, "deleted": false}]}, "modifiedTime": 1770157239000, "deleted": false},
+        {"id": "0TE92EJK5DHZ8", "hidden": false, "available": true, "autoManage":
+        false, "name": "Spinach Artichoke Dip", "price": 1199, "priceType": "FIXED",
+        "defaultTaxRates": true, "isRevenue": true, "modifierGroups": {"elements":
+        [ ]}, "categories": {"elements": [ {"id": "5H2Y77NW7J4NG", "name": "Appetizers",
+        "sortOrder": 1, "deleted": false}]}, "modifiedTime": 1770157237000, "deleted":
+        false}, {"id": "85J3WWY089E8Y", "hidden": false, "available": true, "autoManage":
+        false, "name": "Mozzarella Sticks", "price": 899, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "5H2Y77NW7J4NG", "name": "Appetizers", "sortOrder":
+        1, "deleted": false}]}, "modifiedTime": 1770157236000, "deleted": false},
+        {"id": "P263A474180V0", "hidden": false, "available": true, "autoManage":
+        false, "name": "Loaded Nachos", "price": 1099, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "5H2Y77NW7J4NG", "name": "Appetizers", "sortOrder":
+        1, "deleted": false}]}, "modifiedTime": 1770157234000, "deleted": false},
+        {"id": "SBEYBMQY4C1Q2", "hidden": false, "available": true, "autoManage":
+        false, "name": "Buffalo Wings", "price": 1299, "priceType": "FIXED", "defaultTaxRates":
+        true, "isRevenue": true, "modifierGroups": {"elements": [ ]}, "categories":
+        {"elements": [ {"id": "5H2Y77NW7J4NG", "name": "Appetizers", "sortOrder":
+        1, "deleted": false}]}, "modifiedTime": 1770157232000, "deleted": false}],
+        "href": "http://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/items?limit=100"}'
+  recorded_at: Wed, 04 Feb 2026 22:06:16 GMT
+- request:
+    method: get
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/tax_rates
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Allowed-Filter-Fields:
+      - isDefault, rate, items.id, name, id, taxAmount, taxType
+      X-Clover-Request-Id:
+      - 1edd6ffe-6cad-42c8-97c8-e50d457e1dba
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"elements": [ {"id": "ASGV2CSAHNKZP", "name": "Prepared Food Tax",
+        "taxType": "VAT_EXEMPT", "rate": 825000, "isDefault": false}, {"id": "ZSEVM0FPFF2B6",
+        "name": "Alcohol Tax", "taxType": "VAT_EXEMPT", "rate": 1000000, "isDefault":
+        false}, {"id": "1V879SFH2KXST", "name": "Sales Tax", "taxType": "VAT_EXEMPT",
+        "rate": 825000, "isDefault": true}, {"id": "S8PTQGPP59064", "name": "Test
+        Tax 1770242771", "taxType": "VAT_EXEMPT", "rate": 550000, "isDefault": false},
+        {"id": "EGHPEPQ0XZ2K8", "name": "NO_TAX_APPLIED", "rate": 0, "isDefault":
+        false}], "href": "http://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/tax_rates?limit=100"}'
+  recorded_at: Wed, 04 Feb 2026 22:06:16 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/tax_rate_items
+    body:
+      encoding: UTF-8
+      string: '{"elements":[{"item":{"id":"64TSD94BZX1CC"},"taxRate":{"id":"ASGV2CSAHNKZP"}}]}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '79'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - eab9bb27-1a4b-40cb-aab5-bf2a834734de
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: "{}"
+  recorded_at: Wed, 04 Feb 2026 22:06:17 GMT
+recorded_with: VCR 6.4.0

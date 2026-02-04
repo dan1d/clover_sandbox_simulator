@@ -308,6 +308,149 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::TaxService do
     end
   end
 
+  describe "#get_items_for_tax_rate" do
+    it "fetches all items associated with a tax rate" do
+      stub_request(:get, "#{base_url}/tax_rates/TAX1/items")
+        .to_return(
+          status: 200,
+          body: { elements: [
+            { "id" => "ITEM1", "name" => "Burger" },
+            { "id" => "ITEM2", "name" => "Fries" }
+          ] }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      items = service.get_items_for_tax_rate("TAX1")
+
+      expect(items.size).to eq(2)
+      expect(items.first["name"]).to eq("Burger")
+    end
+  end
+
+  describe "#get_tax_rates_for_item" do
+    it "fetches all tax rates associated with an item" do
+      stub_request(:get, "#{base_url}/items/ITEM1/tax_rates")
+        .to_return(
+          status: 200,
+          body: { elements: [
+            { "id" => "TAX1", "name" => "State Tax", "rate" => 600_000 },
+            { "id" => "TAX2", "name" => "Local Tax", "rate" => 225_000 }
+          ] }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      rates = service.get_tax_rates_for_item("ITEM1")
+
+      expect(rates.size).to eq(2)
+      expect(rates.map { |r| r["name"] }).to include("State Tax", "Local Tax")
+    end
+  end
+
+  describe "#associate_item_with_tax_rate" do
+    it "associates an item with a tax rate" do
+      stub_request(:post, "#{base_url}/tax_rate_items")
+        .with(body: hash_including(
+          "elements" => [{ "item" => { "id" => "ITEM1" }, "taxRate" => { "id" => "TAX1" } }]
+        ))
+        .to_return(
+          status: 200,
+          body: { elements: [{ "item" => { "id" => "ITEM1" }, "taxRate" => { "id" => "TAX1" } }] }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      result = service.associate_item_with_tax_rate("ITEM1", "TAX1")
+
+      expect(result).to be_truthy
+    end
+  end
+
+  describe "#remove_item_from_tax_rate" do
+    it "removes an item from a tax rate" do
+      stub_request(:delete, "#{base_url}/tax_rate_items")
+        .with(query: { item: "ITEM1", taxRate: "TAX1" })
+        .to_return(status: 200, body: "")
+
+      expect { service.remove_item_from_tax_rate("ITEM1", "TAX1") }.not_to raise_error
+    end
+  end
+
+  describe "#calculate_item_tax" do
+    it "calculates tax for an item based on its assigned tax rates" do
+      # Mock get_tax_rates_for_item to return two rates totaling 8.25%
+      stub_request(:get, "#{base_url}/items/ITEM1/tax_rates")
+        .to_return(
+          status: 200,
+          body: { elements: [
+            { "id" => "TAX1", "name" => "State Tax", "rate" => 600_000 },  # 6%
+            { "id" => "TAX2", "name" => "Local Tax", "rate" => 225_000 }   # 2.25%
+          ] }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      # 8.25% of 1000 = 82.5, rounds to 83
+      result = service.calculate_item_tax("ITEM1", 1000)
+
+      expect(result).to eq(83)
+    end
+
+    it "returns zero for items with no tax rates" do
+      stub_request(:get, "#{base_url}/items/ITEM1/tax_rates")
+        .to_return(
+          status: 200,
+          body: { elements: [] }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      result = service.calculate_item_tax("ITEM1", 1000)
+
+      expect(result).to eq(0)
+    end
+  end
+
+  describe "#setup_default_tax_rates" do
+    it "creates standard restaurant tax rates if they don't exist" do
+      # First call - check existing (empty)
+      stub_request(:get, "#{base_url}/tax_rates")
+        .to_return(
+          status: 200,
+          body: { elements: [] }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      # Create the tax rates
+      stub_request(:post, "#{base_url}/tax_rates")
+        .to_return { |request|
+          body = JSON.parse(request.body)
+          { body: { id: "TAX_NEW", name: body["name"], rate: body["rate"] }.to_json }
+        }
+
+      result = service.setup_default_tax_rates
+
+      expect(result).to be_an(Array)
+      expect(result.size).to be >= 1
+    end
+
+    it "skips existing tax rates (idempotent)" do
+      # Return existing tax rates that match default names
+      stub_request(:get, "#{base_url}/tax_rates")
+        .to_return(
+          status: 200,
+          body: { elements: [
+            { "id" => "TAX1", "name" => "Sales Tax", "rate" => 825_000 },
+            { "id" => "TAX2", "name" => "Alcohol Tax", "rate" => 1_000_000 },
+            { "id" => "TAX3", "name" => "Prepared Food Tax", "rate" => 825_000 }
+          ] }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      # No POST should be made since all defaults exist
+      result = service.setup_default_tax_rates
+
+      expect(result).to be_an(Array)
+      expect(result.size).to eq(3)
+    end
+  end
+
   describe "API error handling" do
     it "raises ApiError on 401 Unauthorized" do
       stub_request(:get, "#{base_url}/tax_rates")

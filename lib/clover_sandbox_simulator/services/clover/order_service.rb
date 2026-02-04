@@ -91,6 +91,35 @@ module CloverSandboxSimulator
           line_items
         end
 
+        # Add a single modification (modifier) to a line item
+        # @param order_id [String] The order ID
+        # @param line_item_id [String] The line item ID to modify
+        # @param modifier_id [String] The modifier ID to add
+        # @return [Hash] The created modification
+        def add_modification(order_id, line_item_id:, modifier_id:)
+          logger.debug "Adding modifier #{modifier_id} to line item #{line_item_id}"
+
+          payload = { "modifier" => { "id" => modifier_id } }
+          request(:post, endpoint("orders/#{order_id}/line_items/#{line_item_id}/modifications"), payload: payload)
+        end
+
+        # Add multiple modifications to a line item
+        # @param order_id [String] The order ID
+        # @param line_item_id [String] The line item ID to modify
+        # @param modifier_ids [Array<String>] Array of modifier IDs to add
+        # @return [Array<Hash>] Array of created modifications
+        def add_modifications(order_id, line_item_id:, modifier_ids:)
+          logger.info "Adding #{modifier_ids.size} modifiers to line item #{line_item_id}"
+
+          modifications = []
+          modifier_ids.each do |modifier_id|
+            mod = add_modification(order_id, line_item_id: line_item_id, modifier_id: modifier_id)
+            modifications << mod if mod
+          end
+
+          modifications
+        end
+
         # Apply discount to order
         # IMPORTANT: Always sends calculated amount, not percentage, so that
         # the discount amount is correctly returned when fetching the order.

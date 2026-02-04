@@ -202,7 +202,268 @@ RSpec.describe CloverSandboxSimulator::Generators::EntityGenerator do
     end
   end
 
+  describe "#setup_modifier_groups" do
+    context "when no modifier groups exist" do
+      it "creates all modifier groups from data file" do
+        # Stub empty modifier groups response
+        stub_request(:get, "#{base_url}/modifier_groups")
+          .with(query: { expand: "modifiers" })
+          .to_return(
+            status: 200,
+            body: { elements: [] }.to_json,
+            headers: { "Content-Type" => "application/json" }
+          )
+
+        # Stub modifier group creation
+        stub_request(:post, "#{base_url}/modifier_groups")
+          .to_return(
+            status: 200,
+            body: ->(request) {
+              data = JSON.parse(request.body)
+              { id: "MG_#{rand(1000)}", name: data["name"], minRequired: data["minRequired"], maxAllowed: data["maxAllowed"] }.to_json
+            },
+            headers: { "Content-Type" => "application/json" }
+          )
+
+        # Stub modifier creation
+        stub_request(:post, %r{#{base_url}/modifier_groups/.*/modifiers})
+          .to_return(
+            status: 200,
+            body: ->(request) {
+              data = JSON.parse(request.body)
+              { id: "MOD_#{rand(1000)}", name: data["name"], price: data["price"] }.to_json
+            },
+            headers: { "Content-Type" => "application/json" }
+          )
+
+        modifier_groups = generator.setup_modifier_groups
+
+        expect(modifier_groups.size).to eq(5) # From modifiers.json
+      end
+    end
+
+    context "when modifier groups already exist" do
+      it "is idempotent - does not create duplicates" do
+        # Include ALL modifiers that match modifiers.json to ensure ensure_modifiers_for_group doesn't create them
+        existing_groups = [
+          { "id" => "MG1", "name" => "Temperature", "modifiers" => { "elements" => [
+            { "id" => "M1", "name" => "Rare" }, { "id" => "M2", "name" => "Medium Rare" }, { "id" => "M3", "name" => "Medium" },
+            { "id" => "M4", "name" => "Medium Well" }, { "id" => "M5", "name" => "Well Done" }
+          ] } },
+          { "id" => "MG2", "name" => "Add-Ons", "modifiers" => { "elements" => [
+            { "id" => "M6", "name" => "Extra Cheese" }, { "id" => "M7", "name" => "Bacon" }, { "id" => "M8", "name" => "Avocado" },
+            { "id" => "M9", "name" => "Fried Egg" }, { "id" => "M10", "name" => "Jalapeños" }
+          ] } },
+          { "id" => "MG3", "name" => "Side Choice", "modifiers" => { "elements" => [
+            { "id" => "M11", "name" => "French Fries" }, { "id" => "M12", "name" => "Sweet Potato Fries" }, { "id" => "M13", "name" => "Onion Rings" },
+            { "id" => "M14", "name" => "Side Salad" }, { "id" => "M15", "name" => "Coleslaw" }
+          ] } },
+          { "id" => "MG4", "name" => "Dressing", "modifiers" => { "elements" => [
+            { "id" => "M16", "name" => "Ranch" }, { "id" => "M17", "name" => "Blue Cheese" }, { "id" => "M18", "name" => "Caesar" },
+            { "id" => "M19", "name" => "Balsamic Vinaigrette" }, { "id" => "M20", "name" => "Honey Mustard" }
+          ] } },
+          { "id" => "MG5", "name" => "Drink Size", "modifiers" => { "elements" => [
+            { "id" => "M21", "name" => "Small" }, { "id" => "M22", "name" => "Medium" }, { "id" => "M23", "name" => "Large" }
+          ] } }
+        ]
+
+        stub_request(:get, "#{base_url}/modifier_groups")
+          .with(query: { expand: "modifiers" })
+          .to_return(
+            status: 200,
+            body: { elements: existing_groups }.to_json,
+            headers: { "Content-Type" => "application/json" }
+          )
+
+        # Should NOT make any POST requests for creating modifier groups
+        create_stub = stub_request(:post, "#{base_url}/modifier_groups")
+          .to_return(status: 200, body: "{}".to_json)
+
+        modifier_groups = generator.setup_modifier_groups
+
+        expect(modifier_groups.size).to eq(5)
+        expect(create_stub).not_to have_been_requested
+      end
+    end
+  end
+
+  describe "#setup_tax_rates" do
+    context "when no tax rates exist" do
+      it "creates all tax rates from data file" do
+        stub_request(:get, "#{base_url}/tax_rates")
+          .to_return(
+            status: 200,
+            body: { elements: [] }.to_json,
+            headers: { "Content-Type" => "application/json" }
+          )
+
+        stub_request(:post, "#{base_url}/tax_rates")
+          .to_return { |request|
+            data = JSON.parse(request.body)
+            { body: { id: "TAX_#{rand(1000)}", name: data["name"], rate: data["rate"] }.to_json }
+          }
+
+        tax_rates = generator.setup_tax_rates
+
+        expect(tax_rates).to be_an(Array)
+        expect(tax_rates.size).to be >= 1
+      end
+    end
+
+    context "when tax rates already exist" do
+      it "is idempotent - does not create duplicates" do
+        stub_request(:get, "#{base_url}/tax_rates")
+          .to_return(
+            status: 200,
+            body: { elements: [
+              { "id" => "TAX1", "name" => "Sales Tax", "rate" => 825_000 },
+              { "id" => "TAX2", "name" => "Alcohol Tax", "rate" => 1_000_000 },
+              { "id" => "TAX3", "name" => "Prepared Food Tax", "rate" => 825_000 }
+            ] }.to_json,
+            headers: { "Content-Type" => "application/json" }
+          )
+
+        # Should NOT make any POST requests
+        create_stub = stub_request(:post, "#{base_url}/tax_rates")
+          .to_return(status: 200, body: "{}".to_json)
+
+        tax_rates = generator.setup_tax_rates
+
+        expect(tax_rates.size).to eq(3)
+        expect(create_stub).not_to have_been_requested
+      end
+    end
+  end
+
   describe "#setup_all" do
+    it "includes modifier_groups in results" do
+      # Setup stubs
+      stub_request(:get, "#{base_url}/categories")
+        .to_return(
+          status: 200,
+          body: { elements: (1..7).map { |i| { "id" => "CAT#{i}", "name" => ["Appetizers", "Entrees", "Sides", "Desserts", "Drinks", "Alcoholic Beverages", "Specials"][i-1] } } }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:get, "#{base_url}/items")
+        .with(query: { expand: "categories,modifierGroups" })
+        .to_return(
+          status: 200,
+          body: { elements: [] }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:post, "#{base_url}/items")
+        .to_return(
+          status: 200,
+          body: ->(request) {
+            data = JSON.parse(request.body)
+            { id: "ITEM_#{rand(1000)}", name: data["name"] }.to_json
+          },
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:post, "#{base_url}/category_items")
+        .to_return(status: 200, body: "{}".to_json)
+
+      # Use actual discount names from discounts.json
+      discount_names = [
+        "Happy Hour", "Lunch Special", "Early Bird", "Senior Discount", "Military Discount",
+        "Employee Discount", "Birthday Special", "$5 Off", "$10 Off", "$20 Off",
+        "Loyalty - Bronze", "Loyalty - Silver", "Loyalty - Gold", "Loyalty - Platinum",
+        "Appetizer 50% Off", "Drink Discount", "Dessert $2 Off", "Happy Hour Drinks",
+        "Free Side", "First Order Discount"
+      ]
+      stub_request(:get, "#{base_url}/discounts")
+        .to_return(
+          status: 200,
+          body: { elements: discount_names.map.with_index { |name, i| { "id" => "D#{i+1}", "name" => name } } }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      # Include ALL modifiers in groups to avoid ensure_modifiers_for_group creating them
+      modifier_groups_with_modifiers = [
+        { "id" => "MG1", "name" => "Temperature", "modifiers" => { "elements" => [
+          { "id" => "M1", "name" => "Rare" }, { "id" => "M2", "name" => "Medium Rare" }, { "id" => "M3", "name" => "Medium" },
+          { "id" => "M4", "name" => "Medium Well" }, { "id" => "M5", "name" => "Well Done" }
+        ] } },
+        { "id" => "MG2", "name" => "Add-Ons", "modifiers" => { "elements" => [
+          { "id" => "M6", "name" => "Extra Cheese" }, { "id" => "M7", "name" => "Bacon" }, { "id" => "M8", "name" => "Avocado" },
+          { "id" => "M9", "name" => "Fried Egg" }, { "id" => "M10", "name" => "Jalapeños" }
+        ] } },
+        { "id" => "MG3", "name" => "Side Choice", "modifiers" => { "elements" => [
+          { "id" => "M11", "name" => "French Fries" }, { "id" => "M12", "name" => "Sweet Potato Fries" }, { "id" => "M13", "name" => "Onion Rings" },
+          { "id" => "M14", "name" => "Side Salad" }, { "id" => "M15", "name" => "Coleslaw" }
+        ] } },
+        { "id" => "MG4", "name" => "Dressing", "modifiers" => { "elements" => [
+          { "id" => "M16", "name" => "Ranch" }, { "id" => "M17", "name" => "Blue Cheese" }, { "id" => "M18", "name" => "Caesar" },
+          { "id" => "M19", "name" => "Balsamic Vinaigrette" }, { "id" => "M20", "name" => "Honey Mustard" }
+        ] } },
+        { "id" => "MG5", "name" => "Drink Size", "modifiers" => { "elements" => [
+          { "id" => "M21", "name" => "Small" }, { "id" => "M22", "name" => "Medium" }, { "id" => "M23", "name" => "Large" }
+        ] } }
+      ]
+      stub_request(:get, "#{base_url}/modifier_groups")
+        .with(query: { expand: "modifiers" })
+        .to_return(
+          status: 200,
+          body: { elements: modifier_groups_with_modifiers }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:get, "#{base_url}/employees")
+        .to_return(
+          status: 200,
+          body: { elements: (1..5).map { |i| { "id" => "E#{i}", "name" => "Employee #{i}" } } }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:get, "#{base_url}/customers")
+        .to_return(
+          status: 200,
+          body: { elements: (1..20).map { |i| { "id" => "C#{i}", "firstName" => "Customer", "lastName" => "#{i}" } } }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:get, "#{base_url}/order_types")
+        .to_return(
+          status: 200,
+          body: { elements: [{ "id" => "OT1", "label" => "Dine In" }, { "id" => "OT2", "label" => "Takeout" }] }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:post, "#{base_url}/order_types")
+        .to_return(
+          status: 200,
+          body: ->(request) {
+            data = JSON.parse(request.body)
+            { id: "OT_#{rand(1000)}", label: data["label"] }.to_json
+          },
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:get, "#{base_url}/tax_rates")
+        .to_return(
+          status: 200,
+          body: { elements: [
+            { "id" => "TAX1", "name" => "Sales Tax", "rate" => 825_000 },
+            { "id" => "TAX2", "name" => "Alcohol Tax", "rate" => 1_000_000 },
+            { "id" => "TAX3", "name" => "Prepared Food Tax", "rate" => 825_000 }
+          ] }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:post, "#{base_url}/tax_rate_items")
+        .to_return(status: 200, body: "{}".to_json)
+
+      results = generator.setup_all
+
+      expect(results[:modifier_groups]).to be_an(Array)
+      expect(results[:modifier_groups].size).to eq(5)
+      expect(results[:order_types]).to be_an(Array)
+      expect(results[:tax_rates]).to be_an(Array)
+    end
+
     it "runs idempotently on multiple calls" do
       # Setup all stubs for full entities
       stub_request(:get, "#{base_url}/categories")
@@ -260,6 +521,34 @@ RSpec.describe CloverSandboxSimulator::Generators::EntityGenerator do
           headers: { "Content-Type" => "application/json" }
         )
 
+      stub_request(:get, "#{base_url}/modifier_groups")
+        .with(query: { expand: "modifiers" })
+        .to_return(
+          status: 200,
+          body: { elements: [] }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:post, "#{base_url}/modifier_groups")
+        .to_return(
+          status: 200,
+          body: ->(request) {
+            data = JSON.parse(request.body)
+            { id: "MG_#{rand(1000)}", name: data["name"] }.to_json
+          },
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:post, %r{#{base_url}/modifier_groups/.*/modifiers})
+        .to_return(
+          status: 200,
+          body: ->(request) {
+            data = JSON.parse(request.body)
+            { id: "MOD_#{rand(1000)}", name: data["name"] }.to_json
+          },
+          headers: { "Content-Type" => "application/json" }
+        )
+
       stub_request(:get, "#{base_url}/employees")
         .to_return(
           status: 200,
@@ -274,13 +563,52 @@ RSpec.describe CloverSandboxSimulator::Generators::EntityGenerator do
           headers: { "Content-Type" => "application/json" }
         )
 
+      stub_request(:get, "#{base_url}/order_types")
+        .to_return(
+          status: 200,
+          body: { elements: [] }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:post, "#{base_url}/order_types")
+        .to_return(
+          status: 200,
+          body: ->(request) {
+            data = JSON.parse(request.body)
+            { id: "OT_#{rand(1000)}", label: data["label"] }.to_json
+          },
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:get, "#{base_url}/tax_rates")
+        .to_return(
+          status: 200,
+          body: { elements: [] }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:post, "#{base_url}/tax_rates")
+        .to_return(
+          status: 200,
+          body: ->(request) {
+            data = JSON.parse(request.body)
+            { id: "TAX_#{rand(1000)}", name: data["name"], rate: data["rate"] }.to_json
+          },
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:post, "#{base_url}/tax_rate_items")
+        .to_return(status: 200, body: "{}".to_json)
+
       results = generator.setup_all
 
       expect(results[:categories]).to be_an(Array)
       expect(results[:items]).to be_an(Array)
+      expect(results[:modifier_groups]).to be_an(Array)
       expect(results[:discounts]).to be_an(Array)
       expect(results[:employees]).to be_an(Array)
       expect(results[:customers]).to be_an(Array)
+      expect(results[:order_types]).to be_an(Array)
     end
   end
 end

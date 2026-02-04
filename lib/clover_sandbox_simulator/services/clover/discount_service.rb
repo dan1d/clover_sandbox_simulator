@@ -21,6 +21,33 @@ module CloverSandboxSimulator
           bronze: { min_visits: 5, percentage: 5 }
         }.freeze
 
+        # Cache configuration
+        CACHE_TTL_SECONDS = 300 # 5 minutes for file-based caches
+
+        # Clear all cached data
+        def clear_cache
+          @discount_definitions = nil
+          @coupon_codes = nil
+          @combos = nil
+          @cache_loaded_at = nil
+          logger.debug "Discount service cache cleared"
+        end
+
+        # Reload cache if TTL expired
+        def refresh_cache_if_needed
+          return unless cache_expired?
+
+          clear_cache
+          logger.debug "Discount service cache refreshed (TTL expired)"
+        end
+
+        # Check if cache is expired
+        def cache_expired?
+          return true if @cache_loaded_at.nil?
+
+          (Time.now - @cache_loaded_at) > CACHE_TTL_SECONDS
+        end
+
         # Fetch all discounts
         def get_discounts
           logger.info "Fetching discounts..."
@@ -500,9 +527,12 @@ module CloverSandboxSimulator
           candidates.sort_by { |c| [-c[:value], c[:priority]] }.first
         end
 
-        # Load discount definitions from JSON
+        # Load discount definitions from JSON (with TTL)
         def load_discount_definitions
+          refresh_cache_if_needed
+
           @discount_definitions ||= begin
+            @cache_loaded_at = Time.now
             path = File.join(data_path, "discounts.json")
             return [] unless File.exist?(path)
 
@@ -559,7 +589,10 @@ module CloverSandboxSimulator
         end
 
         def load_coupon_codes
+          refresh_cache_if_needed
+
           @coupon_codes ||= begin
+            @cache_loaded_at ||= Time.now
             path = File.join(data_path, "coupon_codes.json")
             return [] unless File.exist?(path)
 
@@ -569,7 +602,10 @@ module CloverSandboxSimulator
         end
 
         def load_combos
+          refresh_cache_if_needed
+
           @combos ||= begin
+            @cache_loaded_at ||= Time.now
             path = File.join(data_path, "combos.json")
             return [] unless File.exist?(path)
 

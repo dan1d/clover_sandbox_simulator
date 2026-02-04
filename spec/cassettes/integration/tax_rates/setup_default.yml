@@ -1,0 +1,216 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/tax_rates
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Allowed-Filter-Fields:
+      - isDefault, rate, items.id, name, id, taxAmount, taxType
+      X-Clover-Request-Id:
+      - 47bacc14-129e-4382-93a5-915e4730c0d7
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"elements": [ {"id": "S8PTQGPP59064", "name": "Test Tax 1770242771",
+        "taxType": "VAT_EXEMPT", "rate": 550000, "isDefault": false}, {"id": "EGHPEPQ0XZ2K8",
+        "name": "NO_TAX_APPLIED", "rate": 0, "isDefault": false}], "href": "http://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/tax_rates?limit=100"}'
+  recorded_at: Wed, 04 Feb 2026 22:06:13 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/tax_rates
+    body:
+      encoding: UTF-8
+      string: '{"name":"Sales Tax","rate":825000,"isDefault":true,"taxType":"VAT_EXEMPT"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '74'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 84aae275-f439-4ef4-95eb-4e15bb949378
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "1V879SFH2KXST", "name": "Sales Tax", "taxType": "VAT_EXEMPT",
+        "rate": 825000, "isDefault": true}'
+  recorded_at: Wed, 04 Feb 2026 22:06:13 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/tax_rates
+    body:
+      encoding: UTF-8
+      string: '{"name":"Alcohol Tax","rate":1000000,"isDefault":false,"taxType":"VAT_EXEMPT"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '78'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 14a0c081-60e3-45ee-bdda-54dc3b7736f1
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "ZSEVM0FPFF2B6", "name": "Alcohol Tax", "taxType": "VAT_EXEMPT",
+        "rate": 1000000, "isDefault": false}'
+  recorded_at: Wed, 04 Feb 2026 22:06:14 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/tax_rates
+    body:
+      encoding: UTF-8
+      string: '{"name":"Prepared Food Tax","rate":825000,"isDefault":false,"taxType":"VAT_EXEMPT"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '83'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 566ba63a-87b5-4744-be63-3d976fc85d79
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "ASGV2CSAHNKZP", "name": "Prepared Food Tax", "taxType": "VAT_EXEMPT",
+        "rate": 825000, "isDefault": false}'
+  recorded_at: Wed, 04 Feb 2026 22:06:15 GMT
+recorded_with: VCR 6.4.0

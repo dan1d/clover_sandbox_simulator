@@ -44,6 +44,20 @@ module CloverSandboxSimulator
         [] # Return empty array if file doesn't exist
       end
 
+      # Load tax rate definitions
+      def tax_rates
+        @tax_rates ||= load_json("tax_rates")["tax_rates"]
+      rescue Error
+        [] # Return empty array if file doesn't exist
+      end
+
+      # Load category to tax rate mapping
+      def category_tax_mapping
+        @category_tax_mapping ||= load_json("tax_rates")["category_tax_mapping"]
+      rescue Error
+        {} # Return empty hash if file doesn't exist
+      end
+
       def items_for_category(category_name)
         items.select { |item| item["category"] == category_name }
       end

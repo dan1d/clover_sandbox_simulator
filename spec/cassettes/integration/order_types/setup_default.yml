@@ -1,0 +1,328 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/order_types
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Allowed-Filter-Fields:
+      - id, deletedTime
+      X-Clover-Request-Id:
+      - d596ce2f-a9d5-4543-b650-a9c0792d6b89
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"elements": [ {"id": "QDJ00BN10T726", "label": "Test Order Type 1770241686",
+        "taxable": true, "isDefault": true, "filterCategories": false, "fee": 100,
+        "minOrderAmount": 500, "avgOrderTime": 0, "hoursAvailable": "BUSINESS", "isDeleted":
+        false}], "href": "http://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/order_types?limit=100"}'
+  recorded_at: Wed, 04 Feb 2026 21:48:08 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/order_types
+    body:
+      encoding: UTF-8
+      string: '{"label":"Dine In","taxable":true,"fee":0,"minOrderAmount":0,"avgOrderTime":0,"isDeleted":false}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '96'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 625bedee-7672-4330-b8b7-3fcb33b7cbdd
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "CTWV42CRTJ65J", "label": "Dine In", "taxable": true, "isDefault":
+        false, "filterCategories": false, "fee": 0, "minOrderAmount": 0, "avgOrderTime":
+        0, "hoursAvailable": "BUSINESS", "isDeleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:48:08 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/order_types
+    body:
+      encoding: UTF-8
+      string: '{"label":"Takeout","taxable":true,"fee":0,"minOrderAmount":0,"avgOrderTime":15,"isDeleted":false}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '97'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 731bde75-92f2-4d8e-b7ae-596115e60b9d
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "YD4QYXN3RCE18", "label": "Takeout", "taxable": true, "isDefault":
+        false, "filterCategories": false, "fee": 0, "minOrderAmount": 0, "avgOrderTime":
+        15, "hoursAvailable": "BUSINESS", "isDeleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:48:09 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/order_types
+    body:
+      encoding: UTF-8
+      string: '{"label":"Delivery","taxable":true,"fee":200,"minOrderAmount":1500,"avgOrderTime":45,"isDeleted":false}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '103'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 74aca386-5bd4-45db-814e-5875bbc960f0
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "AZ35YQ1XAV1DP", "label": "Delivery", "taxable": true, "isDefault":
+        false, "filterCategories": false, "fee": 200, "minOrderAmount": 1500, "avgOrderTime":
+        45, "hoursAvailable": "BUSINESS", "isDeleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:48:10 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/order_types
+    body:
+      encoding: UTF-8
+      string: '{"label":"Curbside Pickup","taxable":true,"fee":0,"minOrderAmount":0,"avgOrderTime":10,"isDeleted":false}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '105'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 39e9aea4-0f91-499b-b21a-8c72ff0377c7
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "1A2Q6NR47PM44", "label": "Curbside Pickup", "taxable": true,
+        "isDefault": false, "filterCategories": false, "fee": 0, "minOrderAmount":
+        0, "avgOrderTime": 10, "hoursAvailable": "BUSINESS", "isDeleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:48:10 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/order_types
+    body:
+      encoding: UTF-8
+      string: '{"label":"Catering","taxable":true,"fee":0,"minOrderAmount":5000,"avgOrderTime":0,"isDeleted":false}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.2.2p53
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '100'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 0c6a59ef-dd7e-4f93-a97a-79bced9c1777
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "JB0R04MDF02KT", "label": "Catering", "taxable": true, "isDefault":
+        false, "filterCategories": false, "fee": 0, "minOrderAmount": 5000, "avgOrderTime":
+        0, "hoursAvailable": "BUSINESS", "isDeleted": false}'
+  recorded_at: Wed, 04 Feb 2026 21:48:11 GMT
+recorded_with: VCR 6.4.0
