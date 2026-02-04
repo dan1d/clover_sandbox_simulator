@@ -232,6 +232,10 @@ module CloverSandboxSimulator
 
           return nil if voided_items.empty?
 
+          # IMPORTANT: Recalculate and update the order total after voiding items
+          # This prevents data inconsistency where order.total doesn't match line items
+          recalculate_order_total(order_id)
+
           # Return a refund-like response
           {
             "id" => "VOID_#{SecureRandom.hex(8).upcase}",
@@ -284,10 +288,43 @@ module CloverSandboxSimulator
         end
 
         def get_order_with_line_items(order_id)
-          request(:get, endpoint("orders/#{order_id}?expand=lineItems"))
+          request(:get, endpoint("orders/#{order_id}?expand=lineItems,discounts"))
         rescue ApiError => e
           logger.debug "Could not fetch order #{order_id}: #{e.message}"
           nil
+        end
+
+        # Recalculate and update order total after voiding line items
+        # This is critical to prevent data inconsistency (order.total != sum of line items)
+        def recalculate_order_total(order_id)
+          order = get_order_with_line_items(order_id)
+          return unless order
+
+          line_items = order.dig("lineItems", "elements") || []
+          discounts = order.dig("discounts", "elements") || []
+
+          # Calculate total from remaining line items
+          new_total = line_items.sum do |item|
+            price = item["price"] || 0
+            quantity = item["quantity"] || 1
+            price * quantity
+          end
+
+          # Subtract discounts
+          discounts.each do |discount|
+            if discount["percentage"]
+              new_total -= (new_total * discount["percentage"] / 100.0).round
+            else
+              new_total -= (discount["amount"] || 0).abs
+            end
+          end
+
+          # Update the order total
+          new_total = [new_total, 0].max # Ensure non-negative
+          request(:post, endpoint("orders/#{order_id}"), payload: { "total" => new_total })
+          logger.info "  ✓ Updated order total to $#{new_total / 100.0}"
+        rescue ApiError => e
+          logger.warn "Could not update order total: #{e.message}"
         end
 
         # Attempt 2: Platform API refund endpoint (usually doesn't support POST)
