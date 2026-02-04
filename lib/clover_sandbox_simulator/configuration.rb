@@ -146,12 +146,13 @@ module CloverSandboxSimulator
     def apply_merchant_config(merchant)
       @merchant_id   = merchant["CLOVER_MERCHANT_ID"]
       @merchant_name = merchant["CLOVER_MERCHANT_NAME"]
-      # Support both CLOVER_ACTUAL_API_TOKEN (static token) and CLOVER_API_TOKEN (OAuth token)
-      # Prefer the static API token if available
-      if merchant["CLOVER_ACTUAL_API_TOKEN"].to_s.length > 10
-        @api_token = merchant["CLOVER_ACTUAL_API_TOKEN"]
-      elsif merchant["CLOVER_API_TOKEN"].to_s.length > 10
+      # CLOVER_API_TOKEN = static API token (never expires)
+      # CLOVER_ACCESS_TOKEN = OAuth JWT token (expires, can be refreshed)
+      # Prefer static API token if available, fall back to OAuth token
+      if merchant["CLOVER_API_TOKEN"].to_s.length > 10
         @api_token = merchant["CLOVER_API_TOKEN"]
+      elsif merchant["CLOVER_ACCESS_TOKEN"].to_s.length > 10
+        @api_token = merchant["CLOVER_ACCESS_TOKEN"]
       end
       @refresh_token = merchant["CLOVER_REFRESH_TOKEN"] if merchant["CLOVER_REFRESH_TOKEN"].to_s.length > 10
       @public_token  = merchant["PUBLIC_TOKEN"] unless merchant["PUBLIC_TOKEN"].to_s.empty?
