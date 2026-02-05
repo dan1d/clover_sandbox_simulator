@@ -45,7 +45,7 @@ RSpec.describe "Service Charges Integration", :vcr do
 
         # Check if any service charges exist
         charges = service.get_service_charges
-        
+
         if charges.empty?
           # Skip if no pre-configured service charges in sandbox
           skip "No service charges configured in sandbox merchant (must be set up in Clover dashboard)"
