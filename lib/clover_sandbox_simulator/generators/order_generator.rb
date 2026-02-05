@@ -94,7 +94,7 @@ module CloverSandboxSimulator
       # @param simulated_time [Time] Override time for all orders (for testing)
       def generate_realistic_day(date: nil, multiplier: 1.0, simulated_time: nil)
         # Use merchant timezone for "today"
-        date ||= config.merchant_date_today
+        date ||= CloverSandboxSimulator.configuration.merchant_date_today
         count = (order_count_for_date(date) * multiplier).to_i
 
         logger.info "=" * 60
@@ -215,7 +215,7 @@ module CloverSandboxSimulator
       # Generate orders for today (simple mode)
       # Uses merchant timezone for "today"
       def generate_today(count: nil)
-        today = config.merchant_date_today
+        today = CloverSandboxSimulator.configuration.merchant_date_today
         if count
           generate_for_date(today, count: count)
         else
@@ -366,7 +366,7 @@ module CloverSandboxSimulator
         minute = rand(60)
 
         # Use merchant timezone for generating order times
-        tz_identifier = config.fetch_merchant_timezone
+        tz_identifier = CloverSandboxSimulator.configuration.fetch_merchant_timezone
         begin
           require "tzinfo"
           tz = TZInfo::Timezone.get(tz_identifier)
