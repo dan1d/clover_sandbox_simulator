@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "zeitwerk", "~> 2.6"                # Modern autoloading
   spec.add_dependency "omniauth-clover-oauth2", "~> 1.1"  # Clover OAuth2 authentication
   spec.add_dependency "concurrent-ruby", "~> 1.2"         # Parallel execution
+  spec.add_dependency "tzinfo", "~> 2.0"                  # Timezone support
 
   # Development dependencies
   spec.add_development_dependency "rspec", "~> 3.12"

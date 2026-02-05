@@ -4,7 +4,10 @@ module CloverSandboxSimulator
   class Configuration
     attr_accessor :merchant_id, :merchant_name, :api_token, :environment, :log_level, :tax_rate, :business_type,
                   :public_token, :private_token, :ecommerce_environment, :tokenizer_environment,
-                  :app_id, :app_secret, :refresh_token
+                  :app_id, :app_secret, :refresh_token, :merchant_timezone
+
+    # Default timezone if not fetched from Clover
+    DEFAULT_TIMEZONE = "America/Los_Angeles"
 
     # Path to merchants JSON file
     MERCHANTS_FILE = File.join(File.dirname(__FILE__), "..", "..", ".env.json")
@@ -122,6 +125,51 @@ module CloverSandboxSimulator
           "[#{timestamp}] #{severity.ljust(5)} | #{msg}\n"
         end
       end
+    end
+
+    # Fetch merchant timezone from Clover API
+    # @return [String] IANA timezone identifier (e.g., "America/Los_Angeles")
+    def fetch_merchant_timezone
+      return @merchant_timezone if @merchant_timezone
+
+      require "rest-client"
+      require "json"
+
+      url = "#{environment}v3/merchants/#{merchant_id}?expand=properties"
+      response = RestClient.get(url, { Authorization: "Bearer #{api_token}" })
+      data = JSON.parse(response.body)
+
+      @merchant_timezone = data.dig("properties", "timezone") || DEFAULT_TIMEZONE
+      logger.info "Merchant timezone: #{@merchant_timezone}"
+      @merchant_timezone
+    rescue StandardError => e
+      logger.warn "Failed to fetch merchant timezone: #{e.message}. Using default: #{DEFAULT_TIMEZONE}"
+      @merchant_timezone = DEFAULT_TIMEZONE
+    end
+
+    # Get current time in merchant's timezone
+    # @return [Time] Current time in merchant timezone
+    def merchant_time_now
+      require "time"
+      tz = fetch_merchant_timezone
+      # Use TZInfo if available, otherwise use ENV['TZ'] trick
+      begin
+        require "tzinfo"
+        TZInfo::Timezone.get(tz).now
+      rescue LoadError
+        # Fallback: temporarily set TZ environment variable
+        old_tz = ENV["TZ"]
+        ENV["TZ"] = tz
+        time = Time.now
+        ENV["TZ"] = old_tz
+        time
+      end
+    end
+
+    # Get today's date in merchant's timezone
+    # @return [Date] Today's date in merchant timezone
+    def merchant_date_today
+      merchant_time_now.to_date
     end
 
     private

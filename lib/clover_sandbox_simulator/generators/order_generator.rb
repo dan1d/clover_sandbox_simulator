@@ -89,7 +89,12 @@ module CloverSandboxSimulator
       end
 
       # Generate a realistic day of restaurant operations
-      def generate_realistic_day(date: Date.today, multiplier: 1.0, simulated_time: nil)
+      # @param date [Date] Date to generate orders for (defaults to today in merchant timezone)
+      # @param multiplier [Float] Multiplier for order count (0.5 = slow day, 2.0 = busy day)
+      # @param simulated_time [Time] Override time for all orders (for testing)
+      def generate_realistic_day(date: nil, multiplier: 1.0, simulated_time: nil)
+        # Use merchant timezone for "today"
+        date ||= config.merchant_date_today
         count = (order_count_for_date(date) * multiplier).to_i
 
         logger.info "=" * 60
@@ -208,11 +213,13 @@ module CloverSandboxSimulator
       end
 
       # Generate orders for today (simple mode)
+      # Uses merchant timezone for "today"
       def generate_today(count: nil)
+        today = config.merchant_date_today
         if count
-          generate_for_date(Date.today, count: count)
+          generate_for_date(today, count: count)
         else
-          generate_realistic_day
+          generate_realistic_day(date: today)
         end
       end
 
@@ -357,7 +364,17 @@ module CloverSandboxSimulator
         hours = MEAL_PERIODS[period][:hours]
         hour = rand(hours)
         minute = rand(60)
-        Time.new(date.year, date.month, date.day, hour, minute, 0)
+
+        # Use merchant timezone for generating order times
+        tz_identifier = config.fetch_merchant_timezone
+        begin
+          require "tzinfo"
+          tz = TZInfo::Timezone.get(tz_identifier)
+          tz.local_time(date.year, date.month, date.day, hour, minute, 0)
+        rescue LoadError
+          # Fallback if TZInfo not available
+          Time.new(date.year, date.month, date.day, hour, minute, 0)
+        end
       end
 
       def create_realistic_order(period:, data:, order_num:, total_in_period:, order_time: nil)
