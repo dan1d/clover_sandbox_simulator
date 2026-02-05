@@ -293,13 +293,12 @@ module CloverSandboxSimulator
 
           # Clover uses millisecond timestamps
           since_ms = (since.to_f * 1000).to_i
-          until_ms = (until_time.to_f * 1000).to_i
 
           total_deleted = 0
 
           loop do
-            # Filter by createdTime
-            filter = "createdTime>=#{since_ms}&createdTime<=#{until_ms}"
+            # Filter by createdTime - only use >= filter (simpler and works)
+            filter = "createdTime>=#{since_ms}"
             orders = get_orders(limit: 100, filter: filter)
             break if orders.empty?
 
