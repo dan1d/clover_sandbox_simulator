@@ -6,11 +6,11 @@ module CloverSandboxSimulator
     class OrderGenerator
       # Meal periods with realistic distributions
       MEAL_PERIODS = {
-        breakfast: { hours: 7..10, weight: 15, avg_items: 2..4, avg_party: 1..2 },
-        lunch: { hours: 11..14, weight: 30, avg_items: 2..5, avg_party: 1..4 },
-        happy_hour: { hours: 15..17, weight: 10, avg_items: 2..4, avg_party: 2..4 },
-        dinner: { hours: 17..21, weight: 35, avg_items: 3..6, avg_party: 2..6 },
-        late_night: { hours: 21..23, weight: 10, avg_items: 2..4, avg_party: 1..3 }
+        breakfast: { hours: 7..10, weight: 15, avg_items: 3..6, avg_party: 1..3 },
+        lunch: { hours: 11..14, weight: 30, avg_items: 3..7, avg_party: 1..4 },
+        happy_hour: { hours: 15..17, weight: 10, avg_items: 3..6, avg_party: 2..5 },
+        dinner: { hours: 17..21, weight: 35, avg_items: 4..9, avg_party: 2..6 },
+        late_night: { hours: 21..23, weight: 10, avg_items: 3..6, avg_party: 1..3 }
       }.freeze
 
       # Dining option distributions by meal period
@@ -39,11 +39,11 @@ module CloverSandboxSimulator
 
       # Category preferences by meal period
       CATEGORY_PREFERENCES = {
-        breakfast: ["Drinks", "Sides"],
-        lunch: ["Appetizers", "Entrees", "Sides", "Drinks"],
-        happy_hour: ["Appetizers", "Alcoholic Beverages", "Drinks"],
-        dinner: ["Appetizers", "Entrees", "Sides", "Desserts", "Alcoholic Beverages", "Drinks"],
-        late_night: ["Appetizers", "Entrees", "Alcoholic Beverages", "Desserts"]
+        breakfast: ["Brunch", "Drinks", "Sides", "Kids Menu"],
+        lunch: ["Appetizers", "Soups & Salads", "Entrees", "Sides", "Kids Menu", "Drinks"],
+        happy_hour: ["Appetizers", "Soups & Salads", "Alcoholic Beverages", "Drinks", "Sides"],
+        dinner: ["Appetizers", "Soups & Salads", "Entrees", "Sides", "Desserts", "Alcoholic Beverages", "Drinks", "Kids Menu"],
+        late_night: ["Appetizers", "Entrees", "Alcoholic Beverages", "Desserts", "Sides"]
       }.freeze
 
       # Discount application probabilities

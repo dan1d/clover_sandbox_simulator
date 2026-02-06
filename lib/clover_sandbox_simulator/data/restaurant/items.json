@@ -31,6 +31,48 @@
       "description": "Lightly fried with aioli"
     },
     {
+      "name": "Bruschetta",
+      "price": 999,
+      "category": "Appetizers",
+      "description": "Toasted bread with tomato, basil, and balsamic"
+    },
+    {
+      "name": "Shrimp Cocktail",
+      "price": 1599,
+      "category": "Appetizers",
+      "description": "Chilled jumbo shrimp with cocktail sauce"
+    },
+    {
+      "name": "Tomato Bisque",
+      "price": 699,
+      "category": "Soups & Salads",
+      "description": "Creamy tomato soup with croutons"
+    },
+    {
+      "name": "French Onion Soup",
+      "price": 849,
+      "category": "Soups & Salads",
+      "description": "Classic broth with gruyère crouton"
+    },
+    {
+      "name": "Garden Salad",
+      "price": 899,
+      "category": "Soups & Salads",
+      "description": "Mixed greens, tomato, cucumber, choice of dressing"
+    },
+    {
+      "name": "Wedge Salad",
+      "price": 1099,
+      "category": "Soups & Salads",
+      "description": "Iceberg wedge with blue cheese and bacon"
+    },
+    {
+      "name": "Clam Chowder",
+      "price": 899,
+      "category": "Soups & Salads",
+      "description": "New England style cream-based clam chowder"
+    },
+    {
       "name": "Classic Burger",
       "price": 1499,
       "category": "Entrees",
@@ -91,6 +133,18 @@
       "description": "Mixed greens with grilled chicken"
     },
     {
+      "name": "Mushroom Risotto",
+      "price": 1799,
+      "category": "Entrees",
+      "description": "Arborio rice with wild mushrooms and parmesan"
+    },
+    {
+      "name": "Shrimp Scampi",
+      "price": 2099,
+      "category": "Entrees",
+      "description": "Sautéed shrimp in garlic butter over linguine"
+    },
+    {
       "name": "French Fries",
       "price": 499,
       "category": "Sides",
@@ -127,6 +181,78 @@
       "description": "Seasonal vegetables"
     },
     {
+      "name": "Mac and Cheese Bites",
+      "price": 599,
+      "category": "Sides",
+      "description": "Crispy fried mac and cheese balls"
+    },
+    {
+      "name": "Garlic Bread",
+      "price": 449,
+      "category": "Sides",
+      "description": "Toasted with garlic butter and herbs"
+    },
+    {
+      "name": "Chicken Tenders",
+      "price": 799,
+      "category": "Kids Menu",
+      "description": "Hand-breaded chicken strips with fries"
+    },
+    {
+      "name": "Kids Mac and Cheese",
+      "price": 649,
+      "category": "Kids Menu",
+      "description": "Classic creamy macaroni"
+    },
+    {
+      "name": "Mini Burger",
+      "price": 699,
+      "category": "Kids Menu",
+      "description": "Small patty with fries"
+    },
+    {
+      "name": "Grilled Cheese",
+      "price": 599,
+      "category": "Kids Menu",
+      "description": "Melted cheddar on toasted bread with fries"
+    },
+    {
+      "name": "Kids Quesadilla",
+      "price": 649,
+      "category": "Kids Menu",
+      "description": "Cheese quesadilla with sour cream"
+    },
+    {
+      "name": "Eggs Benedict",
+      "price": 1499,
+      "category": "Brunch",
+      "description": "Poached eggs, ham, hollandaise on English muffin"
+    },
+    {
+      "name": "Avocado Toast",
+      "price": 1299,
+      "category": "Brunch",
+      "description": "Smashed avocado on sourdough with poached egg"
+    },
+    {
+      "name": "Pancake Stack",
+      "price": 1099,
+      "category": "Brunch",
+      "description": "Fluffy buttermilk pancakes with maple syrup"
+    },
+    {
+      "name": "French Toast",
+      "price": 1199,
+      "category": "Brunch",
+      "description": "Brioche dipped in vanilla custard with berries"
+    },
+    {
+      "name": "Breakfast Burrito",
+      "price": 1199,
+      "category": "Brunch",
+      "description": "Scrambled eggs, chorizo, cheese, salsa verde"
+    },
+    {
       "name": "Chocolate Brownie",
       "price": 699,
       "category": "Desserts",
@@ -149,6 +275,12 @@
       "price": 899,
       "category": "Desserts",
       "description": "Italian coffee-flavored dessert"
+    },
+    {
+      "name": "Crème Brûlée",
+      "price": 949,
+      "category": "Desserts",
+      "description": "Vanilla custard with caramelized sugar crust"
     },
     {
       "name": "Soft Drink",
@@ -179,6 +311,18 @@
       "price": 299,
       "category": "Drinks",
       "description": "Assorted flavors"
+    },
+    {
+      "name": "Sparkling Water",
+      "price": 349,
+      "category": "Drinks",
+      "description": "San Pellegrino or Perrier"
+    },
+    {
+      "name": "Fresh Juice",
+      "price": 499,
+      "category": "Drinks",
+      "description": "Orange, apple, or cranberry"
     },
     {
       "name": "Draft Beer",
@@ -221,6 +365,12 @@
       "price": 1099,
       "category": "Alcoholic Beverages",
       "description": "Classic cocktail"
+    },
+    {
+      "name": "Old Fashioned",
+      "price": 1299,
+      "category": "Alcoholic Beverages",
+      "description": "Bourbon, bitters, orange peel"
     },
     {
       "name": "Chef's Special",
