@@ -9,12 +9,17 @@ require "json"
 # Disable real HTTP connections in tests
 WebMock.disable_net_connect!(allow_localhost: true)
 
-# Load .env.json for integration tests
+# Load merchants from .env.json for integration tests.
+# Supports both the legacy array format and the new object format:
+#   { "DATABASE_URL": "...", "merchants": [...] }
 def load_env_json
   env_path = File.expand_path("../../.env.json", __FILE__)
   return [] unless File.exist?(env_path)
 
-  JSON.parse(File.read(env_path))
+  data = JSON.parse(File.read(env_path))
+  return data if data.is_a?(Array) # legacy format
+
+  data.fetch("merchants", [])
 end
 
 # Get specific merchant config by name
