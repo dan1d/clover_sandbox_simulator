@@ -215,16 +215,12 @@
     {
       "id": "kids_meal",
       "name": "Kids Meal",
-      "description": "Side + Drink free with entree (kids under 12)",
+      "description": "Kids item + Drink for 10% off",
       "discount_type": "percentage",
-      "discount_value": 100,
+      "discount_value": 10,
       "required_components": [
         {
-          "category": "Entrees",
-          "quantity": 1
-        },
-        {
-          "category": "Sides",
+          "category": "Kids Menu",
           "quantity": 1
         },
         {
@@ -232,10 +228,37 @@
           "quantity": 1
         }
       ],
-      "applies_to": "cheapest_items",
-      "max_items_discounted": 2,
-      "requires_kid": true,
-      "max_discount_amount": 898,
+      "applies_to": "total",
+      "max_discount_amount": 300,
+      "active": true
+    },
+    {
+      "id": "brunch_special",
+      "name": "Brunch Special",
+      "description": "Brunch item + Drink + Side for 15% off",
+      "discount_type": "percentage",
+      "discount_value": 15,
+      "required_components": [
+        {
+          "category": "Brunch",
+          "quantity": 1
+        },
+        {
+          "category": "Drinks",
+          "quantity": 1
+        },
+        {
+          "category": "Sides",
+          "quantity": 1
+        }
+      ],
+      "applies_to": "total",
+      "time_restricted": true,
+      "time_rules": {
+        "start_hour": 7,
+        "end_hour": 14
+      },
+      "max_discount_amount": 500,
       "active": true
     }
   ]

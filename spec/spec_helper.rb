@@ -9,12 +9,17 @@ require "json"
 # Disable real HTTP connections in tests
 WebMock.disable_net_connect!(allow_localhost: true)
 
-# Load .env.json for integration tests
+# Load merchants from .env.json for integration tests.
+# Supports both the legacy array format and the new object format:
+#   { "DATABASE_URL": "...", "merchants": [...] }
 def load_env_json
   env_path = File.expand_path("../../.env.json", __FILE__)
   return [] unless File.exist?(env_path)
 
-  JSON.parse(File.read(env_path))
+  data = JSON.parse(File.read(env_path))
+  return data if data.is_a?(Array) # legacy format
+
+  data.fetch("merchants", [])
 end
 
 # Get specific merchant config by name
@@ -68,6 +73,25 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
+  end
+
+  # Connect to test database if available.
+  # Uses clover_simulator_test by default; specs that don't need DB still pass.
+  test_db_url = CloverSandboxSimulator::Database.test_database_url
+  begin
+    CloverSandboxSimulator::Database.connect!(test_db_url)
+    require "database_cleaner/active_record"
+
+    config.before(:suite) do
+      DatabaseCleaner.strategy = :transaction
+      DatabaseCleaner.clean_with(:truncation)
+    end
+
+    config.around(:each, :db) do |example|
+      DatabaseCleaner.cleaning { example.run }
+    end
+  rescue StandardError
+    # Database not available — non-DB specs will still run fine
   end
 end
 

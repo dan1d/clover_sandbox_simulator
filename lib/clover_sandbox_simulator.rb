@@ -37,6 +37,8 @@ end
 
 # Set up Zeitwerk autoloader
 loader = Zeitwerk::Loader.for_gem
+# Migrations and factories follow ActiveRecord conventions, not Zeitwerk naming
+loader.ignore(File.expand_path("clover_sandbox_simulator/db", __dir__))
 loader.setup
 
 # Eager load in production

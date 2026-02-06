@@ -182,13 +182,34 @@ module CloverSandboxSimulator
       apply_merchant_config(merchants.first)
     end
 
+    # Parse .env.json, supporting both the legacy array format and the
+    # new object format: { "DATABASE_URL": "...", "merchants": [...] }
     def load_merchants_file
       return [] unless File.exist?(MERCHANTS_FILE)
 
-      JSON.parse(File.read(MERCHANTS_FILE))
+      data = JSON.parse(File.read(MERCHANTS_FILE))
+      return data if data.is_a?(Array) # legacy format
+
+      # New object format — extract merchants list
+      data.fetch("merchants", [])
     rescue JSON::ParserError => e
       warn "Failed to parse #{MERCHANTS_FILE}: #{e.message}"
       []
+    end
+
+    # Read the top-level DATABASE_URL from .env.json (new object format only).
+    # Returns nil when the file uses the legacy array format or has no key.
+    #
+    # @return [String, nil] The DATABASE_URL or nil
+    def self.database_url_from_file
+      return nil unless File.exist?(MERCHANTS_FILE)
+
+      data = JSON.parse(File.read(MERCHANTS_FILE))
+      return nil if data.is_a?(Array)
+
+      data["DATABASE_URL"]
+    rescue JSON::ParserError
+      nil
     end
 
     def apply_merchant_config(merchant)

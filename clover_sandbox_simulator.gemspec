@@ -26,10 +26,14 @@ Gem::Specification.new do |spec|
   spec.add_dependency "omniauth-clover-oauth2", "~> 1.1"  # Clover OAuth2 authentication
   spec.add_dependency "concurrent-ruby", "~> 1.2"         # Parallel execution
   spec.add_dependency "tzinfo", "~> 2.0"                  # Timezone support
+  spec.add_dependency "pg", "~> 1.5"                      # PostgreSQL driver
+  spec.add_dependency "activerecord", "~> 8.0"            # Standalone ORM (no Rails)
+  spec.add_dependency "factory_bot", "~> 6.4"             # Factories for tests AND seeding
 
   # Development dependencies
   spec.add_development_dependency "rspec", "~> 3.12"
   spec.add_development_dependency "rubocop", "~> 1.50"
   spec.add_development_dependency "webmock", "~> 3.18"
   spec.add_development_dependency "vcr", "~> 6.1"
+  spec.add_development_dependency "database_cleaner-active_record", "~> 2.1"
 end
