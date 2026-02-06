@@ -133,12 +133,14 @@ module CloverSandboxSimulator
             category = line_item.dig("item", "categories", "elements", 0, "name")
             next unless category && eligible_categories.include?(category)
 
+            item_price = line_item["price"] || line_item.dig("item", "price") || 0
             result = apply_line_item_discount(
               order_id,
               line_item_id: line_item["id"],
               name: discount_config[:name],
               percentage: discount_config[:percentage],
-              amount: discount_config[:amount]
+              amount: discount_config[:amount],
+              item_price: item_price
             )
 
             applied_discounts << result if result
@@ -436,15 +438,22 @@ module CloverSandboxSimulator
         end
 
         # Apply loyalty discount to an order
-        def apply_loyalty_discount(order_id, customer:)
+        # Always sends calculated amount to avoid Clover's percentage-only zero-amount bug
+        def apply_loyalty_discount(order_id, customer:, order_total: nil)
           discount = get_loyalty_discount(customer)
           return nil unless discount
 
           logger.info "Applying loyalty discount '#{discount['name']}' to order #{order_id}"
 
+          # Fetch order total if not provided, so we can calculate the amount
+          order_total ||= OrderService.new(config: config).calculate_total(order_id)
+          calculated_amount = (order_total * discount["percentage"] / 100.0).round
+
+          logger.info "Loyalty discount: #{discount['percentage']}% of #{order_total} = #{calculated_amount}"
+
           request(:post, endpoint("orders/#{order_id}/discounts"), payload: {
             "name" => discount["name"],
-            "percentage" => discount["percentage"].to_s
+            "amount" => -calculated_amount.abs
           })
         end
 
@@ -550,6 +559,10 @@ module CloverSandboxSimulator
         # Build discount payload for line item discounts
         # IMPORTANT: For percentage discounts, we need the item_price to calculate
         # the actual amount. Clover returns amount=0 for percentage discounts.
+        #
+        # SAFETY NET: Will raise ArgumentError if a percentage-only discount
+        # (without calculated amount) would be sent, because Clover stores
+        # amount=0 for these when fetched via the expand API.
         def build_discount_payload(discount_id: nil, name: nil, percentage: nil, amount: nil, item_price: nil)
           if discount_id
             discount = get_discount(discount_id)
@@ -564,9 +577,10 @@ module CloverSandboxSimulator
                 calculated = (item_price * discount["percentage"] / 100.0).round
                 payload["amount"] = -calculated.abs
               else
-                # Fallback to percentage (will result in amount=0 when fetched)
-                logger.warn "No item_price provided for percentage discount - amount may be 0 when fetched"
-                payload["percentage"] = discount["percentage"].to_s
+                raise ArgumentError,
+                  "Cannot send percentage-only discount to Clover API " \
+                  "(amount will be 0 when fetched via expand). " \
+                  "Provide item_price for line-item discounts or use order-level amount."
               end
             end
             payload
@@ -580,9 +594,10 @@ module CloverSandboxSimulator
               calculated = (item_price * percentage / 100.0).round
               payload["amount"] = -calculated.abs
             elsif percentage
-              # Fallback to percentage (will result in amount=0 when fetched)
-              logger.warn "No item_price provided for percentage discount - amount may be 0 when fetched"
-              payload["percentage"] = percentage.to_s
+              raise ArgumentError,
+                "Cannot send percentage-only discount to Clover API " \
+                "(amount will be 0 when fetched via expand). " \
+                "Provide item_price for line-item discounts or use order-level amount."
             end
             payload
           end
@@ -691,12 +706,14 @@ module CloverSandboxSimulator
           applied = []
 
           applicable.each do |item|
+            item_price = item["price"] || item.dig("item", "price") || 0
             result = if coupon["discount_type"] == "percentage"
               apply_line_item_discount(
                 order_id,
                 line_item_id: item["id"],
                 name: coupon["name"],
-                percentage: coupon["discount_value"]
+                percentage: coupon["discount_value"],
+                item_price: item_price
               )
             else
               apply_line_item_discount(
@@ -717,16 +734,9 @@ module CloverSandboxSimulator
 
           payload = { "name" => coupon["name"] }
 
-          if coupon["discount_type"] == "percentage"
-            # Use calculated amount if there's a max cap
-            if coupon["max_discount_amount"]
-              payload["amount"] = -discount_info[:amount]
-            else
-              payload["percentage"] = coupon["discount_value"].to_s
-            end
-          else
-            payload["amount"] = -coupon["discount_value"]
-          end
+          # Always send calculated amount, never percentage-only
+          # Clover stores amount=0 for percentage-only discounts when fetched via expand API
+          payload["amount"] = -discount_info[:amount].abs
 
           request(:post, endpoint("orders/#{order_id}/discounts"), payload: payload)
         end
@@ -835,12 +845,14 @@ module CloverSandboxSimulator
           applied = []
 
           items.each do |item|
+            item_price = item["price"] || item.dig("item", "price") || 0
             result = if combo["discount_type"] == "percentage"
               apply_line_item_discount(
                 order_id,
                 line_item_id: item["id"],
                 name: combo["name"],
-                percentage: combo["discount_value"]
+                percentage: combo["discount_value"],
+                item_price: item_price
               )
             else
               per_item_amount = discount_info[:amount] / items.size

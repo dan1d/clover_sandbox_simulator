@@ -2889,4 +2889,218 @@ http_interactions:
         "price": 150, "modifiedTime": 1770245931000, "modifierGroup": {"id": "EHZ33JH9TD6JE"},
         "deleted": false}'
   recorded_at: Wed, 04 Feb 2026 22:58:51 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group for Modifier 1770364946","minRequired":0,"maxAllowed":5}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '80'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - d6b68894-7b98-4d65-bf07-1eb898040375
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "482QC5XR4JPG2", "name": "VCR Test Group for Modifier 1770364946",
+        "minRequired": 0, "maxAllowed": 5, "showByDefault": true, "deleted": false}'
+  recorded_at: Fri, 06 Feb 2026 08:02:27 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/482QC5XR4JPG2/modifiers
+    body:
+      encoding: UTF-8
+      string: '{"name":"Extra Cheese","price":150}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '35'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 1755caad-afbd-415a-aad1-43835de5bfbd
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "ED5VBF9BYV6SP", "name": "Extra Cheese", "available": true,
+        "price": 150, "modifiedTime": 1770364948000, "modifierGroup": {"id": "482QC5XR4JPG2"},
+        "deleted": false}'
+  recorded_at: Fri, 06 Feb 2026 08:02:28 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group for Modifier 1770365039","minRequired":0,"maxAllowed":5}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '80'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 87ea95ee-9d94-41dc-8b1c-59f1da06279a
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "DYNY76DH695CY", "name": "VCR Test Group for Modifier 1770365039",
+        "minRequired": 0, "maxAllowed": 5, "showByDefault": true, "deleted": false}'
+  recorded_at: Fri, 06 Feb 2026 08:04:00 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups/DYNY76DH695CY/modifiers
+    body:
+      encoding: UTF-8
+      string: '{"name":"Extra Cheese","price":150}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '35'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 40897ecf-4185-4bb9-a4bf-e12b53962a27
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "K39MGN6GFN12M", "name": "Extra Cheese", "available": true,
+        "price": 150, "modifiedTime": 1770365041000, "modifierGroup": {"id": "DYNY76DH695CY"},
+        "deleted": false}'
+  recorded_at: Fri, 06 Feb 2026 08:04:01 GMT
 recorded_with: VCR 6.4.0

@@ -597,6 +597,7 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
         allow(mock_order).to receive(:apply_discount)
         allow(mock_order).to receive(:calculate_total).and_return(2500)
         allow(mock_order).to receive(:update_total)
+        allow(mock_order).to receive(:validate_total).and_return({ calculated: 2500, clover_total: 2500, delta: 0, match: true })
         allow(mock_order).to receive(:update_state)
         allow(mock_order).to receive(:get_order).and_return({ "id" => "ORDER1", "total" => 2500 })
 
@@ -725,6 +726,7 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
       allow(mock_order).to receive(:apply_discount)
       allow(mock_order).to receive(:calculate_total).and_return(2500)
       allow(mock_order).to receive(:update_total)
+      allow(mock_order).to receive(:validate_total).and_return({ calculated: 2500, clover_total: 2500, delta: 0, match: true })
       allow(mock_order).to receive(:update_state)
       allow(mock_order).to receive(:get_order).and_return({ "id" => "ORDER1", "total" => 2500 })
 
@@ -881,8 +883,9 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
         modifier_groups: sample_modifier_groups
       )
 
-      expect(result).to be_an(Integer)
-      expect(result).to be >= 0
+      expect(result).to be_a(Hash)
+      expect(result[:modified_count]).to be >= 0
+      expect(result[:modifier_amount]).to be >= 0
     end
 
     it "does not apply modifiers to items without modifier groups" do
@@ -899,7 +902,8 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
       )
 
       # Should not have attempted to add any modifications
-      expect(result).to eq(0)
+      expect(result[:modified_count]).to eq(0)
+      expect(result[:modifier_amount]).to eq(0)
     end
 
     it "selects random modifiers from item's modifier groups" do
@@ -914,7 +918,8 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
           items: sample_items,
           modifier_groups: sample_modifier_groups
         )
-        expect(result).to be_an(Integer)
+        expect(result).to be_a(Hash)
+        expect(result[:modified_count]).to be >= 0
       end
     end
   end

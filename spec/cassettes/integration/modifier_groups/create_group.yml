@@ -1431,4 +1431,110 @@ http_interactions:
       string: '{"id": "4TN7HCCYB2RG2", "name": "VCR Test Group 1770245929", "minRequired":
         0, "maxAllowed": 3, "showByDefault": true, "deleted": false}'
   recorded_at: Wed, 04 Feb 2026 22:58:50 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group 1770364945","minRequired":0,"maxAllowed":3}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - a84dc64e-ea0a-4544-a204-fd999f2e5164
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "DAW00GCNAPPST", "name": "VCR Test Group 1770364945", "minRequired":
+        0, "maxAllowed": 3, "showByDefault": true, "deleted": false}'
+  recorded_at: Fri, 06 Feb 2026 08:02:26 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/modifier_groups
+    body:
+      encoding: UTF-8
+      string: '{"name":"VCR Test Group 1770365039","minRequired":0,"maxAllowed":3}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '67'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - aef6aded-e961-415d-a7a7-533a53de11bf
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "RWXYVEDEZK6Y0", "name": "VCR Test Group 1770365039", "minRequired":
+        0, "maxAllowed": 3, "showByDefault": true, "deleted": false}'
+  recorded_at: Fri, 06 Feb 2026 08:03:59 GMT
 recorded_with: VCR 6.4.0

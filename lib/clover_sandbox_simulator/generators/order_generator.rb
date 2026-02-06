@@ -448,8 +448,9 @@ module CloverSandboxSimulator
         end
 
         # Apply modifiers to line items (if available)
+        modifier_result = { modified_count: 0, modifier_amount: 0 }
         if data[:modifier_groups]&.any?
-          apply_modifiers_to_line_items(
+          modifier_result = apply_modifiers_to_line_items(
             order_id: order_id,
             line_items: added_line_items,
             items: selected_items,
@@ -477,6 +478,14 @@ module CloverSandboxSimulator
         # Calculate totals
         subtotal = services.order.calculate_total(order_id)
         services.order.update_total(order_id, subtotal)
+
+        # Validate calculated total against Clover's server-side total
+        validation = services.order.validate_total(order_id)
+        unless validation[:match]
+          logger.warn "Order #{order_id}: TOTAL MISMATCH " \
+                      "calculated=#{validation[:calculated]} clover=#{validation[:clover_total]} " \
+                      "delta=#{validation[:delta]} modifier_surcharge=#{modifier_result[:modifier_amount]}"
+        end
 
         # Apply auto-gratuity service charge for large parties (6+)
         service_charge_applied = nil
@@ -516,6 +525,8 @@ module CloverSandboxSimulator
           tax: tax_amount,
           order_time: order_time,
           discount_applied: discount_applied,
+          modifier_count: modifier_result[:modified_count],
+          modifier_amount: modifier_result[:modifier_amount],
           order_type: selected_order_type&.dig("label")
         }
 
@@ -1289,14 +1300,16 @@ module CloverSandboxSimulator
       # @param items [Array<Hash>] Original items data with modifier group associations
       # @param modifier_groups [Array<Hash>] All available modifier groups with modifiers
       # @return [Integer] Number of line items that received modifiers
+      # @return [Hash] { modified_count: Integer, modifier_amount: Integer (cents) }
       def apply_modifiers_to_line_items(order_id:, line_items:, items:, modifier_groups:)
-        return 0 if line_items.empty? || modifier_groups.empty?
+        return { modified_count: 0, modifier_amount: 0 } if line_items.empty? || modifier_groups.empty?
 
         # Build lookup maps for efficiency
         items_by_id = items.each_with_object({}) { |item, h| h[item["id"]] = item }
         modifier_groups_by_id = modifier_groups.each_with_object({}) { |mg, h| h[mg["id"]] = mg }
 
         modified_count = 0
+        total_modifier_amount = 0
 
         line_items.each do |line_item|
           item_id = line_item.dig("item", "id")
@@ -1313,28 +1326,46 @@ module CloverSandboxSimulator
           next unless rand < MODIFIER_PROBABILITY
 
           # Select random modifiers from applicable groups
-          selected_modifier_ids = select_modifiers_for_item(item_modifier_group_ids, modifier_groups_by_id)
+          selected_modifier_ids, selected_modifier_prices = select_modifiers_for_item_with_prices(item_modifier_group_ids, modifier_groups_by_id)
           next if selected_modifier_ids.empty?
+
+          # Track modifier amount for this line item
+          mod_amount = selected_modifier_prices.sum
+          total_modifier_amount += mod_amount
 
           # Apply the modifiers to the line item
           begin
             services.order.add_modifications(order_id, line_item_id: line_item["id"], modifier_ids: selected_modifier_ids)
             modified_count += 1
-            logger.debug "  Applied #{selected_modifier_ids.size} modifier(s) to line item #{line_item['id']}"
+            logger.debug "  Applied #{selected_modifier_ids.size} modifier(s) to line item #{line_item['id']} (+$#{mod_amount / 100.0})"
           rescue StandardError => e
             logger.warn "  Failed to apply modifiers to line item #{line_item['id']}: #{e.message}"
           end
         end
 
-        modified_count
+        if modified_count > 0
+          logger.info "  Order #{order_id}: #{modified_count} items modified, modifier surcharge: $#{total_modifier_amount / 100.0}"
+        end
+
+        { modified_count: modified_count, modifier_amount: total_modifier_amount }
       end
 
-      # Select random modifiers from the item's modifier groups
+      # Select random modifiers from the item's modifier groups (legacy, returns IDs only)
       # @param modifier_group_ids [Array<String>] IDs of modifier groups associated with the item
       # @param modifier_groups_by_id [Hash] Modifier groups indexed by ID
       # @return [Array<String>] Selected modifier IDs
       def select_modifiers_for_item(modifier_group_ids, modifier_groups_by_id)
-        selected = []
+        ids, _prices = select_modifiers_for_item_with_prices(modifier_group_ids, modifier_groups_by_id)
+        ids
+      end
+
+      # Select random modifiers from the item's modifier groups (returns IDs + prices)
+      # @param modifier_group_ids [Array<String>] IDs of modifier groups associated with the item
+      # @param modifier_groups_by_id [Hash] Modifier groups indexed by ID
+      # @return [Array<Array<String>, Array<Integer>>] [modifier_ids, modifier_prices_in_cents]
+      def select_modifiers_for_item_with_prices(modifier_group_ids, modifier_groups_by_id)
+        selected_ids = []
+        selected_prices = []
 
         modifier_group_ids.each do |mg_id|
           mg = modifier_groups_by_id[mg_id]
@@ -1358,10 +1389,11 @@ module CloverSandboxSimulator
 
           # Select random modifiers
           selected_mods = modifiers.sample(count)
-          selected.concat(selected_mods.map { |m| m["id"] })
+          selected_ids.concat(selected_mods.map { |m| m["id"] })
+          selected_prices.concat(selected_mods.map { |m| m["price"] || 0 })
         end
 
-        selected
+        [selected_ids, selected_prices]
       end
     end
   end

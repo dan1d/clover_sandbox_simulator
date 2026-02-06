@@ -245,6 +245,55 @@ module CloverSandboxSimulator
           total
         end
 
+        # Validate calculated total against Clover's server-side order.total
+        # Returns a hash with comparison details and logs warnings on mismatch
+        #
+        # @param order_id [String] The order ID to validate
+        # @return [Hash] { calculated:, clover_total:, delta:, match: }
+        def validate_total(order_id)
+          order = get_order(order_id)
+          return { calculated: 0, clover_total: 0, delta: 0, match: true } unless order
+
+          clover_total = order["total"] || 0
+          calculated = 0
+
+          if order["lineItems"]&.dig("elements")
+            order["lineItems"]["elements"].each do |line_item|
+              price = line_item["price"] || 0
+              quantity = line_item["quantity"] || 1
+              item_total = price * quantity
+
+              if line_item["modifications"]&.dig("elements")
+                line_item["modifications"]["elements"].each do |mod|
+                  item_total += (mod["price"] || 0)
+                end
+              end
+
+              calculated += item_total
+            end
+
+            if order["discounts"]&.dig("elements")
+              order["discounts"]["elements"].each do |discount|
+                if discount["percentage"]
+                  calculated -= (calculated * discount["percentage"] / 100.0).round
+                else
+                  calculated -= (discount["amount"] || 0).abs
+                end
+              end
+            end
+          end
+
+          delta = clover_total - calculated
+          match = delta == 0
+
+          unless match
+            logger.warn "TOTAL MISMATCH: calculated=#{calculated} vs clover=#{clover_total} " \
+                        "delta=#{delta} for order #{order_id} (likely hidden modifiers)"
+          end
+
+          { calculated: calculated, clover_total: clover_total, delta: delta, match: match }
+        end
+
         # Delete an order
         def delete_order(order_id)
           logger.info "Deleting order: #{order_id}"

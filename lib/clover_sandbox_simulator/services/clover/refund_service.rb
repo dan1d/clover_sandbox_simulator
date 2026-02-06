@@ -296,6 +296,10 @@ module CloverSandboxSimulator
 
         # Recalculate and update order total after voiding line items
         # This is critical to prevent data inconsistency (order.total != sum of line items)
+        #
+        # IMPORTANT: Includes modifier prices (modifications) in the calculation.
+        # Previous version excluded modifiers, causing post-refund order.total to
+        # be lower than expected when remaining items had priced modifiers.
         def recalculate_order_total(order_id)
           order = get_order_with_line_items(order_id)
           return unless order
@@ -303,11 +307,20 @@ module CloverSandboxSimulator
           line_items = order.dig("lineItems", "elements") || []
           discounts = order.dig("discounts", "elements") || []
 
-          # Calculate total from remaining line items
+          # Calculate total from remaining line items INCLUDING modifier prices
           new_total = line_items.sum do |item|
             price = item["price"] || 0
             quantity = item["quantity"] || 1
-            price * quantity
+            item_total = price * quantity
+
+            # Include modification/modifier prices
+            if item["modifications"]&.dig("elements")
+              item["modifications"]["elements"].each do |mod|
+                item_total += (mod["price"] || 0)
+              end
+            end
+
+            item_total
           end
 
           # Subtract discounts

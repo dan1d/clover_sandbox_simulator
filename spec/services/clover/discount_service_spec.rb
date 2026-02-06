@@ -397,15 +397,15 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::DiscountService do
     let(:order_id) { "ORDER123" }
     let(:line_item_id) { "LI456" }
 
-    it "applies a percentage discount to a line item" do
+    it "applies a percentage discount to a line item with calculated amount" do
       stub_request(:post, "#{base_url}/orders/#{order_id}/line_items/#{line_item_id}/discounts")
         .with(body: hash_including(
           "name" => "Happy Hour Drinks",
-          "percentage" => "30"
+          "amount" => -300 # 30% of 1000 = 300
         ))
         .to_return(
           status: 200,
-          body: { id: "LD1", name: "Happy Hour Drinks", percentage: "30" }.to_json,
+          body: { id: "LD1", name: "Happy Hour Drinks", amount: -300 }.to_json,
           headers: { "Content-Type" => "application/json" }
         )
 
@@ -413,7 +413,8 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::DiscountService do
         order_id,
         line_item_id: line_item_id,
         name: "Happy Hour Drinks",
-        percentage: 30
+        percentage: 30,
+        item_price: 1000
       )
 
       expect(result["id"]).to eq("LD1")
@@ -442,7 +443,7 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::DiscountService do
       expect(result["amount"]).to eq(-200)
     end
 
-    it "applies a discount by discount_id" do
+    it "applies a discount by discount_id with calculated amount" do
       stub_request(:get, "#{base_url}/discounts/D1")
         .to_return(
           status: 200,
@@ -451,20 +452,22 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::DiscountService do
         )
 
       stub_request(:post, "#{base_url}/orders/#{order_id}/line_items/#{line_item_id}/discounts")
-        .with(body: hash_including("name" => "10% Off"))
+        .with(body: hash_including("name" => "10% Off", "amount" => -150))
         .to_return(
           status: 200,
-          body: { id: "LD3", name: "10% Off", percentage: "10" }.to_json,
+          body: { id: "LD3", name: "10% Off", amount: -150 }.to_json,
           headers: { "Content-Type" => "application/json" }
         )
 
       result = service.apply_line_item_discount(
         order_id,
         line_item_id: line_item_id,
-        discount_id: "D1"
+        discount_id: "D1",
+        item_price: 1500
       )
 
       expect(result["name"]).to eq("10% Off")
+      expect(result["amount"]).to eq(-150)
     end
   end
 
@@ -1113,20 +1116,37 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::DiscountService do
   describe "#apply_loyalty_discount" do
     let(:order_id) { "ORDER123" }
 
-    it "applies loyalty discount for eligible customer" do
+    it "applies loyalty discount for eligible customer with calculated amount" do
       customer = { "visit_count" => 30 }
 
-      stub_request(:post, "#{base_url}/orders/#{order_id}/discounts")
-        .with(body: hash_including("name" => "Loyalty - Gold"))
+      # Stub order fetch for calculate_total (needed to compute discount amount)
+      stub_request(:get, "#{base_url}/orders/#{order_id}")
+        .with(query: { expand: "lineItems,discounts,payments,customers" })
         .to_return(
           status: 200,
-          body: { id: "LD1", name: "Loyalty - Gold", percentage: "15" }.to_json,
+          body: {
+            "id" => order_id,
+            "lineItems" => {
+              "elements" => [
+                { "id" => "LI1", "price" => 5000, "quantity" => 1 }
+              ]
+            }
+          }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+      stub_request(:post, "#{base_url}/orders/#{order_id}/discounts")
+        .with(body: hash_including("name" => "Loyalty - Gold", "amount" => -750))
+        .to_return(
+          status: 200,
+          body: { id: "LD1", name: "Loyalty - Gold", amount: -750 }.to_json,
           headers: { "Content-Type" => "application/json" }
         )
 
       result = service.apply_loyalty_discount(order_id, customer: customer)
 
       expect(result["name"]).to eq("Loyalty - Gold")
+      expect(result["amount"]).to eq(-750) # 15% of 5000
     end
 
     it "returns nil for customer without tier" do
