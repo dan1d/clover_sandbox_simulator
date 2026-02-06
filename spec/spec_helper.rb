@@ -74,6 +74,25 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  # Connect to test database if available.
+  # Uses clover_simulator_test by default; specs that don't need DB still pass.
+  test_db_url = CloverSandboxSimulator::Database.test_database_url
+  begin
+    CloverSandboxSimulator::Database.connect!(test_db_url)
+    require "database_cleaner/active_record"
+
+    config.before(:suite) do
+      DatabaseCleaner.strategy = :transaction
+      DatabaseCleaner.clean_with(:truncation)
+    end
+
+    config.around(:each, :db) do |example|
+      DatabaseCleaner.cleaning { example.run }
+    end
+  rescue StandardError
+    # Database not available — non-DB specs will still run fine
+  end
 end
 
 # Create a test configuration that doesn't require env vars

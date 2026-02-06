@@ -199,6 +199,8 @@ module CloverSandboxSimulator
 
     # Read the top-level DATABASE_URL from .env.json (new object format only).
     # Returns nil when the file uses the legacy array format or has no key.
+    #
+    # @return [String, nil] The DATABASE_URL or nil
     def self.database_url_from_file
       return nil unless File.exist?(MERCHANTS_FILE)
 
