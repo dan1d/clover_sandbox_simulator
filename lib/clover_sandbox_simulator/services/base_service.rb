@@ -17,12 +17,18 @@ module CloverSandboxSimulator
 
       # Make HTTP request to Clover API
       #
+      # Every call is audit-logged to the `api_requests` table when a
+      # database connection is available.  If no DB is connected the
+      # request still executes normally — audit logging is a no-op.
+      #
       # @param method [Symbol] HTTP method (:get, :post, :put, :delete)
       # @param path [String] API endpoint path
       # @param payload [Hash, nil] Request body for POST/PUT
       # @param params [Hash, nil] Query parameters
+      # @param resource_type [String, nil] Logical resource (e.g. "Order")
+      # @param resource_id [String, nil] Clover resource ID
       # @return [Hash, nil] Parsed JSON response
-      def request(method, path, payload: nil, params: nil)
+      def request(method, path, payload: nil, params: nil, resource_type: nil, resource_id: nil)
         url = build_url(path, params)
 
         log_request(method, url, payload)
@@ -33,10 +39,49 @@ module CloverSandboxSimulator
         duration_ms = ((Time.now - start_time) * 1000).round(2)
         log_response(response, duration_ms)
 
-        parse_response(response)
+        parsed = parse_response(response)
+
+        audit_api_request(
+          http_method: method.to_s.upcase,
+          url: url,
+          request_payload: payload,
+          response_status: response.code,
+          response_payload: parsed,
+          duration_ms: duration_ms.to_i,
+          resource_type: resource_type,
+          resource_id: resource_id
+        )
+
+        parsed
       rescue RestClient::ExceptionWithResponse => e
+        duration_ms = ((Time.now - start_time) * 1000).round(2) if start_time
+
+        audit_api_request(
+          http_method: method.to_s.upcase,
+          url: url,
+          request_payload: payload,
+          response_status: e.http_code,
+          response_payload: (JSON.parse(e.response.body) rescue nil),
+          duration_ms: duration_ms&.to_i,
+          error_message: "HTTP #{e.http_code}: #{e.message}",
+          resource_type: resource_type,
+          resource_id: resource_id
+        )
+
         handle_api_error(e)
       rescue StandardError => e
+        duration_ms = ((Time.now - start_time) * 1000).round(2) if start_time
+
+        audit_api_request(
+          http_method: method.to_s.upcase,
+          url: url || build_url(path, params),
+          request_payload: payload,
+          duration_ms: duration_ms&.to_i,
+          error_message: e.message,
+          resource_type: resource_type,
+          resource_id: resource_id
+        )
+
         logger.error "Request failed: #{e.message}"
         raise ApiError, e.message
       end
@@ -105,6 +150,26 @@ module CloverSandboxSimulator
 
       def log_response(response, duration_ms)
         logger.debug "← #{response.code} (#{duration_ms}ms)"
+      end
+
+      # Persist an API request record for audit trail.
+      # Silently no-ops when DB is not connected.
+      def audit_api_request(http_method:, url:, request_payload: nil, response_status: nil, response_payload: nil, duration_ms: nil, error_message: nil, resource_type: nil, resource_id: nil)
+        return unless Database.connected?
+
+        Models::ApiRequest.create!(
+          http_method: http_method,
+          url: url,
+          request_payload: request_payload || {},
+          response_payload: response_payload || {},
+          response_status: response_status,
+          duration_ms: duration_ms,
+          error_message: error_message,
+          resource_type: resource_type,
+          resource_id: resource_id
+        )
+      rescue StandardError => e
+        logger.debug "Audit logging failed: #{e.message}"
       end
 
       # ============================================
