@@ -1215,7 +1215,7 @@ FactoryBot.define do
       price { 5500 }
       sku { "SPA-HAR-001" }
       unit { "session" }
-      metadata { { duration_minutes: 45 } }
+      metadata { { "duration_minutes" => 45 } }
       association :category, factory: [:category, :haircuts]
     end
 
@@ -1224,7 +1224,7 @@ FactoryBot.define do
       price { 3000 }
       sku { "SPA-HAR-002" }
       unit { "session" }
-      metadata { { duration_minutes: 30 } }
+      metadata { { "duration_minutes" => 30 } }
       association :category, factory: [:category, :haircuts]
     end
 
@@ -1233,7 +1233,7 @@ FactoryBot.define do
       price { 2000 }
       sku { "SPA-HAR-003" }
       unit { "session" }
-      metadata { { duration_minutes: 20 } }
+      metadata { { "duration_minutes" => 20 } }
       association :category, factory: [:category, :haircuts]
     end
 
@@ -1242,7 +1242,7 @@ FactoryBot.define do
       price { 1500 }
       sku { "SPA-HAR-004" }
       unit { "session" }
-      metadata { { duration_minutes: 15 } }
+      metadata { { "duration_minutes" => 15 } }
       association :category, factory: [:category, :haircuts]
     end
 
@@ -1253,7 +1253,7 @@ FactoryBot.define do
       price { 12000 }
       sku { "SPA-CLR-001" }
       unit { "session" }
-      metadata { { duration_minutes: 120 } }
+      metadata { { "duration_minutes" => 120 } }
       association :category, factory: [:category, :color_services]
     end
 
@@ -1262,7 +1262,7 @@ FactoryBot.define do
       price { 9000 }
       sku { "SPA-CLR-002" }
       unit { "session" }
-      metadata { { duration_minutes: 90 } }
+      metadata { { "duration_minutes" => 90 } }
       association :category, factory: [:category, :color_services]
     end
 
@@ -1271,7 +1271,7 @@ FactoryBot.define do
       price { 15000 }
       sku { "SPA-CLR-003" }
       unit { "session" }
-      metadata { { duration_minutes: 120 } }
+      metadata { { "duration_minutes" => 120 } }
       association :category, factory: [:category, :color_services]
     end
 
@@ -1280,7 +1280,7 @@ FactoryBot.define do
       price { 18000 }
       sku { "SPA-CLR-004" }
       unit { "session" }
-      metadata { { duration_minutes: 150 } }
+      metadata { { "duration_minutes" => 150 } }
       association :category, factory: [:category, :color_services]
     end
 
@@ -1291,7 +1291,7 @@ FactoryBot.define do
       price { 9500 }
       sku { "SPA-SPA-001" }
       unit { "hour" }
-      metadata { { duration_minutes: 60 } }
+      metadata { { "duration_minutes" => 60 } }
       association :category, factory: [:category, :spa_treatments]
     end
 
@@ -1300,7 +1300,7 @@ FactoryBot.define do
       price { 11000 }
       sku { "SPA-SPA-002" }
       unit { "hour" }
-      metadata { { duration_minutes: 60 } }
+      metadata { { "duration_minutes" => 60 } }
       association :category, factory: [:category, :spa_treatments]
     end
 
@@ -1309,7 +1309,7 @@ FactoryBot.define do
       price { 12000 }
       sku { "SPA-SPA-003" }
       unit { "hour" }
-      metadata { { duration_minutes: 60 } }
+      metadata { { "duration_minutes" => 60 } }
       association :category, factory: [:category, :spa_treatments]
     end
 
@@ -1318,7 +1318,7 @@ FactoryBot.define do
       price { 8500 }
       sku { "SPA-SPA-004" }
       unit { "hour" }
-      metadata { { duration_minutes: 60 } }
+      metadata { { "duration_minutes" => 60 } }
       association :category, factory: [:category, :spa_treatments]
     end
 
@@ -1329,7 +1329,7 @@ FactoryBot.define do
       price { 2500 }
       sku { "SPA-NAL-001" }
       unit { "session" }
-      metadata { { duration_minutes: 30 } }
+      metadata { { "duration_minutes" => 30 } }
       association :category, factory: [:category, :nail_services]
     end
 
@@ -1338,7 +1338,7 @@ FactoryBot.define do
       price { 3500 }
       sku { "SPA-NAL-002" }
       unit { "session" }
-      metadata { { duration_minutes: 45 } }
+      metadata { { "duration_minutes" => 45 } }
       association :category, factory: [:category, :nail_services]
     end
 
@@ -1347,7 +1347,7 @@ FactoryBot.define do
       price { 4000 }
       sku { "SPA-NAL-003" }
       unit { "session" }
-      metadata { { duration_minutes: 45 } }
+      metadata { { "duration_minutes" => 45 } }
       association :category, factory: [:category, :nail_services]
     end
 
@@ -1356,7 +1356,7 @@ FactoryBot.define do
       price { 5500 }
       sku { "SPA-NAL-004" }
       unit { "session" }
-      metadata { { duration_minutes: 60 } }
+      metadata { { "duration_minutes" => 60 } }
       association :category, factory: [:category, :nail_services]
     end
   end

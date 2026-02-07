@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "securerandom"
+
 FactoryBot.define do
   factory :simulated_payment, class: "CloverSandboxSimulator::Models::SimulatedPayment" do
     association :simulated_order

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "securerandom"
+
 FactoryBot.define do
   factory :simulated_order, class: "CloverSandboxSimulator::Models::SimulatedOrder" do
     sequence(:clover_merchant_id) { |n| "MERCHANT#{n}" }
@@ -42,7 +44,7 @@ FactoryBot.define do
       tax_amount { 0 }
       tip_amount { 0 }
       total { 0 }
-      metadata { { error: "Payment declined" } }
+      metadata { { "error" => "Payment declined" } }
     end
 
     trait :with_business_type do

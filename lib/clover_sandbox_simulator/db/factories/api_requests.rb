@@ -5,7 +5,7 @@ FactoryBot.define do
     http_method { "GET" }
     sequence(:url) { |n| "https://sandbox.dev.clover.com/v3/merchants/TESTMERCHANT/orders/ORDER#{n}" }
     response_status { 200 }
-    duration_ms { rand(50..300) }
+    duration_ms { 150 }
     resource_type { "Order" }
     request_payload { {} }
     response_payload { {} }
@@ -64,11 +64,11 @@ FactoryBot.define do
     # ── Performance traits ─────────────────────────────────────
 
     trait :slow do
-      duration_ms { rand(1500..5000) }
+      duration_ms { 2500 }
     end
 
     trait :fast do
-      duration_ms { rand(10..50) }
+      duration_ms { 25 }
     end
 
     # ── Resource traits ────────────────────────────────────────

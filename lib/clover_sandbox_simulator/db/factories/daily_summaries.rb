@@ -24,11 +24,11 @@ FactoryBot.define do
       total_discounts { 12_500 }   # $125.00
       breakdown do
         {
-          by_meal_period: { "breakfast" => 15, "lunch" => 40, "dinner" => 30 },
-          by_dining_option: { "HERE" => 55, "TO_GO" => 20, "DELIVERY" => 10 },
-          by_tender: { "Cash" => 25, "Credit Card" => 55, "Debit Card" => 10 },
-          revenue_by_meal_period: { "breakfast" => 45_000, "lunch" => 180_000, "dinner" => 200_000 },
-          revenue_by_dining_option: { "HERE" => 280_000, "TO_GO" => 95_000, "DELIVERY" => 50_000 }
+          "by_meal_period" => { "breakfast" => 15, "lunch" => 40, "dinner" => 30 },
+          "by_dining_option" => { "HERE" => 55, "TO_GO" => 20, "DELIVERY" => 10 },
+          "by_tender" => { "Cash" => 25, "Credit Card" => 55, "Debit Card" => 10 },
+          "revenue_by_meal_period" => { "breakfast" => 45_000, "lunch" => 180_000, "dinner" => 200_000 },
+          "revenue_by_dining_option" => { "HERE" => 280_000, "TO_GO" => 95_000, "DELIVERY" => 50_000 }
         }
       end
     end
@@ -44,11 +44,11 @@ FactoryBot.define do
       total_discounts { 0 }
       breakdown do
         {
-          by_meal_period: { "lunch" => 5, "dinner" => 7 },
-          by_dining_option: { "HERE" => 8, "TO_GO" => 4 },
-          by_tender: { "Cash" => 4, "Credit Card" => 8 },
-          revenue_by_meal_period: { "lunch" => 18_000, "dinner" => 30_000 },
-          revenue_by_dining_option: { "HERE" => 32_000, "TO_GO" => 16_000 }
+          "by_meal_period" => { "lunch" => 5, "dinner" => 7 },
+          "by_dining_option" => { "HERE" => 8, "TO_GO" => 4 },
+          "by_tender" => { "Cash" => 4, "Credit Card" => 8 },
+          "revenue_by_meal_period" => { "lunch" => 18_000, "dinner" => 30_000 },
+          "revenue_by_dining_option" => { "HERE" => 32_000, "TO_GO" => 16_000 }
         }
       end
     end
