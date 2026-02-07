@@ -588,8 +588,10 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
         allow(mock_inventory).to receive(:get_items).and_return(sample_items)
         allow(mock_employee).to receive(:get_employees).and_return(sample_employees)
         allow(mock_customer).to receive(:get_customers).and_return(sample_customers)
-        allow(mock_tender).to receive(:get_safe_tenders).and_return(sample_tenders)
+        allow(mock_tender).to receive(:get_all_payment_tenders).and_return(sample_tenders)
+        allow(mock_tender).to receive(:card_tender?).and_return(false)
         allow(mock_discount).to receive(:get_discounts).and_return(sample_discounts)
+        allow(mock_services).to receive(:ecommerce_available?).and_return(false)
 
         allow(mock_order).to receive(:create_order).and_return({ "id" => "ORDER_#{rand(1000)}" })
         allow(mock_order).to receive(:set_dining_option)
@@ -618,8 +620,10 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
         allow(mock_inventory).to receive(:get_items).and_return([])
         allow(mock_employee).to receive(:get_employees).and_return(sample_employees)
         allow(mock_customer).to receive(:get_customers).and_return(sample_customers)
-        allow(mock_tender).to receive(:get_safe_tenders).and_return(sample_tenders)
+        allow(mock_tender).to receive(:get_all_payment_tenders).and_return(sample_tenders)
+        allow(mock_tender).to receive(:card_tender?).and_return(false)
         allow(mock_discount).to receive(:get_discounts).and_return(sample_discounts)
+        allow(mock_services).to receive(:ecommerce_available?).and_return(false)
 
         orders = generator_with_mocks.generate_today(count: 2)
 
@@ -632,8 +636,10 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
         allow(mock_inventory).to receive(:get_items).and_return(sample_items)
         allow(mock_employee).to receive(:get_employees).and_return([])
         allow(mock_customer).to receive(:get_customers).and_return(sample_customers)
-        allow(mock_tender).to receive(:get_safe_tenders).and_return(sample_tenders)
+        allow(mock_tender).to receive(:get_all_payment_tenders).and_return(sample_tenders)
+        allow(mock_tender).to receive(:card_tender?).and_return(false)
         allow(mock_discount).to receive(:get_discounts).and_return(sample_discounts)
+        allow(mock_services).to receive(:ecommerce_available?).and_return(false)
 
         orders = generator_with_mocks.generate_today(count: 2)
 
@@ -646,8 +652,10 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
         allow(mock_inventory).to receive(:get_items).and_return(sample_items)
         allow(mock_employee).to receive(:get_employees).and_return(sample_employees)
         allow(mock_customer).to receive(:get_customers).and_return(sample_customers)
-        allow(mock_tender).to receive(:get_safe_tenders).and_return([])
+        allow(mock_tender).to receive(:get_all_payment_tenders).and_return([])
+        allow(mock_tender).to receive(:card_tender?).and_return(false)
         allow(mock_discount).to receive(:get_discounts).and_return(sample_discounts)
+        allow(mock_services).to receive(:ecommerce_available?).and_return(false)
 
         orders = generator_with_mocks.generate_today(count: 2)
 
@@ -713,12 +721,14 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
       allow(mock_inventory).to receive(:get_modifier_groups).and_return([])
       allow(mock_employee).to receive(:get_employees).and_return(sample_employees)
       allow(mock_customer).to receive(:get_customers).and_return(sample_customers)
-      allow(mock_tender).to receive(:get_safe_tenders).and_return(sample_tenders)
+      allow(mock_tender).to receive(:get_all_payment_tenders).and_return(sample_tenders)
+      allow(mock_tender).to receive(:card_tender?).and_return(false)
       allow(mock_discount).to receive(:get_discounts).and_return(sample_discounts)
       allow(mock_gift_card).to receive(:fetch_gift_cards).and_return(sample_gift_cards)
       allow(mock_order_type).to receive(:get_order_types).and_return([])
       allow(mock_cash_event).to receive(:record_cash_payment)
       allow(mock_service_charge).to receive(:apply_service_charge_to_order).and_return({ "id" => "SC1" })
+      allow(mock_services).to receive(:ecommerce_available?).and_return(false)
 
       allow(mock_order).to receive(:create_order).and_return({ "id" => "ORDER_#{rand(1000)}" })
       allow(mock_order).to receive(:set_dining_option)
@@ -962,6 +972,7 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
     let(:mock_services) { double("ServicesManager") }
     let(:mock_payment) { double("PaymentService") }
     let(:mock_cash_event) { double("CashEventService") }
+    let(:mock_tender_service) { double("TenderService") }
 
     let(:generator_with_mocks) { described_class.new(services: mock_services) }
 
@@ -975,7 +986,12 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
     before do
       allow(mock_services).to receive(:payment).and_return(mock_payment)
       allow(mock_services).to receive(:cash_event).and_return(mock_cash_event)
+      allow(mock_services).to receive(:tender).and_return(mock_tender_service)
       allow(mock_cash_event).to receive(:record_cash_payment)
+      allow(mock_tender_service).to receive(:card_tender?) do |tender|
+        label = tender["label"]&.downcase || ""
+        label.include?("credit") || label.include?("debit")
+      end
     end
 
     it "processes single payment for small parties" do
@@ -1106,6 +1122,288 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator do
       # Given the 5% split chance, we should still see cash used
       # Allow test to pass if at least some payments were cash
       expect(cash_count).to be >= 0 # Cash should be preferred when single payment is used
+    end
+  end
+
+  describe "#classify_tender_type" do
+    it "classifies credit card" do
+      expect(generator.send(:classify_tender_type, "Credit Card")).to eq("credit_card")
+    end
+
+    it "classifies debit card" do
+      expect(generator.send(:classify_tender_type, "Debit Card")).to eq("debit_card")
+    end
+
+    it "classifies cash" do
+      expect(generator.send(:classify_tender_type, "Cash")).to eq("cash")
+    end
+
+    it "classifies check" do
+      expect(generator.send(:classify_tender_type, "Check")).to eq("check")
+    end
+
+    it "classifies gift card" do
+      expect(generator.send(:classify_tender_type, "Gift Card")).to eq("gift_card")
+    end
+
+    it "classifies unknown tender as other" do
+      expect(generator.send(:classify_tender_type, "Bitcoin")).to eq("other")
+    end
+
+    it "is case insensitive" do
+      expect(generator.send(:classify_tender_type, "CREDIT CARD")).to eq("credit_card")
+      expect(generator.send(:classify_tender_type, "debit")).to eq("debit_card")
+    end
+  end
+
+  describe "#select_card_type" do
+    it "returns visa_debit for debit tenders" do
+      tender = { "label" => "Debit Card" }
+      expect(generator.send(:select_card_type, tender)).to eq(:visa_debit)
+    end
+
+    it "returns a valid credit card type for non-debit tenders" do
+      tender = { "label" => "Credit Card" }
+      valid_types = %i[visa mastercard discover amex]
+
+      20.times do
+        card_type = generator.send(:select_card_type, tender)
+        expect(valid_types).to include(card_type)
+      end
+    end
+  end
+
+  describe "#select_payment_tender" do
+    let(:mock_services) { double("ServicesManager") }
+    let(:mock_tender_service) { double("TenderService") }
+    let(:generator_with_mocks) { described_class.new(services: mock_services) }
+
+    let(:card_tender) { { "id" => "T_CREDIT", "label" => "Credit Card", "labelKey" => "com.clover.tender.credit_card" } }
+    let(:cash_tender) { { "id" => "T_CASH", "label" => "Cash", "labelKey" => "com.clover.tender.cash" } }
+    let(:check_tender) { { "id" => "T_CHECK", "label" => "Check", "labelKey" => "com.clover.tender.check" } }
+    let(:all_tenders) { [card_tender, cash_tender, check_tender] }
+
+    before do
+      allow(mock_services).to receive(:tender).and_return(mock_tender_service)
+      allow(mock_tender_service).to receive(:card_tender?) do |tender|
+        tender["label"]&.downcase&.include?("credit") || tender["label"]&.downcase&.include?("debit")
+      end
+    end
+
+    context "when ecommerce is available" do
+      it "sometimes selects card tenders" do
+        card_count = 0
+        100.times do
+          tender = generator_with_mocks.send(:select_payment_tender, all_tenders, 5000, true)
+          card_count += 1 if tender["id"] == "T_CREDIT"
+        end
+
+        # With 55% chance, should get card at least some times
+        expect(card_count).to be > 10
+      end
+    end
+
+    context "when ecommerce is not available" do
+      it "never selects card tenders" do
+        100.times do
+          tender = generator_with_mocks.send(:select_payment_tender, all_tenders, 5000, false)
+          expect(tender["id"]).not_to eq("T_CREDIT")
+        end
+      end
+    end
+
+    context "for small orders" do
+      it "prefers cash more often" do
+        cash_count = 0
+        100.times do
+          tender = generator_with_mocks.send(:select_payment_tender, all_tenders, 1500, false)
+          cash_count += 1 if tender["id"] == "T_CASH"
+        end
+
+        # Cash should be selected more than average (40% chance for small orders)
+        expect(cash_count).to be > 15
+      end
+    end
+  end
+
+  describe "#process_card_payment_via_ecommerce" do
+    let(:mock_services) { double("ServicesManager") }
+    let(:mock_payment) { double("PaymentService") }
+    let(:mock_tender_service) { double("TenderService") }
+    let(:mock_cash_event) { double("CashEventService") }
+    let(:generator_with_mocks) { described_class.new(services: mock_services) }
+
+    let(:card_tender) { { "id" => "T_CREDIT", "label" => "Credit Card" } }
+    let(:cash_tender) { { "id" => "T_CASH", "label" => "Cash" } }
+    let(:tenders_list) { [card_tender, cash_tender] }
+
+    before do
+      allow(mock_services).to receive(:payment).and_return(mock_payment)
+      allow(mock_services).to receive(:tender).and_return(mock_tender_service)
+      allow(mock_services).to receive(:cash_event).and_return(mock_cash_event)
+      allow(mock_cash_event).to receive(:record_cash_payment)
+      allow(mock_tender_service).to receive(:card_tender?) do |tender|
+        tender["label"]&.downcase&.include?("credit") || tender["label"]&.downcase&.include?("debit")
+      end
+    end
+
+    it "processes card payment via ecommerce service" do
+      allow(mock_payment).to receive(:process_card_payment).and_return({ "id" => "CHARGE1", "amount" => 5000, "status" => "succeeded" })
+
+      generator_with_mocks.send(:process_card_payment_via_ecommerce,
+        order_id: "ORDER1",
+        subtotal: 4000,
+        tax_amount: 330,
+        tip_amount: 670,
+        tender: card_tender,
+        employee_id: "EMP1",
+        tenders: tenders_list
+      )
+
+      expect(mock_payment).to have_received(:process_card_payment).with(
+        amount: 5000,
+        card_type: anything,
+        order_id: "ORDER1"
+      )
+    end
+
+    it "does not create a duplicate Platform API payment" do
+      allow(mock_payment).to receive(:process_card_payment).and_return({ "id" => "CHARGE1", "amount" => 5000, "status" => "succeeded" })
+      allow(mock_payment).to receive(:process_payment) # stub to enable spy
+
+      generator_with_mocks.send(:process_card_payment_via_ecommerce,
+        order_id: "ORDER1",
+        subtotal: 4000,
+        tax_amount: 330,
+        tip_amount: 670,
+        tender: card_tender,
+        employee_id: "EMP1",
+        tenders: tenders_list
+      )
+
+      # process_payment should NOT be called — Ecommerce charge auto-creates platform payment
+      expect(mock_payment).not_to have_received(:process_payment)
+    end
+
+    it "tracks card payment stats on success" do
+      allow(mock_payment).to receive(:process_card_payment).and_return({ "id" => "CHARGE1", "amount" => 5000, "status" => "succeeded" })
+
+      generator_with_mocks.send(:process_card_payment_via_ecommerce,
+        order_id: "ORDER1",
+        subtotal: 4000,
+        tax_amount: 330,
+        tip_amount: 670,
+        tender: card_tender,
+        employee_id: "EMP1",
+        tenders: tenders_list
+      )
+
+      stats = generator_with_mocks.stats
+      expect(stats[:card_payments][:count]).to eq(1)
+      expect(stats[:card_payments][:amount]).to eq(5000)
+    end
+
+    it "falls back to cash when charge returns nil" do
+      allow(mock_payment).to receive(:process_card_payment).and_return(nil)
+      allow(mock_payment).to receive(:process_payment)
+
+      generator_with_mocks.send(:process_card_payment_via_ecommerce,
+        order_id: "ORDER1",
+        subtotal: 4000,
+        tax_amount: 330,
+        tip_amount: 670,
+        tender: card_tender,
+        employee_id: "EMP1",
+        tenders: tenders_list
+      )
+
+      expect(mock_payment).to have_received(:process_payment)
+    end
+
+    it "falls back to cash when charge raises error" do
+      allow(mock_payment).to receive(:process_card_payment).and_raise(StandardError.new("Network error"))
+      allow(mock_payment).to receive(:process_payment)
+
+      generator_with_mocks.send(:process_card_payment_via_ecommerce,
+        order_id: "ORDER1",
+        subtotal: 4000,
+        tax_amount: 330,
+        tip_amount: 670,
+        tender: card_tender,
+        employee_id: "EMP1",
+        tenders: tenders_list
+      )
+
+      expect(mock_payment).to have_received(:process_payment)
+    end
+  end
+
+  describe "#fallback_to_cash" do
+    let(:mock_services) { double("ServicesManager") }
+    let(:mock_payment) { double("PaymentService") }
+    let(:mock_tender_service) { double("TenderService") }
+    let(:mock_cash_event) { double("CashEventService") }
+    let(:generator_with_mocks) { described_class.new(services: mock_services) }
+
+    let(:cash_tender) { { "id" => "T_CASH", "label" => "Cash" } }
+    let(:card_tender) { { "id" => "T_CREDIT", "label" => "Credit Card" } }
+    let(:check_tender) { { "id" => "T_CHECK", "label" => "Check" } }
+    let(:tenders_list) { [cash_tender, card_tender, check_tender] }
+
+    before do
+      allow(mock_services).to receive(:payment).and_return(mock_payment)
+      allow(mock_services).to receive(:tender).and_return(mock_tender_service)
+      allow(mock_services).to receive(:cash_event).and_return(mock_cash_event)
+      allow(mock_payment).to receive(:process_payment)
+      allow(mock_cash_event).to receive(:record_cash_payment)
+      allow(mock_tender_service).to receive(:card_tender?) do |tender|
+        tender["label"]&.downcase&.include?("credit") || tender["label"]&.downcase&.include?("debit")
+      end
+    end
+
+    it "prefers cash tender" do
+      generator_with_mocks.send(:fallback_to_cash,
+        order_id: "ORDER1",
+        subtotal: 4000,
+        tax_amount: 330,
+        tip_amount: 670,
+        employee_id: "EMP1",
+        tenders: tenders_list
+      )
+
+      expect(mock_payment).to have_received(:process_payment).with(
+        hash_including(tender_id: "T_CASH")
+      )
+    end
+
+    it "records cash payment event for cash tender" do
+      generator_with_mocks.send(:fallback_to_cash,
+        order_id: "ORDER1",
+        subtotal: 4000,
+        tax_amount: 330,
+        tip_amount: 670,
+        employee_id: "EMP1",
+        tenders: tenders_list
+      )
+
+      expect(mock_cash_event).to have_received(:record_cash_payment)
+    end
+
+    it "uses non-card tender when cash unavailable" do
+      tenders_no_cash = [card_tender, check_tender]
+
+      generator_with_mocks.send(:fallback_to_cash,
+        order_id: "ORDER1",
+        subtotal: 4000,
+        tax_amount: 330,
+        tip_amount: 670,
+        employee_id: "EMP1",
+        tenders: tenders_no_cash
+      )
+
+      expect(mock_payment).to have_received(:process_payment).with(
+        hash_including(tender_id: "T_CHECK")
+      )
     end
   end
 

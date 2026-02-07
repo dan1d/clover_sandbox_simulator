@@ -3,9 +3,24 @@
 require "spec_helper"
 
 RSpec.describe CloverSandboxSimulator::Database do
+  # Every example in this file may disconnect or reconnect to a different
+  # database.  We save the working test-database URL and reconnect after
+  # each example so the rest of the suite is unaffected.
+  let(:test_db_url) { described_class.test_database_url }
+
+  after do
+    # Always restore the real test-database connection
+    begin
+      described_class.connect!(test_db_url)
+    rescue StandardError
+      # If reconnection fails, subsequent DB-dependent specs will fail
+      # with a clear "not connected" error rather than a misleading one.
+      nil
+    end
+  end
+
   describe ".connected?" do
     it "returns false when no connection is established" do
-      # Disconnect any existing connection from spec_helper
       begin
         described_class.disconnect!
       rescue StandardError

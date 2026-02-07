@@ -320,7 +320,7 @@ module CloverSandboxSimulator
         end
 
         if tenders.empty?
-          logger.error "No safe tenders found!"
+          logger.error "No payment tenders found!"
           return nil
         end
 
@@ -918,8 +918,6 @@ module CloverSandboxSimulator
         party_size = party_size.to_i
         party_size = 1 if party_size < 1
 
-        total_amount = subtotal + tax_amount
-
         # Check if this order should use gift card payment (~10% chance)
         use_gift_card = rand(100) < GIFT_CARD_CONFIG[:payment_chance] &&
                         gift_cards.any? &&
@@ -1013,10 +1011,16 @@ module CloverSandboxSimulator
       end
 
       # Process a card payment via the Ecommerce API (tokenize → charge)
-      # Falls back to Platform API (Cash) if the charge fails.
+      # Falls back to a non-card tender (cash) if the charge fails.
+      #
+      # NOTE: The Ecommerce API charge payload includes `order_id`, which
+      # auto-links the charge to the order and creates a corresponding
+      # Platform API payment record on the Clover side.  We do NOT call
+      # `process_payment` separately — doing so would create a duplicate
+      # payment and inflate revenue.
       def process_card_payment_via_ecommerce(order_id:, subtotal:, tax_amount:, tip_amount:, tender:, employee_id:, tenders:)
         total_with_tip = subtotal + tip_amount + tax_amount
-        card_type = tender["label"]&.downcase&.include?("debit") ? :visa_debit : [:visa, :mastercard, :discover, :amex].sample
+        card_type = select_card_type(tender)
 
         logger.info "  💳 Card payment via Ecommerce API: $#{'%.2f' % (total_with_tip / 100.0)} (#{card_type})"
 
@@ -1028,17 +1032,6 @@ module CloverSandboxSimulator
           )
 
           if charge && charge["id"]
-            # Ecommerce charge succeeded — also create a Platform API payment
-            # record so the order shows as paid with the correct tender
-            services.payment.process_payment(
-              order_id: order_id,
-              amount: subtotal,
-              tender_id: tender["id"],
-              employee_id: employee_id,
-              tip_amount: tip_amount,
-              tax_amount: tax_amount
-            )
-
             @stats[:card_payments] ||= { count: 0, amount: 0 }
             @stats[:card_payments][:count] += 1
             @stats[:card_payments][:amount] += total_with_tip
@@ -1050,6 +1043,17 @@ module CloverSandboxSimulator
         rescue StandardError => e
           logger.warn "  💳 Card payment failed (#{e.message}) — falling back to Cash"
           fallback_to_cash(order_id: order_id, subtotal: subtotal, tax_amount: tax_amount, tip_amount: tip_amount, employee_id: employee_id, tenders: tenders)
+        end
+      end
+
+      # Select a realistic card type based on tender label
+      # Debit tenders rotate between debit variants; credit tenders rotate
+      # between the major card brands.
+      def select_card_type(tender)
+        if tender["label"]&.downcase&.include?("debit")
+          [:visa_debit].sample # Only visa_debit test card available in sandbox
+        else
+          %i[visa mastercard discover amex].sample
         end
       end
 
@@ -1092,7 +1096,9 @@ module CloverSandboxSimulator
 
         if active_cards.empty?
           logger.debug "  No active gift cards with balance, using regular payment"
-          fallback_tender = tenders.reject { |t| t["id"] == gift_card_tender["id"] }.sample || tenders.sample
+          # Exclude gift card tender AND card tenders (cards need Ecommerce routing)
+          safe = tenders.reject { |t| t["id"] == gift_card_tender["id"] || services.tender.card_tender?(t) }
+          fallback_tender = safe.sample || tenders.first
           services.payment.process_payment(
             order_id: order_id,
             amount: subtotal,
@@ -1142,8 +1148,9 @@ module CloverSandboxSimulator
             gc_percentage = (amount_redeemed.to_f / total_with_tax * 100).round
             remaining_percentage = 100 - gc_percentage
 
-            # Select another tender for the remaining amount
-            other_tender = tenders.reject { |t| t["id"] == gift_card_tender["id"] }.sample || tenders.sample
+            # Select another non-card tender for the remaining amount (split payments use Platform API)
+            safe = tenders.reject { |t| t["id"] == gift_card_tender["id"] || services.tender.card_tender?(t) }
+            other_tender = safe.sample || tenders.first
 
             splits = [
               { tender: gift_card_tender, percentage: gc_percentage },
@@ -1160,9 +1167,10 @@ module CloverSandboxSimulator
             )
           end
         else
-          # Redemption failed, fall back to regular payment
+          # Redemption failed, fall back to regular payment (exclude card tenders)
           logger.warn "  Gift card redemption failed, using regular payment"
-          fallback_tender = tenders.reject { |t| t["id"] == gift_card_tender["id"] }.sample || tenders.sample
+          safe = tenders.reject { |t| t["id"] == gift_card_tender["id"] || services.tender.card_tender?(t) }
+          fallback_tender = safe.sample || tenders.first
           services.payment.process_payment(
             order_id: order_id,
             amount: subtotal,
@@ -1567,7 +1575,7 @@ module CloverSandboxSimulator
         payments.each do |payment|
           begin
             tender_label = payment.dig("tender", "label") || "Unknown"
-            tender_type  = tender_label.downcase.include?("cash") ? "cash" : "card"
+            tender_type  = classify_tender_type(tender_label)
 
             Models::SimulatedPayment.create!(
               simulated_order:  sim_order,
@@ -1582,6 +1590,19 @@ module CloverSandboxSimulator
           rescue StandardError => e
             logger.debug "Payment audit logging failed for #{payment['id']}: #{e.message}"
           end
+        end
+      end
+
+      # Classify a tender label into a canonical payment type for audit records
+      def classify_tender_type(tender_label)
+        label = tender_label.downcase
+        case label
+        when /credit/  then "credit_card"
+        when /debit/   then "debit_card"
+        when /cash/    then "cash"
+        when /check/   then "check"
+        when /gift/    then "gift_card"
+        else                "other"
         end
       end
 

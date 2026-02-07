@@ -283,7 +283,7 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator, :db do
       expect(pay.tip_amount).to eq(400)
       expect(pay.tax_amount).to eq(200)
       expect(pay.status).to eq("SUCCESS")
-      expect(pay.payment_type).to eq("card")
+      expect(pay.payment_type).to eq("credit_card")
     end
 
     it "identifies cash payment type" do
@@ -349,7 +349,7 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator, :db do
       card_pay = payment_model.find_by(clover_payment_id: "SPLIT_1")
       cash_pay = payment_model.find_by(clover_payment_id: "SPLIT_2")
 
-      expect(card_pay.payment_type).to eq("card")
+      expect(card_pay.payment_type).to eq("credit_card")
       expect(card_pay.amount).to eq(1250)
       expect(cash_pay.payment_type).to eq("cash")
       expect(cash_pay.amount).to eq(1250)

@@ -13,7 +13,8 @@ module CloverSandboxSimulator
           com.clover.tender.external_payment
         ].freeze
 
-        # Card tenders — payments routed through the Ecommerce API
+        # Canonical labelKey values for card tenders — payments routed
+        # through the Ecommerce API rather than the Platform API.
         CARD_TENDER_KEYS = %w[
           com.clover.tender.credit_card
           com.clover.tender.debit_card
@@ -60,15 +61,19 @@ module CloverSandboxSimulator
           tenders
         end
 
-        # Returns true if the tender is a credit or debit card
+        # Returns true if the tender is a credit or debit card.
+        # Checks the canonical `labelKey` against CARD_TENDER_KEYS first,
+        # then falls back to substring matching on the human-readable label
+        # (handles custom/renamed tenders).
         def card_tender?(tender)
-          label = tender["label"]&.downcase || ""
           label_key = tender["labelKey"]&.downcase || ""
 
-          label.include?("credit") ||
-            label.include?("debit") ||
-            label_key.include?("credit") ||
-            label_key.include?("debit")
+          # Fast path: known Clover card tender labelKeys
+          return true if CARD_TENDER_KEYS.include?(label_key)
+
+          # Fallback: match on human-readable label for custom tenders
+          label = tender["label"]&.downcase || ""
+          label.include?("credit") || label.include?("debit")
         end
 
         # Get a specific tender by label

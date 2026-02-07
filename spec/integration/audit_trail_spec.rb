@@ -144,7 +144,7 @@ RSpec.describe "Audit trail end-to-end", :db, :integration do
       expect(sim_payment.clover_payment_id).to eq("PAY_S1")
       expect(sim_payment.amount).to eq(3000)
       expect(sim_payment.tender_name).to eq("Credit Card")
-      expect(sim_payment.payment_type).to eq("card")
+      expect(sim_payment.payment_type).to eq("credit_card")
       expect(sim_payment.simulated_order_id).to eq(sim_order.id)
     end
 
@@ -166,7 +166,7 @@ RSpec.describe "Audit trail end-to-end", :db, :integration do
       card_pay = payment_model.find_by(clover_payment_id: "SPLIT_A")
       cash_pay = payment_model.find_by(clover_payment_id: "SPLIT_B")
 
-      expect(card_pay.payment_type).to eq("card")
+      expect(card_pay.payment_type).to eq("credit_card")
       expect(cash_pay.payment_type).to eq("cash")
       expect(card_pay.amount + cash_pay.amount).to eq(3000)
     end

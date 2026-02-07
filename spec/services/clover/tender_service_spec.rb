@@ -93,6 +93,84 @@ RSpec.describe CloverSandboxSimulator::Services::Clover::TenderService do
     end
   end
 
+  describe "#card_tender?" do
+    it "identifies credit card by labelKey" do
+      tender = { "label" => "Visa", "labelKey" => "com.clover.tender.credit_card", "enabled" => true }
+      expect(service.card_tender?(tender)).to be true
+    end
+
+    it "identifies debit card by labelKey" do
+      tender = { "label" => "Debit", "labelKey" => "com.clover.tender.debit_card", "enabled" => true }
+      expect(service.card_tender?(tender)).to be true
+    end
+
+    it "identifies credit card by label fallback" do
+      tender = { "label" => "Credit Card", "labelKey" => "com.custom.tender", "enabled" => true }
+      expect(service.card_tender?(tender)).to be true
+    end
+
+    it "identifies debit card by label fallback" do
+      tender = { "label" => "Debit Card", "labelKey" => "com.custom.tender", "enabled" => true }
+      expect(service.card_tender?(tender)).to be true
+    end
+
+    it "does not flag cash as card tender" do
+      tender = { "label" => "Cash", "labelKey" => "com.clover.tender.cash", "enabled" => true }
+      expect(service.card_tender?(tender)).to be false
+    end
+
+    it "does not flag gift card as card tender" do
+      tender = { "label" => "Gift Card", "labelKey" => "com.clover.tender.external_gift_card", "enabled" => true }
+      expect(service.card_tender?(tender)).to be false
+    end
+
+    it "does not flag check as card tender" do
+      tender = { "label" => "Check", "labelKey" => "com.clover.tender.check", "enabled" => true }
+      expect(service.card_tender?(tender)).to be false
+    end
+  end
+
+  describe "#get_all_payment_tenders" do
+    before do
+      stub_request(:get, "#{base_url}/tenders")
+        .to_return(
+          status: 200,
+          body: { elements: all_tenders }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+    end
+
+    context "when ecommerce is enabled" do
+      before do
+        allow(service.send(:config)).to receive(:ecommerce_enabled?).and_return(true)
+      end
+
+      it "includes card tenders" do
+        tenders = service.get_all_payment_tenders
+        labels = tenders.map { |t| t["label"] }
+
+        expect(labels).to include("Credit Card")
+        expect(labels).to include("Debit Card")
+        expect(tenders.size).to eq(5) # All enabled tenders
+      end
+    end
+
+    context "when ecommerce is not enabled" do
+      before do
+        allow(service.send(:config)).to receive(:ecommerce_enabled?).and_return(false)
+      end
+
+      it "excludes card tenders" do
+        tenders = service.get_all_payment_tenders
+        labels = tenders.map { |t| t["label"] }
+
+        expect(labels).not_to include("Credit Card")
+        expect(labels).not_to include("Debit Card")
+        expect(tenders.size).to eq(3) # Cash, Gift Card, Check
+      end
+    end
+  end
+
   describe "#select_split_tenders" do
     before do
       stub_request(:get, "#{base_url}/tenders")

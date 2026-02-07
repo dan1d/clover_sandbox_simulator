@@ -102,7 +102,12 @@ RSpec.configure do |config|
       DatabaseCleaner.clean_with(:truncation)
     end
 
-    config.around(:each, :db) do |example|
+    # Wrap ALL examples — not just :db-tagged ones — because
+    # BaseService#request creates ApiRequest audit records on every
+    # stubbed HTTP call, even in service specs that aren't explicitly
+    # marked :db.  Without this, those records leak across spec files
+    # and pollute scope assertions (e.g. ApiRequest.errors.count).
+    config.around(:each) do |example|
       DatabaseCleaner.cleaning { example.run }
     end
   rescue StandardError
