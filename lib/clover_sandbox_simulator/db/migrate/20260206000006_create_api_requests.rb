@@ -17,7 +17,6 @@ class CreateApiRequests < ActiveRecord::Migration[8.0]
     end
 
     add_index :api_requests, :http_method
-    add_index :api_requests, :resource_type
     add_index :api_requests, :resource_id
     add_index :api_requests, [:resource_type, :resource_id]
     add_index :api_requests, :created_at
