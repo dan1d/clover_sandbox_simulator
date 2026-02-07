@@ -10,7 +10,7 @@ require "dotenv"
 Dotenv.load
 
 module CloverSandboxSimulator
-  VERSION = "1.4.0"
+  VERSION = "1.5.0"
 
   class Error < StandardError; end
   class ConfigurationError < Error; end

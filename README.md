@@ -1,12 +1,13 @@
 # Clover Sandbox Simulator
 
-A Ruby gem for simulating Point of Sale operations in Clover sandbox environments. Generates realistic restaurant orders, payments, and transaction data for testing integrations with Clover's API.
+A Ruby gem for simulating Point of Sale operations in Clover sandbox environments. Generates realistic orders, payments, and transaction data across **9 business types** for testing integrations with Clover's API.
 
 ## Features
 
-- **Realistic Restaurant Data**: Complete menu with 39 items across 7 categories (appetizers, entrees, sides, desserts, drinks, alcoholic beverages, specials)
+- **9 Business Types**: Restaurant, Cafe/Bakery, Bar/Nightclub, Food Truck, Fine Dining, Pizzeria, Retail Clothing, Retail General, Salon/Spa — each with tailored categories and items
+- **168 Menu/Product Items**: Spread across 38 categories with realistic pricing
 - **Modifier Groups**: Temperature, add-ons, sides, dressings, drink sizes applied to menu items
-- **Multiple Payment Methods**: Supports Credit/Debit cards via Ecommerce API, plus Cash, Check, Gift Card, and other tenders
+- **Multiple Payment Methods**: Credit/Debit cards via Ecommerce API, plus Cash, Check, Gift Card, and other tenders
 - **Split Payments**: Supports 1-4 tender splits per order, more common for larger parties
 - **Meal Period Simulation**: Orders distributed across breakfast, lunch, happy hour, dinner, and late night with realistic weights
 - **Order Types**: Dine-in, Takeout, and Delivery with configurable settings
@@ -14,12 +15,15 @@ A Ruby gem for simulating Point of Sale operations in Clover sandbox environment
 - **Dynamic Order Volume**: Different order counts for weekdays, Friday, Saturday, Sunday (40-120 orders/day)
 - **Tips & Taxes**: Variable tip rates by dining option (15-25% dine-in, 0-15% takeout, 10-20% delivery)
 - **Per-Item Tax Rates**: Different tax rates for food vs alcohol items
-- **Discounts**: 7 discount types including Happy Hour, Senior, Military, Employee, Birthday, and fixed amounts
+- **Discounts**: 7 discount types including Happy Hour, promo codes, loyalty, combo, line-item, threshold, and legacy
 - **Employees & Customers**: Auto-generated with realistic names and contact info
 - **Shift Tracking**: Clock in/out for employees with duration tracking
 - **Cash Drawer Management**: Open/close drawer events with cash tracking
 - **Party Size Variation**: 1-6 guests affecting item counts and split payment probability
 - **Order Notes**: Random special instructions (allergies, modifications, VIP customers)
+- **PostgreSQL Audit Trail**: Track all simulated orders, payments, and API requests in a local database
+- **Daily Summaries**: Automated aggregation of revenue, tax, tips, and discounts by meal period and dining option
+- **Database Seeding**: Idempotent FactoryBot-based seeder for all 9 business types
 
 ## Installation
 
@@ -45,18 +49,32 @@ gem install clover_sandbox_simulator
 
 ### Multi-Merchant Setup (Recommended)
 
-Create a `.env.json` file with multiple merchant configurations:
+Create a `.env.json` file with the object format:
+
+```json
+{
+  "DATABASE_URL": "postgres://localhost:5432/clover_simulator_development",
+  "merchants": [
+    {
+      "CLOVER_MERCHANT_ID": "YOUR_MERCHANT_ID",
+      "CLOVER_MERCHANT_NAME": "My Test Merchant",
+      "CLOVER_API_TOKEN": "static-api-token",
+      "CLOVER_ACCESS_TOKEN": "oauth-jwt-token",
+      "CLOVER_REFRESH_TOKEN": "clvroar-refresh-token",
+      "PUBLIC_TOKEN": "ecommerce-public-token",
+      "PRIVATE_TOKEN": "ecommerce-private-token"
+    }
+  ]
+}
+```
+
+The legacy array format is also supported for backwards compatibility:
 
 ```json
 [
   {
     "CLOVER_MERCHANT_ID": "YOUR_MERCHANT_ID",
-    "CLOVER_MERCHANT_NAME": "My Test Merchant",
-    "CLOVER_API_TOKEN": "static-api-token",
-    "CLOVER_ACCESS_TOKEN": "oauth-jwt-token",
-    "CLOVER_REFRESH_TOKEN": "clvroar-refresh-token",
-    "PUBLIC_TOKEN": "ecommerce-public-token",
-    "PRIVATE_TOKEN": "ecommerce-private-token"
+    "CLOVER_API_TOKEN": "your-token"
   }
 ]
 ```
@@ -65,6 +83,7 @@ Create a `.env.json` file with multiple merchant configurations:
 - `CLOVER_API_TOKEN` - Static API token (never expires, preferred)
 - `CLOVER_ACCESS_TOKEN` - OAuth JWT token (expires, can be refreshed)
 - `PUBLIC_TOKEN` / `PRIVATE_TOKEN` - Required for credit card payments via Ecommerce API
+- `DATABASE_URL` - PostgreSQL connection string for audit trail persistence
 
 ### Single Merchant Setup
 
@@ -80,6 +99,20 @@ LOG_LEVEL=INFO
 TAX_RATE=8.25
 ```
 
+### Database Setup
+
+The simulator uses PostgreSQL to persist audit data (simulated orders, payments, API requests, daily summaries). Set up the database with:
+
+```bash
+# Create, migrate, and seed the database
+./bin/simulate db reset
+
+# Or step by step:
+./bin/simulate db create
+./bin/simulate db migrate
+./bin/simulate db seed
+```
+
 ## Usage
 
 ### Quick Start
@@ -93,6 +126,9 @@ Run a full simulation (setup + generate orders):
 ### Commands
 
 ```bash
+# Show version
+./bin/simulate version
+
 # List available merchants from .env.json
 ./bin/simulate merchants
 
@@ -175,9 +211,42 @@ Run a full simulation (setup + generate orders):
 ./bin/simulate generate -v
 ```
 
+### Database Management
+
+```bash
+# Database subcommands
+./bin/simulate db create    # Create PostgreSQL database
+./bin/simulate db migrate   # Run pending migrations
+./bin/simulate db seed      # Seed with 9 business types, 38 categories, 168 items
+./bin/simulate db reset     # Drop, create, migrate, and seed
+
+# Reporting
+./bin/simulate summary         # Show daily summary (revenue, orders, tips, tax)
+./bin/simulate audit            # Show recent API requests
+./bin/simulate business_types   # List business types with category/item counts
+```
+
+## Business Types
+
+The simulator supports 9 business types across 3 industries:
+
+| Business Type | Industry | Categories | Items | Description |
+|---------------|----------|------------|-------|-------------|
+| Restaurant | Food | 5 | 25 | Full-service casual dining |
+| Cafe/Bakery | Food | 5 | 25 | Coffee shop with pastries and light fare |
+| Bar/Nightclub | Food | 5 | 25 | Craft cocktails, draft beer, late-night bites |
+| Food Truck | Food | 3 | 15 | Mobile street food — tacos and Mexican fare |
+| Fine Dining | Food | 3 | 15 | Upscale prix-fixe and a la carte dining |
+| Pizzeria | Food | 3 | 15 | Classic and specialty pies, calzones, sides |
+| Retail Clothing | Retail | 5 | 25 | Casual wear with size/color variants |
+| Retail General | Retail | 5 | 13 | Electronics, home goods, personal care |
+| Salon/Spa | Service | 4 | 10 | Hair salon, spa treatments, nail services |
+
+All business types have tailored order profiles, category structures, and item pricing.
+
 ## Menu Structure
 
-### Categories
+### Categories (Restaurant Example)
 - Appetizers
 - Entrees
 - Sides
@@ -216,6 +285,8 @@ Run a full simulation (setup + generate orders):
 
 Credit and debit card payments are fully supported via the **Clover Ecommerce API**. This requires configuring `PUBLIC_TOKEN` and `PRIVATE_TOKEN` in your `.env.json`.
 
+~55% of orders use card payments when the Ecommerce API is configured. The simulator tokenizes test cards and creates charges linked to orders. If a charge fails, payment gracefully falls back to cash.
+
 **Test Card Numbers:**
 
 | Card Type | Number |
@@ -240,10 +311,41 @@ For non-card payments, the simulator uses Platform API tenders:
 - Check
 - Gift Card
 - External Payment
-- Mobile Payment
-- Store Credit
 
-The simulator uses whatever tenders are available in the Clover merchant account.
+The simulator uses whatever tenders are available in the Clover merchant account. Card tenders are automatically excluded from split payments (which use the Platform API).
+
+## Audit Trail & Persistence
+
+The simulator persists all activity to a PostgreSQL database for analysis and debugging:
+
+### Models
+
+| Model | Purpose |
+|-------|---------|
+| `BusinessType` | 9 business types with industry classification and order profiles |
+| `Category` | 38 categories linked to business types with tax groups |
+| `Item` | 168 items with SKUs, pricing, and optional size/color variants |
+| `SimulatedOrder` | Every generated order with merchant ID, period, dining option, amounts |
+| `SimulatedPayment` | Payment records with tender type classification (credit_card, debit_card, cash, check, gift_card) |
+| `ApiRequest` | Full audit log of every HTTP call to Clover (method, URL, status, duration, payloads) |
+| `DailySummary` | Automated daily aggregation of revenue, tax, tips, and discounts |
+
+### Daily Summary
+
+The `DailySummary` model automatically aggregates:
+- Order count, revenue, tax, tips, discounts
+- Breakdown by meal period and dining option
+- Revenue by meal period and dining option
+- Payment breakdown by tender type
+
+```ruby
+# Generate a summary for today
+DailySummary.generate_for!("MERCHANT_ID", Date.today)
+
+# Query summaries
+DailySummary.for_merchant("M1").recent(7)
+DailySummary.between_dates(1.week.ago, Date.today)
+```
 
 ## Tax Rates
 
@@ -280,47 +382,6 @@ The simulator supports multiple order types that affect order flow and reporting
 | Catering | Large catering orders |
 
 Order types are automatically created during setup if they don't exist.
-
-## Shift Management
-
-The simulator tracks employee shifts for realistic operations:
-
-```ruby
-# Clock in an employee
-services.shift.clock_in(employee_id: "EMP_123")
-
-# Clock out an employee
-services.shift.clock_out(employee_id: "EMP_123")
-
-# Get active shifts
-services.shift.get_active_shifts
-
-# Calculate shift duration
-services.shift.calculate_shift_duration(shift_id: "SHIFT_123")
-```
-
-## Cash Drawer Operations
-
-Track cash drawer operations for end-of-day reconciliation:
-
-```ruby
-# Open cash drawer
-services.cash_event.open_drawer(employee_id: "EMP_123", amount: 10000)
-
-# Close cash drawer
-services.cash_event.close_drawer(employee_id: "EMP_123", amount: 15000)
-
-# Add cash (e.g., from cash payment)
-services.cash_event.add_cash(employee_id: "EMP_123", amount: 2500, note: "Cash sale")
-
-# Remove cash (e.g., cash out)
-services.cash_event.remove_cash(employee_id: "EMP_123", amount: 5000, note: "Bank deposit")
-
-# Get drawer total
-services.cash_event.calculate_drawer_total
-```
-
-**Note:** Cash event creation may not be fully supported in the Clover sandbox. The simulator handles this gracefully with simulated responses.
 
 ## Tips
 
@@ -374,24 +435,38 @@ Each meal period has different dining option distributions:
 
 ```
 clover_sandbox_simulator/
-├── bin/simulate                      # CLI entry point
+├── bin/simulate                      # CLI entry point (Thor)
 ├── lib/
-│   ├── clover_sandbox_simulator.rb   # Gem entry point
+│   ├── clover_sandbox_simulator.rb   # Gem entry point, VERSION constant
 │   └── clover_sandbox_simulator/
 │       ├── configuration.rb          # Multi-merchant config from .env.json
+│       ├── database.rb               # PostgreSQL connection management
+│       ├── seeder.rb                 # Idempotent FactoryBot seeder
 │       ├── parallel_executor.rb      # Concurrent execution support
+│       ├── models/                   # ActiveRecord models (standalone, no Rails)
+│       │   ├── record.rb            # Base class for all models
+│       │   ├── business_type.rb     # 9 business types with industries
+│       │   ├── category.rb          # 38 categories per business type
+│       │   ├── item.rb              # 168 items with pricing & variants
+│       │   ├── simulated_order.rb   # Generated order audit records
+│       │   ├── simulated_payment.rb # Payment audit records by tender type
+│       │   ├── api_request.rb       # Full HTTP request/response audit log
+│       │   └── daily_summary.rb     # Automated daily aggregation
+│       ├── db/
+│       │   ├── migrate/             # 8 PostgreSQL migrations (UUID PKs)
+│       │   └── factories/           # FactoryBot factories (shared with seeder)
 │       ├── services/
-│       │   ├── base_service.rb       # HTTP client, error handling helpers
-│       │   └── clover/               # Clover API services
+│       │   ├── base_service.rb      # HTTP client, error handling, audit logging
+│       │   └── clover/              # Clover API services
 │       │       ├── inventory_service.rb    # Categories, items, modifier groups
 │       │       ├── order_service.rb        # Orders, line items, modifiers
-│       │       ├── payment_service.rb      # Payments, splits
-│       │       ├── tender_service.rb       # Payment tenders
+│       │       ├── payment_service.rb      # Payments, splits, card payments
+│       │       ├── tender_service.rb       # Payment tenders, card detection
+│       │       ├── ecommerce_service.rb    # Card tokenization & charges
 │       │       ├── tax_service.rb          # Tax rates, per-item taxes
-│       │       ├── discount_service.rb     # Discounts, promos, combos
+│       │       ├── discount_service.rb     # Discounts, promos, combos, loyalty
 │       │       ├── employee_service.rb     # Employee management
 │       │       ├── customer_service.rb     # Customer management
-│       │       ├── ecommerce_service.rb    # Card payments via Ecommerce API
 │       │       ├── refund_service.rb       # Full/partial refunds
 │       │       ├── gift_card_service.rb    # Gift card management
 │       │       ├── service_charge_service.rb # Service charges, auto-gratuity
@@ -401,18 +476,18 @@ clover_sandbox_simulator/
 │       │       ├── oauth_service.rb        # Token refresh
 │       │       └── services_manager.rb     # Thread-safe service access
 │       ├── generators/
-│       │   ├── data_loader.rb        # Load JSON data files
+│       │   ├── data_loader.rb        # DB-first data loading with JSON fallback
 │       │   ├── entity_generator.rb   # Setup entities (idempotent)
-│       │   └── order_generator.rb    # Generate realistic orders
+│       │   └── order_generator.rb    # Generate realistic orders & payments
 │       └── data/
-│           └── restaurant/           # JSON data files
+│           └── restaurant/           # JSON data files (fallback for DB)
 │               ├── categories.json
 │               ├── items.json
 │               ├── discounts.json
 │               ├── tenders.json
 │               ├── modifiers.json
 │               └── tax_rates.json
-└── spec/                             # RSpec tests with VCR integration
+└── spec/                             # 1124 examples, 0 failures
 ```
 
 ## Development
@@ -427,6 +502,9 @@ bundle exec rspec --format documentation
 # Run specific test file
 bundle exec rspec spec/services/clover/tender_service_spec.rb
 
+# Run model specs
+bundle exec rspec spec/models/
+
 # Run integration tests (requires .env.json with valid credentials)
 bundle exec rspec spec/integration/
 
@@ -435,24 +513,30 @@ bundle exec rubocop
 
 # Open console
 bundle exec irb -r ./lib/clover_sandbox_simulator
+
+# Build the gem
+gem build clover_sandbox_simulator.gemspec
 ```
 
 ## Testing
 
-The gem includes comprehensive RSpec tests with WebMock for HTTP stubbing and VCR for integration tests.
+The gem includes comprehensive RSpec tests with WebMock for HTTP stubbing, VCR for integration tests, and DatabaseCleaner for test isolation.
 
 ### Test Coverage
 
-- **475 examples, 0 failures, 3 pending**
-- Configuration validation
-- Data loading from JSON files
+- **1124 examples, 0 failures, 3 pending**
+- Database connection management and migration
+- Seeder idempotency (9 business types, 38 categories, 168 items)
+- FactoryBot factory validation (219 factories/traits)
+- All ActiveRecord models (validations, scopes, associations)
 - All Clover API services:
   - InventoryService (categories, items, modifier groups)
   - OrderService (create, line items, dining options, modifiers)
   - PaymentService (single, split, and card payments)
-  - TenderService (tender selection)
+  - TenderService (tender selection, card detection, ecommerce filtering)
+  - EcommerceService (tokenization, charges, refunds)
   - TaxService (rates, per-item calculation, item associations)
-  - DiscountService (percentage, fixed, time-based, loyalty)
+  - DiscountService (percentage, fixed, time-based, loyalty, combo, promo codes)
   - EmployeeService (CRUD, deterministic setup)
   - CustomerService (CRUD, anonymous orders)
   - RefundService (full/partial refunds, multiple strategies)
@@ -462,42 +546,64 @@ The gem includes comprehensive RSpec tests with WebMock for HTTP stubbing and VC
   - OrderTypeService (CRUD, default setup)
   - CashEventService (drawer operations, simulated responses)
   - ServicesManager (thread-safe memoization, lazy loading)
-- Entity generator idempotency
-- Order generator (meal periods, dining options, tips, refunds, modifiers, service charges)
-- Edge cases (nil handling, empty arrays, API errors)
+- Audit trail (API request logging, order/payment tracking, daily summaries)
+- Order generator (meal periods, dining options, tips, card payments, fallbacks, refunds, modifiers, service charges)
+- Data loader (DB-first with JSON fallback, format parity)
+- Multi-business type integration (industry classification, order profiles)
+- Financial data quality validation
+- Edge cases (nil handling, empty arrays, API errors, network failures)
 - VCR integration tests for real API validation
 
 ### Test Files
 
 ```
 spec/
-├── configuration_spec.rb
+├── audit_logging_spec.rb              # BaseService audit + OrderGenerator tracking
+├── configuration_spec.rb              # Multi-merchant config validation
+├── configuration_database_url_spec.rb # DATABASE_URL parsing
+├── database_spec.rb                   # Connection management, migrations
+├── seeder_spec.rb                     # Idempotent seeding, business types
+├── factories/
+│   └── factories_spec.rb             # 219 factory/trait validation
 ├── generators/
-│   ├── data_loader_spec.rb
-│   ├── entity_generator_spec.rb
-│   └── order_generator_spec.rb
-├── services/clover/
-│   ├── customer_service_spec.rb
-│   ├── discount_service_spec.rb
-│   ├── employee_service_spec.rb
-│   ├── gift_card_service_spec.rb
-│   ├── inventory_service_spec.rb
-│   ├── order_service_spec.rb
-│   ├── payment_service_spec.rb
-│   ├── refund_service_spec.rb
-│   ├── service_charge_service_spec.rb
-│   ├── shift_service_spec.rb
-│   ├── order_type_service_spec.rb
-│   ├── cash_event_service_spec.rb
-│   ├── tax_service_spec.rb
-│   ├── services_manager_spec.rb
-│   └── tender_service_spec.rb
-└── integration/
-    ├── modifier_groups_spec.rb
-    ├── service_charges_spec.rb
-    ├── order_types_spec.rb
-    ├── cash_events_spec.rb
-    └── tax_rates_spec.rb
+│   ├── data_loader_spec.rb           # DB/JSON loading, format parity
+│   ├── entity_generator_spec.rb      # Idempotent setup
+│   └── order_generator_spec.rb       # Payments, tips, dining, card flow
+├── integration/
+│   ├── audit_trail_spec.rb           # End-to-end order/payment/summary
+│   ├── data_loader_compat_spec.rb    # DB vs JSON compatibility
+│   ├── multi_business_spec.rb        # 9 business types, industries
+│   ├── modifier_groups_spec.rb       # VCR: real API
+│   ├── service_charges_spec.rb       # VCR: real API
+│   ├── order_types_spec.rb           # VCR: real API
+│   ├── cash_events_spec.rb           # VCR: real API
+│   └── tax_rates_spec.rb            # VCR: real API
+├── models/
+│   ├── api_request_spec.rb           # Scopes, validations
+│   ├── business_type_spec.rb         # Industries, associations
+│   ├── category_spec.rb              # Scoped uniqueness
+│   ├── daily_summary_spec.rb         # Aggregation, idempotency
+│   ├── item_spec.rb                  # Pricing, variants, scopes
+│   ├── record_spec.rb                # Base class
+│   ├── simulated_order_spec.rb       # Status transitions, scopes
+│   └── simulated_payment_spec.rb     # Tender classification, scopes
+└── services/clover/
+    ├── cash_event_service_spec.rb
+    ├── customer_service_spec.rb
+    ├── discount_service_spec.rb
+    ├── employee_service_spec.rb
+    ├── financial_data_quality_spec.rb
+    ├── gift_card_service_spec.rb
+    ├── inventory_service_spec.rb
+    ├── order_service_spec.rb
+    ├── order_type_service_spec.rb
+    ├── payment_service_spec.rb
+    ├── refund_service_spec.rb
+    ├── service_charge_service_spec.rb
+    ├── services_manager_spec.rb
+    ├── shift_service_spec.rb
+    ├── tax_service_spec.rb
+    └── tender_service_spec.rb
 ```
 
 ### Idempotency Verification
@@ -519,6 +625,7 @@ The tests verify:
 - Tax rates are not duplicated
 - Order types are not duplicated
 - Employees/customers only created if count threshold not met
+- Database seeder is idempotent across all 9 business types
 
 ## Sandbox Limitations
 
@@ -526,11 +633,11 @@ Some Clover sandbox operations may return errors or behave differently than prod
 
 | Feature | Sandbox Support | Notes |
 |---------|-----------------|-------|
-| Service Charge Creation | ❌ Limited | Must pre-configure in dashboard |
-| Cash Event Creation | ❌ Limited | Returns 405, simulated locally |
-| Item Tax Rate Fetch | ❌ Limited | Returns 405, simulated locally |
-| Credit Card Payments | ✅ Full | Via Ecommerce API |
-| Order Creation | ✅ Full | Today's date only |
+| Service Charge Creation | Limited | Must pre-configure in dashboard |
+| Cash Event Creation | Limited | Returns 405, simulated locally |
+| Item Tax Rate Fetch | Limited | Returns 405, simulated locally |
+| Credit Card Payments | Full | Via Ecommerce API |
+| Order Creation | Full | Today's date only |
 
 The simulator handles these limitations gracefully with fallback behavior.
 
@@ -538,8 +645,9 @@ The simulator handles these limitations gracefully with fallback behavior.
 
 - **Sandbox URL**: `https://sandbox.dev.clover.com/`
 - **API Version**: v3
-- **Authentication**: Bearer token (OAuth)
+- **Authentication**: Bearer token (OAuth) for Platform API; apikey header for tokenization
 - **Date Limitation**: Clover sandbox only allows creating orders for TODAY
+- **Ecommerce API**: Separate endpoints for card tokenization, charges, and refunds
 
 ## License
 
