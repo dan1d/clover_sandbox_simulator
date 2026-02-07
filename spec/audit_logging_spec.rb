@@ -82,6 +82,56 @@ RSpec.describe CloverSandboxSimulator::Services::BaseService, :db do
       end
     end
 
+    context "on PUT request" do
+      before do
+        stub_request(:put, /.*\/v3\/merchants\/.*/)
+          .to_return(status: 200, body: '{"state":"paid"}', headers: { "Content-Type" => "application/json" })
+      end
+
+      it "records PUT method" do
+        service.request(:put, service.endpoint("orders/ORDER1"),
+                         payload: { state: "paid" }, resource_type: "Order", resource_id: "ORDER1")
+
+        record = api_request_model.last
+        expect(record.http_method).to eq("PUT")
+        expect(record.resource_type).to eq("Order")
+        expect(record.resource_id).to eq("ORDER1")
+      end
+    end
+
+    context "on DELETE request" do
+      before do
+        stub_request(:delete, /.*\/v3\/merchants\/.*/)
+          .to_return(status: 200, body: "", headers: { "Content-Type" => "application/json" })
+      end
+
+      it "records DELETE method" do
+        service.request(:delete, service.endpoint("items/ITEM1"),
+                         resource_type: "Item", resource_id: "ITEM1")
+
+        record = api_request_model.last
+        expect(record.http_method).to eq("DELETE")
+      end
+    end
+
+    context "on server error (500)" do
+      before do
+        stub_request(:post, /.*\/v3\/merchants\/.*/)
+          .to_return(status: 500, body: '{"message":"Internal Server Error"}',
+                     headers: { "Content-Type" => "application/json" })
+      end
+
+      it "records the 500 status and error_message" do
+        service.request(:post, service.endpoint("orders"), payload: { test: true }) rescue CloverSandboxSimulator::ApiError
+
+        record = api_request_model.last
+        expect(record.http_method).to eq("POST")
+        expect(record.response_status).to eq(500)
+        expect(record.error_message).to include("500")
+        expect(record.request_payload).to eq("test" => true)
+      end
+    end
+
     context "on API error (RestClient::ExceptionWithResponse)" do
       before do
         stub_request(:get, /.*\/v3\/merchants\/.*/)
@@ -241,6 +291,67 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator, :db do
       expect(payment_model.count).to eq(0)
     end
 
+    it "creates correct records for split payments (2-way)" do
+      clover_order["payments"]["elements"] = [
+        {
+          "id" => "SPLIT_1",
+          "amount" => 1250,
+          "tipAmount" => 200,
+          "taxAmount" => 100,
+          "result" => "SUCCESS",
+          "tender" => { "label" => "Credit Card" }
+        },
+        {
+          "id" => "SPLIT_2",
+          "amount" => 1250,
+          "tipAmount" => 200,
+          "taxAmount" => 100,
+          "result" => "SUCCESS",
+          "tender" => { "label" => "Cash" }
+        }
+      ]
+
+      generator.send(:track_simulated_order, clover_order,
+                      period: :dinner, dining: "HERE", date: Date.today)
+
+      expect(payment_model.count).to eq(2)
+
+      card_pay = payment_model.find_by(clover_payment_id: "SPLIT_1")
+      cash_pay = payment_model.find_by(clover_payment_id: "SPLIT_2")
+
+      expect(card_pay.payment_type).to eq("card")
+      expect(card_pay.amount).to eq(1250)
+      expect(cash_pay.payment_type).to eq("cash")
+      expect(cash_pay.amount).to eq(1250)
+
+      # Both belong to the same SimulatedOrder
+      sim_order = order_model.last
+      expect(card_pay.simulated_order_id).to eq(sim_order.id)
+      expect(cash_pay.simulated_order_id).to eq(sim_order.id)
+    end
+
+    it "records discount metadata when a discount is applied" do
+      clover_order["_metadata"][:discount_applied] = { type: :loyalty, name: "10% Loyalty" }
+      clover_order["discounts"] = { "elements" => [{ "amount" => 250 }] }
+
+      generator.send(:track_simulated_order, clover_order,
+                      period: :lunch, dining: "HERE", date: Date.today)
+
+      sim = order_model.last
+      expect(sim.discount_amount).to eq(250)
+      expect(sim.metadata["discount_type"]).to eq("loyalty")
+    end
+
+    it "records order_type in metadata" do
+      clover_order["_metadata"][:order_type] = "Delivery"
+
+      generator.send(:track_simulated_order, clover_order,
+                      period: :dinner, dining: "DELIVERY", date: Date.today)
+
+      sim = order_model.last
+      expect(sim.metadata["order_type"]).to eq("Delivery")
+    end
+
     context "when database is not connected" do
       before do
         allow(CloverSandboxSimulator::Database).to receive(:connected?).and_return(false)
@@ -288,7 +399,8 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator, :db do
 
   describe "#generate_daily_summary (private)" do
     before do
-      order_model.create!(
+      # Create 2 paid orders
+      @order1 = order_model.create!(
         clover_order_id: "SUM_ORDER_1",
         clover_merchant_id: merchant_id,
         status: "paid",
@@ -296,13 +408,65 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator, :db do
         total: 3500,
         tax_amount: 300,
         tip_amount: 200,
+        discount_amount: 100,
         business_date: Date.today,
         meal_period: "lunch",
         dining_option: "HERE"
       )
+
+      @order2 = order_model.create!(
+        clover_order_id: "SUM_ORDER_2",
+        clover_merchant_id: merchant_id,
+        status: "paid",
+        subtotal: 2000,
+        total: 2400,
+        tax_amount: 200,
+        tip_amount: 150,
+        discount_amount: 0,
+        business_date: Date.today,
+        meal_period: "dinner",
+        dining_option: "TO_GO"
+      )
+
+      # Create a refunded order
+      @refunded = order_model.create!(
+        clover_order_id: "SUM_ORDER_3",
+        clover_merchant_id: merchant_id,
+        status: "refunded",
+        subtotal: 1500,
+        total: 1800,
+        tax_amount: 150,
+        tip_amount: 100,
+        business_date: Date.today,
+        meal_period: "dinner",
+        dining_option: "HERE"
+      )
+
+      # Create payments for orders
+      payment_model.create!(
+        simulated_order: @order1,
+        clover_payment_id: "SUMPAY_1",
+        tender_name: "Credit Card",
+        amount: 3500,
+        tip_amount: 200,
+        tax_amount: 300,
+        status: "SUCCESS",
+        payment_type: "card"
+      )
+
+      payment_model.create!(
+        simulated_order: @order2,
+        clover_payment_id: "SUMPAY_2",
+        tender_name: "Cash",
+        amount: 2400,
+        tip_amount: 150,
+        tax_amount: 200,
+        status: "SUCCESS",
+        payment_type: "cash"
+      )
     end
 
-    it "creates a DailySummary record" do
+    it "creates a DailySummary with correct aggregated counts" do
       expect {
         generator.send(:generate_daily_summary, Date.today)
       }.to change { summary_model.count }.by(1)
@@ -310,10 +474,32 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator, :db do
       summary = summary_model.last
       expect(summary.merchant_id).to eq(merchant_id)
       expect(summary.business_date).to eq(Date.today)
-      expect(summary.order_count).to eq(1)
-      expect(summary.total_revenue).to eq(3500)
-      expect(summary.total_tax).to eq(300)
-      expect(summary.total_tips).to eq(200)
+      expect(summary.order_count).to eq(2)      # only paid orders
+      expect(summary.payment_count).to eq(2)
+      expect(summary.refund_count).to eq(1)
+    end
+
+    it "aggregates revenue, tax, tips, and discounts" do
+      generator.send(:generate_daily_summary, Date.today)
+
+      summary = summary_model.last
+      expect(summary.total_revenue).to eq(3500 + 2400)   # sum of paid order totals
+      expect(summary.total_tax).to eq(300 + 200)
+      expect(summary.total_tips).to eq(200 + 150)
+      expect(summary.total_discounts).to eq(100 + 0)
+    end
+
+    it "builds breakdown by meal_period and dining_option" do
+      generator.send(:generate_daily_summary, Date.today)
+
+      summary = summary_model.last
+      breakdown = summary.breakdown
+
+      expect(breakdown["by_meal_period"]).to include("lunch" => 1, "dinner" => 1)
+      expect(breakdown["by_dining_option"]).to include("HERE" => 1, "TO_GO" => 1)
+      expect(breakdown["by_tender"]).to include("Credit Card" => 1, "Cash" => 1)
+      expect(breakdown["revenue_by_meal_period"]["lunch"]).to eq(3500)
+      expect(breakdown["revenue_by_meal_period"]["dinner"]).to eq(2400)
     end
 
     it "is idempotent — updates existing summary" do
@@ -321,6 +507,26 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator, :db do
       expect {
         generator.send(:generate_daily_summary, Date.today)
       }.not_to change { summary_model.count }
+    end
+
+    it "updates summary when new orders appear" do
+      generator.send(:generate_daily_summary, Date.today)
+      summary = summary_model.last
+      expect(summary.order_count).to eq(2)
+
+      # Add another paid order
+      order_model.create!(
+        clover_order_id: "SUM_ORDER_4",
+        clover_merchant_id: merchant_id,
+        status: "paid",
+        total: 1000,
+        business_date: Date.today,
+        meal_period: "breakfast",
+        dining_option: "HERE"
+      )
+
+      generator.send(:generate_daily_summary, Date.today)
+      expect(summary.reload.order_count).to eq(3)
     end
 
     context "when database is not connected" do
@@ -333,6 +539,29 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator, :db do
           generator.send(:generate_daily_summary, Date.today)
         }.not_to change { summary_model.count }
       end
+    end
+  end
+
+  # ── Status transition tracking ─────────────────────────────────
+
+  describe "order status transitions" do
+    it "tracks open -> paid -> refunded lifecycle" do
+      # 1. Order created (tracked as paid)
+      order = order_model.create!(
+        clover_order_id: "LIFECYCLE_1",
+        clover_merchant_id: merchant_id,
+        status: "paid",
+        business_date: Date.today
+      )
+      expect(order.status).to eq("paid")
+
+      # 2. Refund processed
+      generator.send(:track_refund, "LIFECYCLE_1")
+      expect(order.reload.status).to eq("refunded")
+
+      # Verify scopes reflect the transition
+      expect(order_model.successful.count).to eq(0)
+      expect(order_model.refunded.count).to eq(1)
     end
   end
 end
