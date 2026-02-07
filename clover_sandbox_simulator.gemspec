@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = "clover_sandbox_simulator"
-  spec.version       = "1.5.0"
+  spec.version       = "1.5.1"
   spec.authors       = ["dan1d"]
   spec.email         = ["dan1d@users.noreply.github.com"]
 
