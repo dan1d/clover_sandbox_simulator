@@ -11,7 +11,7 @@ module CloverSandboxSimulator
       validates :amount, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
       # Status scopes
-      scope :successful, -> { where(status: "paid") }
+      scope :successful, -> { where(status: "SUCCESS") }
       scope :pending, -> { where(status: "pending") }
       scope :refunded, -> { where(status: "refunded") }
 

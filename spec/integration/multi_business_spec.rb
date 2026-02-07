@@ -8,8 +8,8 @@ RSpec.describe "Multi-business type integration", :db, :integration do
   let(:item_model) { CloverSandboxSimulator::Models::Item }
   let(:seeder) { CloverSandboxSimulator::Seeder }
 
-  before(:all) do
-    # Seed all 9 business types once for the entire describe block
+  before do
+    # Seed all 9 business types — idempotent so safe to call per-example
     CloverSandboxSimulator::Seeder.seed!
   end
 
