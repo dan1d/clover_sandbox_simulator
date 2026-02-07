@@ -7,8 +7,8 @@ module CloverSandboxSimulator
       validates :http_method, presence: true
       validates :url, presence: true
 
-      # Time scopes
-      scope :today, -> { where("created_at >= ?", Date.today.beginning_of_day) }
+      # Time scopes — use Time.now.utc for consistency with AR's UTC storage
+      scope :today, -> { where("created_at >= ?", Time.now.utc.beginning_of_day) }
       scope :recent, ->(minutes = 60) { where("created_at >= ?", minutes.minutes.ago) }
 
       # Status scopes
@@ -19,9 +19,11 @@ module CloverSandboxSimulator
       scope :for_resource, ->(type) { where(resource_type: type) }
       scope :for_resource_id, ->(type, id) { where(resource_type: type, resource_id: id) }
 
-      # Merchant scope — extracts merchant ID from URL pattern
+      # Merchant scope — matches /merchants/<id>/ or /merchants/<id> (end of URL)
       scope :for_merchant, ->(merchant_id) {
-        where("url LIKE ?", "%/merchants/#{merchant_id}/%")
+        sanitized = sanitize_sql_like(merchant_id)
+        where("url LIKE ?", "%/merchants/#{sanitized}/%")
+          .or(where("url LIKE ?", "%/merchants/#{sanitized}"))
       }
 
       # HTTP method scopes

@@ -477,4 +477,57 @@ http_interactions:
       string: '{"id": "SM2XAWE6R3WAP", "name": "Test Tax 1770365045", "taxType": "VAT_EXEMPT",
         "rate": 550000, "isDefault": false}'
   recorded_at: Fri, 06 Feb 2026 08:04:05 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/tax_rates
+    body:
+      encoding: UTF-8
+      string: '{"name":"Test Tax 1770421181","rate":550000,"isDefault":false,"taxType":"VAT_EXEMPT"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '85'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Tue, 17 Sep 1991 10:00:00 PST
+      X-Clover-Request-Id:
+      - 62ccb9cd-cebc-4e4e-bfd4-a0370babaf60
+      Content-Type:
+      - application/json; charset=utf-8
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id": "X3E7SF3T72RF4", "name": "Test Tax 1770421181", "taxType": "VAT_EXEMPT",
+        "rate": 550000, "isDefault": false}'
+  recorded_at: Fri, 06 Feb 2026 23:39:42 GMT
 recorded_with: VCR 6.4.0

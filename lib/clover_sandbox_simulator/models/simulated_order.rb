@@ -6,6 +6,9 @@ module CloverSandboxSimulator
       belongs_to :business_type, optional: true
       has_many :simulated_payments, dependent: :destroy
 
+      # Note: no has_many :items — simulated orders track monetary totals only.
+      # Line-item detail lives in the Clover API response (stored in metadata jsonb).
+
       # Validations
       validates :clover_merchant_id, presence: true
       validates :status, presence: true
@@ -28,11 +31,11 @@ module CloverSandboxSimulator
 
       # Amounts in dollars (convenience)
       def total_dollars
-        total / 100.0
+        (total || 0) / 100.0
       end
 
       def subtotal_dollars
-        subtotal / 100.0
+        (subtotal || 0) / 100.0
       end
     end
   end

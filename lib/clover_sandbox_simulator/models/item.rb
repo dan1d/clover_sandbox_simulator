@@ -26,7 +26,7 @@ module CloverSandboxSimulator
 
       # Price in dollars (convenience)
       def price_dollars
-        price / 100.0
+        (price || 0) / 100.0
       end
     end
   end
