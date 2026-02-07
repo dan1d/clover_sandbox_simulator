@@ -3,15 +3,20 @@
 module CloverSandboxSimulator
   module Services
     module Clover
-      # Manages Clover payment tenders (Cash, Gift Card, etc.)
+      # Manages Clover payment tenders (Cash, Credit Card, Gift Card, etc.)
       class TenderService < BaseService
-        # Tenders that work reliably in Clover sandbox
-        # NOTE: Credit Card and Debit Card are BROKEN in sandbox - do not use!
-        SANDBOX_SAFE_TENDERS = %w[
+        # Tenders that work via the Platform API (non-card payments)
+        PLATFORM_API_TENDERS = %w[
           com.clover.tender.cash
           com.clover.tender.check
           com.clover.tender.external_gift_card
           com.clover.tender.external_payment
+        ].freeze
+
+        # Card tenders — payments routed through the Ecommerce API
+        CARD_TENDER_KEYS = %w[
+          com.clover.tender.credit_card
+          com.clover.tender.debit_card
         ].freeze
 
         # Fetch all tenders
@@ -27,22 +32,43 @@ module CloverSandboxSimulator
         end
 
         # Get sandbox-safe tenders (excludes credit/debit cards)
+        # Use get_all_payment_tenders instead if Ecommerce API is available.
         def get_safe_tenders
           tenders = get_tenders
 
           safe = tenders.reject do |tender|
-            label = tender["label"]&.downcase || ""
-            label_key = tender["labelKey"]&.downcase || ""
-
-            # Exclude credit and debit cards - they're broken in sandbox
-            label.include?("credit") ||
-              label.include?("debit") ||
-              label_key.include?("credit") ||
-              label_key.include?("debit")
+            card_tender?(tender)
           end
 
           logger.info "Found #{safe.size} sandbox-safe tenders"
           safe
+        end
+
+        # Get ALL payment tenders including credit/debit cards.
+        # Card tenders are included when the Ecommerce API is configured;
+        # payments using these tenders are routed through the Ecommerce API
+        # (tokenize → charge) instead of the Platform API.
+        def get_all_payment_tenders
+          tenders = get_tenders
+
+          unless config.ecommerce_enabled?
+            logger.info "Ecommerce API not configured — excluding card tenders"
+            return tenders.reject { |t| card_tender?(t) }
+          end
+
+          logger.info "Ecommerce API available — including #{tenders.count { |t| card_tender?(t) }} card tender(s)"
+          tenders
+        end
+
+        # Returns true if the tender is a credit or debit card
+        def card_tender?(tender)
+          label = tender["label"]&.downcase || ""
+          label_key = tender["labelKey"]&.downcase || ""
+
+          label.include?("credit") ||
+            label.include?("debit") ||
+            label_key.include?("credit") ||
+            label_key.include?("debit")
         end
 
         # Get a specific tender by label
