@@ -596,7 +596,7 @@ module CloverSandboxSimulator
         total_cats += cat_count
         total_items += item_count
 
-        industry = bt.order_profile&.dig("industry") || "N/A"
+        industry = bt.industry || "N/A"
 
         puts "#{bt.key.ljust(20)} #{industry.ljust(10)} #{cat_count.to_s.rjust(10)} #{item_count.to_s.rjust(8)}"
       end
