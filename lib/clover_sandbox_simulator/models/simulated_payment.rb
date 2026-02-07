@@ -8,7 +8,7 @@ module CloverSandboxSimulator
       # Validations
       validates :tender_name, presence: true
       validates :status, presence: true
-      validates :amount, numericality: { only_integer: true }
+      validates :amount, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
       # Status scopes
       scope :successful, -> { where(status: "paid") }
@@ -21,7 +21,7 @@ module CloverSandboxSimulator
 
       # Amount in dollars (convenience)
       def amount_dollars
-        amount / 100.0
+        (amount || 0) / 100.0
       end
     end
   end

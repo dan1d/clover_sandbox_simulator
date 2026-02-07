@@ -10,9 +10,8 @@ module CloverSandboxSimulator
       validates :name, presence: true,
                        uniqueness: { scope: :business_type_id }
 
-      # Default ordering
-      default_scope { order(:sort_order) }
-
+      # Explicit sort scope (avoids default_scope anti-pattern)
+      scope :sorted, -> { order(:sort_order) }
       scope :with_items, -> { joins(:items).distinct }
     end
   end

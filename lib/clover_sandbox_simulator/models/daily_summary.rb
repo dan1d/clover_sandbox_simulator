@@ -16,6 +16,7 @@ module CloverSandboxSimulator
       scope :recent, ->(days = 7) { where("business_date >= ?", days.days.ago.to_date) }
 
       # Generate (or update) a daily summary by aggregating simulated orders.
+      # Race-condition safe: retries on unique constraint violation.
       #
       # @param merchant_id [String] Clover merchant ID
       # @param date [Date] Business date to summarize
@@ -38,8 +39,7 @@ module CloverSandboxSimulator
           revenue_by_dining_option: orders.group(:dining_option).sum(:total)
         }
 
-        summary = find_or_initialize_by(merchant_id: merchant_id, business_date: date)
-        summary.assign_attributes(
+        attrs = {
           order_count: orders.count,
           payment_count: payments.count,
           refund_count: SimulatedOrder.for_merchant(merchant_id).on_date(date).refunded.count,
@@ -48,14 +48,20 @@ module CloverSandboxSimulator
           total_tips: orders.sum(:tip_amount),
           total_discounts: orders.sum(:discount_amount),
           breakdown: breakdown
-        )
+        }
+
+        summary = find_or_initialize_by(merchant_id: merchant_id, business_date: date)
+        summary.assign_attributes(attrs)
         summary.save!
         summary
+      rescue ::ActiveRecord::RecordNotUnique
+        # Concurrent insert won — retry will find the existing record and update it
+        retry
       end
 
       # Convenience: total revenue in dollars
       def total_revenue_dollars
-        total_revenue / 100.0
+        (total_revenue || 0) / 100.0
       end
     end
   end
