@@ -122,7 +122,11 @@ RSpec.describe CloverSandboxSimulator::Services::BaseService, :db do
       end
 
       it "records the 500 status and error_message" do
-        service.request(:post, service.endpoint("orders"), payload: { test: true }) rescue CloverSandboxSimulator::ApiError
+        begin
+          service.request(:post, service.endpoint("orders"), payload: { test: true })
+        rescue CloverSandboxSimulator::ApiError
+          # expected
+        end
 
         record = api_request_model.last
         expect(record.http_method).to eq("POST")
@@ -140,7 +144,11 @@ RSpec.describe CloverSandboxSimulator::Services::BaseService, :db do
 
       it "creates an ApiRequest record with error_message" do
         expect {
-          service.request(:get, service.endpoint("items")) rescue CloverSandboxSimulator::ApiError
+          begin
+            service.request(:get, service.endpoint("items"))
+          rescue CloverSandboxSimulator::ApiError
+            # expected
+          end
         }.to change { api_request_model.count }.by(1)
 
         record = api_request_model.last
@@ -153,6 +161,28 @@ RSpec.describe CloverSandboxSimulator::Services::BaseService, :db do
         expect {
           service.request(:get, service.endpoint("items"))
         }.to raise_error(CloverSandboxSimulator::ApiError)
+      end
+    end
+
+    context "on transport-layer error (network failure)" do
+      before do
+        stub_request(:get, /.*\/v3\/merchants\/.*/)
+          .to_raise(SocketError.new("getaddrinfo: Name or service not known"))
+      end
+
+      it "creates an ApiRequest record with error_message and nil response_status" do
+        expect {
+          begin
+            service.request(:get, service.endpoint("items"))
+          rescue CloverSandboxSimulator::ApiError
+            # expected
+          end
+        }.to change { api_request_model.count }.by(1)
+
+        record = api_request_model.last
+        expect(record.http_method).to eq("GET")
+        expect(record.error_message).to include("Name or service not known")
+        expect(record.response_status).to be_nil
       end
     end
 
@@ -399,7 +429,8 @@ RSpec.describe CloverSandboxSimulator::Generators::OrderGenerator, :db do
 
   describe "#generate_daily_summary (private)" do
     before do
-      # Create 2 paid orders
+      # Create 2 paid orders (using instance variables for before block)
+      # rubocop:disable RSpec/InstanceVariable
       @order1 = order_model.create!(
         clover_order_id: "SUM_ORDER_1",
         clover_merchant_id: merchant_id,

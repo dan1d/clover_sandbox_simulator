@@ -346,20 +346,19 @@ RSpec.describe CloverSandboxSimulator::Generators::DataLoader do
     end
 
     let(:json_loader) do
-      loader = described_class.new(business_type: :restaurant)
       allow(CloverSandboxSimulator::Database).to receive(:connected?).and_return(false)
-      loader
+      described_class.new(business_type: :restaurant)
     end
 
     let(:db_loader) do
       described_class.new(business_type: :restaurant)
     end
 
-    it "categories have identical keys in DB and JSON" do
-      json_keys = json_loader.categories.first.keys.sort
-      db_keys = db_loader.categories.first.keys.sort
+    it "categories have identical keys in DB and JSON (all elements)" do
+      json_key_sets = json_loader.categories.map { |c| c.keys.sort }.uniq
+      db_key_sets = db_loader.categories.map { |c| c.keys.sort }.uniq
 
-      expect(db_keys).to eq(json_keys)
+      expect(db_key_sets).to eq(json_key_sets)
     end
 
     it "categories have matching value types" do

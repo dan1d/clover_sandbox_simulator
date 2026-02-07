@@ -212,7 +212,7 @@ RSpec.describe "Factories", :db do
     it "creates a :with_payment order (has associated payment)" do
       order = create(:simulated_order, :with_payment)
       expect(order.simulated_payments.count).to eq(1)
-      expect(order.simulated_payments.first.status).to eq("paid")
+      expect(order.simulated_payments.first.status).to eq("SUCCESS")
     end
 
     it "creates a :with_split_payment order (two payments)" do
@@ -240,7 +240,7 @@ RSpec.describe "Factories", :db do
 
     it "creates a :success payment" do
       payment = create(:simulated_payment, :success)
-      expect(payment.status).to eq("paid")
+      expect(payment.status).to eq("SUCCESS")
       expect(payment.clover_payment_id).to be_present
     end
 

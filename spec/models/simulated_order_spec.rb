@@ -117,7 +117,7 @@ RSpec.describe CloverSandboxSimulator::Models::SimulatedOrder, :db do
     it ":with_payment creates an order with one payment" do
       order = create(:simulated_order, :with_payment)
       expect(order.simulated_payments.count).to eq(1)
-      expect(order.simulated_payments.first.status).to eq("paid")
+      expect(order.simulated_payments.first.status).to eq("SUCCESS")
       expect(order.simulated_payments.first.amount).to eq(order.total)
     end
 

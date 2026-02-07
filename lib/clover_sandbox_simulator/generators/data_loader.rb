@@ -54,10 +54,11 @@ module CloverSandboxSimulator
         {} # Return empty hash if file doesn't exist
       end
 
+      # Combos are always loaded from JSON — no DB model exists.
       def combos
         @combos ||= load_json("combos")["combos"]
       rescue Error
-        [] # No DB model for combos — always JSON
+        []
       end
 
       # ── JSON-only accessors (no DB models for these) ───────────
@@ -124,8 +125,11 @@ module CloverSandboxSimulator
 
       # ── Data source introspection ──────────────────────────────
 
-      # Returns :db or :json to indicate which source was used.
-      # Useful for logging and diagnostics.
+      # Returns the *preferred* data source: :db or :json.
+      # Note: individual accessors may fall back to JSON even when this
+      # returns :db (e.g. when the business type is not seeded in the DB).
+      # Combos, discounts, tenders, modifiers, and coupon_codes are always
+      # loaded from JSON regardless of this value.
       def data_source
         db_connected? ? :db : :json
       end
@@ -178,17 +182,8 @@ module CloverSandboxSimulator
       end
 
       def tax_rates_from_db
-        # Tax rates are stored in the JSON file as they are static
-        # configuration. When DB categories have tax_group set, we
-        # build synthetic tax rate entries matching the JSON format.
-        bt = Models::BusinessType.find_by(key: business_type.to_s)
-        return load_json("tax_rates")["tax_rates"] unless bt
-
-        # Collect unique tax groups from categories
-        tax_groups = bt.categories.where.not(tax_group: nil).distinct.pluck(:tax_group).compact
-        return load_json("tax_rates")["tax_rates"] if tax_groups.empty?
-
-        # Fall back to JSON — tax rates don't have their own DB model
+        # Tax rates are static configuration without a dedicated DB model.
+        # Always loaded from JSON regardless of DB connection status.
         load_json("tax_rates")["tax_rates"]
       end
 

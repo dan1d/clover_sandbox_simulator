@@ -15,7 +15,7 @@ FactoryBot.define do
     # ── Status traits ──────────────────────────────────────────
 
     trait :success do
-      status { "paid" }
+      status { "SUCCESS" }
       sequence(:clover_payment_id) { |n| "PAY#{n}#{SecureRandom.hex(4).upcase}" }
     end
 

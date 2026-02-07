@@ -1426,6 +1426,9 @@ module CloverSandboxSimulator
           tax_amount:        metadata[:tax] || 0,
           tip_amount:        metadata[:tip] || 0,
           discount_amount:   order.dig("discounts", "elements")&.sum { |d| d["amount"] || 0 } || 0,
+          # NOTE: order["total"] is Clover's subtotal (post-discount, pre-tax).
+          # This assumes Clover's total field never includes tax — verified
+          # against sandbox API behaviour.
           total:             (order["total"] || 0) + (metadata[:tax] || 0) + (metadata[:tip] || 0),
           dining_option:     dining,
           meal_period:       period.to_s,
@@ -1449,27 +1452,31 @@ module CloverSandboxSimulator
       end
 
       # Create SimulatedPayment records for each payment on the order.
+      # Each payment is rescued independently so a single malformed entry
+      # does not prevent the remaining payments from being recorded.
       def track_simulated_payments(order, sim_order)
         payments = order.dig("payments", "elements") || []
         return if payments.empty?
 
         payments.each do |payment|
-          tender_label = payment.dig("tender", "label") || "Unknown"
-          tender_type  = tender_label.downcase.include?("cash") ? "cash" : "card"
+          begin
+            tender_label = payment.dig("tender", "label") || "Unknown"
+            tender_type  = tender_label.downcase.include?("cash") ? "cash" : "card"
 
-          Models::SimulatedPayment.create!(
-            simulated_order:  sim_order,
-            clover_payment_id: payment["id"],
-            tender_name:      tender_label,
-            amount:           payment["amount"] || 0,
-            tip_amount:       payment["tipAmount"] || 0,
-            tax_amount:       payment["taxAmount"] || 0,
-            status:           payment["result"] || "SUCCESS",
-            payment_type:     tender_type
-          )
+            Models::SimulatedPayment.create!(
+              simulated_order:  sim_order,
+              clover_payment_id: payment["id"],
+              tender_name:      tender_label,
+              amount:           payment["amount"] || 0,
+              tip_amount:       payment["tipAmount"] || 0,
+              tax_amount:       payment["taxAmount"] || 0,
+              status:           payment["result"] || "SUCCESS",
+              payment_type:     tender_type
+            )
+          rescue StandardError => e
+            logger.debug "Payment audit logging failed for #{payment['id']}: #{e.message}"
+          end
         end
-      rescue StandardError => e
-        logger.debug "Payment audit logging failed: #{e.message}"
       end
 
       # Update a SimulatedOrder's status to "refunded" after a refund

@@ -36,7 +36,7 @@ module CloverSandboxSimulator
 
         response = execute_request(method, url, payload)
 
-        duration_ms = ((Time.now - start_time) * 1000).round(2)
+        duration_ms = ((Time.now - start_time) * 1000).round
         log_response(response, duration_ms)
 
         parsed = parse_response(response)
@@ -47,14 +47,14 @@ module CloverSandboxSimulator
           request_payload: payload,
           response_status: response.code,
           response_payload: parsed,
-          duration_ms: duration_ms.to_i,
+          duration_ms: duration_ms,
           resource_type: resource_type,
           resource_id: resource_id
         )
 
         parsed
       rescue RestClient::ExceptionWithResponse => e
-        duration_ms = ((Time.now - start_time) * 1000).round(2) if start_time
+        duration_ms = ((Time.now - start_time) * 1000).round if start_time
 
         audit_api_request(
           http_method: method.to_s.upcase,
@@ -62,7 +62,7 @@ module CloverSandboxSimulator
           request_payload: payload,
           response_status: e.http_code,
           response_payload: (JSON.parse(e.response.body) rescue nil),
-          duration_ms: duration_ms&.to_i,
+          duration_ms: duration_ms,
           error_message: "HTTP #{e.http_code}: #{e.message}",
           resource_type: resource_type,
           resource_id: resource_id
@@ -70,13 +70,13 @@ module CloverSandboxSimulator
 
         handle_api_error(e)
       rescue StandardError => e
-        duration_ms = ((Time.now - start_time) * 1000).round(2) if start_time
+        duration_ms = ((Time.now - start_time) * 1000).round if start_time
 
         audit_api_request(
           http_method: method.to_s.upcase,
-          url: url || build_url(path, params),
+          url: url,
           request_payload: payload,
-          duration_ms: duration_ms&.to_i,
+          duration_ms: duration_ms,
           error_message: e.message,
           resource_type: resource_type,
           resource_id: resource_id

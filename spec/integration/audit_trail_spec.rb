@@ -238,7 +238,7 @@ RSpec.describe "Audit trail end-to-end", :db, :integration do
       end
 
       # Create 1 refunded order
-      refunded = order_model.create!(
+      order_model.create!(
         clover_order_id: "AGG_REF",
         clover_merchant_id: merchant_id,
         status: "refunded",

@@ -386,7 +386,7 @@ module CloverSandboxSimulator
 
     desc "version", "Show version"
     def version
-      puts "Clover Sandbox Simulator v1.0.0"
+      puts "Clover Sandbox Simulator v#{CloverSandboxSimulator::VERSION}"
     end
 
     # ============================================
@@ -395,6 +395,10 @@ module CloverSandboxSimulator
 
     desc "db SUBCOMMAND", "Database management commands"
     subcommand "db", Class.new(Thor) {
+      def self.banner(task, namespace = true, subcommand = true)
+        "simulate db #{task.usage}"
+      end
+
       namespace "db"
 
       desc "create", "Create the PostgreSQL database"
@@ -479,6 +483,7 @@ module CloverSandboxSimulator
     desc "summary", "Show daily summary for current merchant"
     option :date, type: :string, aliases: "-d", desc: "Date (YYYY-MM-DD, default: today)"
     def summary
+      configure_logging
       require_db_connection!
 
       date = options[:date] ? Date.parse(options[:date]) : Date.today
@@ -499,10 +504,10 @@ module CloverSandboxSimulator
       puts "  Payments:      #{s.payment_count}"
       puts "  Refunds:       #{s.refund_count}"
       puts ""
-      puts "  Revenue:       $#{'%.2f' % (s.total_revenue / 100.0)}"
-      puts "  Tax:           $#{'%.2f' % (s.total_tax / 100.0)}"
-      puts "  Tips:          $#{'%.2f' % (s.total_tips / 100.0)}"
-      puts "  Discounts:     $#{'%.2f' % (s.total_discounts / 100.0)}"
+      puts "  Revenue:       #{format_cents(s.total_revenue)}"
+      puts "  Tax:           #{format_cents(s.total_tax)}"
+      puts "  Tips:          #{format_cents(s.total_tips)}"
+      puts "  Discounts:     #{format_cents(s.total_discounts)}"
 
       breakdown = s.breakdown || {}
 
@@ -511,7 +516,7 @@ module CloverSandboxSimulator
         puts "  By Meal Period:"
         breakdown["by_meal_period"].each do |period, count|
           rev = breakdown.dig("revenue_by_meal_period", period) || 0
-          puts "    #{period.ljust(15)} #{count.to_s.rjust(3)} orders  $#{'%.2f' % (rev / 100.0)}"
+          puts "    #{period.ljust(15)} #{count.to_s.rjust(3)} orders  #{format_cents(rev)}"
         end
       end
 
@@ -520,7 +525,7 @@ module CloverSandboxSimulator
         puts "  By Dining Option:"
         breakdown["by_dining_option"].each do |opt, count|
           rev = breakdown.dig("revenue_by_dining_option", opt) || 0
-          puts "    #{opt.ljust(15)} #{count.to_s.rjust(3)} orders  $#{'%.2f' % (rev / 100.0)}"
+          puts "    #{opt.ljust(15)} #{count.to_s.rjust(3)} orders  #{format_cents(rev)}"
         end
       end
 
@@ -537,6 +542,7 @@ module CloverSandboxSimulator
     option :limit, type: :numeric, aliases: "-l", default: 20, desc: "Number of requests to show (default: 20)"
     option :errors, type: :boolean, aliases: "-e", desc: "Show only error requests"
     def audit
+      configure_logging
       require_db_connection!
 
       scope = Models::ApiRequest.order(created_at: :desc)
@@ -573,6 +579,7 @@ module CloverSandboxSimulator
 
     desc "business_types", "List business types with category and item counts"
     def business_types
+      configure_logging
       require_db_connection!
 
       types = Models::BusinessType.all.order(:key)
@@ -704,7 +711,8 @@ module CloverSandboxSimulator
       rates.each do |rate|
         rate_pct = (rate["rate"] || 0) / 100_000.0
         default_str = rate["isDefault"] ? "Yes" : "No"
-        puts "#{(rate['name'] || 'N/A').ljust(25)} #{'%.3f%' % rate_pct.rjust(8)} #{default_str.ljust(10)} #{rate['id']}"
+        rate_str = format("%.3f%%", rate_pct)
+        puts "#{(rate['name'] || 'N/A').ljust(25)} #{rate_str.rjust(8)} #{default_str.ljust(10)} #{rate['id']}"
       end
     end
 
@@ -1104,6 +1112,10 @@ module CloverSandboxSimulator
       return card_number if card_number.nil? || card_number.length < 8
 
       "#{card_number[0..3]}********#{card_number[-4..]}"
+    end
+
+    def format_cents(cents)
+      "$#{'%.2f' % ((cents || 0) / 100.0)}"
     end
 
     def require_db_connection!
