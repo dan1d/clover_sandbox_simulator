@@ -83,6 +83,9 @@ module CloverSandboxSimulator
         ensure_connected!
         load_factories!
 
+        # Default to configured business_type if none specified;
+        # pass nil to Seeder to seed ALL types when config is also nil.
+        business_type ||= CloverSandboxSimulator.configuration.business_type
         Seeder.seed!(business_type: business_type)
       end
 

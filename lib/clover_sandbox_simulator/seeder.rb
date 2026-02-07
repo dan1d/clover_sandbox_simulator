@@ -87,6 +87,11 @@ module CloverSandboxSimulator
       cats.each { |cat_trait, items| hash[cat_trait] = items.size }
     end.freeze
 
+    # Total counts across all business types.
+    TOTAL_BUSINESS_TYPES = SEED_MAP.size
+    TOTAL_CATEGORIES = SEED_MAP.values.sum(&:size)
+    TOTAL_ITEMS = SEED_MAP.values.flat_map(&:values).flatten.size
+
     # Seed all (or one) business types with categories and items.
     #
     # @param business_type [Symbol, String, nil] Seed only this type, or all if nil.
@@ -96,30 +101,37 @@ module CloverSandboxSimulator
     end
 
     # @param business_type [Symbol, String, nil]
-    # @return [Hash] Summary with :business_types, :categories, :items counts.
+    # @return [Hash] Summary with :business_types, :categories, :items,
+    #   :created, :found counts.
     def seed!(business_type: nil)
       types_to_seed = resolve_types(business_type)
 
-      counts = { business_types: 0, categories: 0, items: 0 }
+      counts = { business_types: 0, categories: 0, items: 0, created: 0, found: 0 }
 
-      types_to_seed.each do |bt_trait, categories_map|
-        bt = seed_business_type(bt_trait)
-        counts[:business_types] += 1
+      ActiveRecord::Base.transaction do
+        types_to_seed.each do |bt_trait, categories_map|
+          bt, was_new = seed_business_type(bt_trait)
+          counts[:business_types] += 1
+          was_new ? counts[:created] += 1 : counts[:found] += 1
 
-        categories_map.each do |cat_trait, item_traits|
-          cat = seed_category(cat_trait, bt)
-          counts[:categories] += 1
+          categories_map.each do |cat_trait, item_traits|
+            cat, was_new = seed_category(cat_trait, bt)
+            counts[:categories] += 1
+            was_new ? counts[:created] += 1 : counts[:found] += 1
 
-          item_traits.each do |item_trait|
-            seed_item(item_trait, cat)
-            counts[:items] += 1
+            item_traits.each do |item_trait|
+              _, was_new = seed_item(item_trait, cat)
+              counts[:items] += 1
+              was_new ? counts[:created] += 1 : counts[:found] += 1
+            end
           end
         end
       end
 
       CloverSandboxSimulator.logger.info(
         "Seeding complete: #{counts[:business_types]} business types, " \
-        "#{counts[:categories]} categories, #{counts[:items]} items"
+        "#{counts[:categories]} categories, #{counts[:items]} items " \
+        "(#{counts[:created]} created, #{counts[:found]} found)"
       )
 
       counts
@@ -147,36 +159,39 @@ module CloverSandboxSimulator
     # Find or create a business type using factory attributes.
     #
     # @param trait [Symbol]
-    # @return [Models::BusinessType]
+    # @return [Array(Models::BusinessType, Boolean)] record and whether it was newly created
     def seed_business_type(trait)
       attrs = FactoryBot.attributes_for(:business_type, trait)
-      Models::BusinessType.find_or_create_by!(key: attrs[:key]) do |bt|
+      record = Models::BusinessType.find_or_create_by!(key: attrs[:key]) do |bt|
         bt.assign_attributes(attrs)
       end
+      [record, record.previously_new_record?]
     end
 
     # Find or create a category using factory attributes.
     #
     # @param trait [Symbol]
     # @param business_type [Models::BusinessType]
-    # @return [Models::Category]
+    # @return [Array(Models::Category, Boolean)] record and whether it was newly created
     def seed_category(trait, business_type)
       attrs = FactoryBot.attributes_for(:category, trait)
-      Models::Category.find_or_create_by!(name: attrs[:name], business_type: business_type) do |cat|
+      record = Models::Category.find_or_create_by!(name: attrs[:name], business_type: business_type) do |cat|
         cat.assign_attributes(attrs.except(:business_type_id))
       end
+      [record, record.previously_new_record?]
     end
 
     # Find or create an item using factory attributes.
     #
     # @param trait [Symbol]
     # @param category [Models::Category]
-    # @return [Models::Item]
+    # @return [Array(Models::Item, Boolean)] record and whether it was newly created
     def seed_item(trait, category)
       attrs = FactoryBot.attributes_for(:item, trait)
-      Models::Item.find_or_create_by!(name: attrs[:name], category: category) do |item|
+      record = Models::Item.find_or_create_by!(name: attrs[:name], category: category) do |item|
         item.assign_attributes(attrs.except(:category_id))
       end
+      [record, record.previously_new_record?]
     end
   end
 end

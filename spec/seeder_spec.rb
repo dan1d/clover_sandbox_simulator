@@ -3,8 +3,6 @@
 require "spec_helper"
 
 RSpec.describe CloverSandboxSimulator::Seeder, :db do
-  include FactoryBot::Syntax::Methods
-
   let(:bt_model) { CloverSandboxSimulator::Models::BusinessType }
   let(:cat_model) { CloverSandboxSimulator::Models::Category }
   let(:item_model) { CloverSandboxSimulator::Models::Item }
@@ -30,11 +28,18 @@ RSpec.describe CloverSandboxSimulator::Seeder, :db do
       expect(second_counts).to eq(first_counts)
     end
 
-    it "returns consistent summary counts on repeated calls" do
+    it "reports all created on first run, all found on second" do
       result1 = described_class.seed!
-      result2 = described_class.seed!
+      expect(result1[:created]).to eq(described_class::TOTAL_BUSINESS_TYPES +
+                                      described_class::TOTAL_CATEGORIES +
+                                      described_class::TOTAL_ITEMS)
+      expect(result1[:found]).to eq(0)
 
-      expect(result1).to eq(result2)
+      result2 = described_class.seed!
+      expect(result2[:created]).to eq(0)
+      expect(result2[:found]).to eq(described_class::TOTAL_BUSINESS_TYPES +
+                                     described_class::TOTAL_CATEGORIES +
+                                     described_class::TOTAL_ITEMS)
     end
   end
 
@@ -44,15 +49,15 @@ RSpec.describe CloverSandboxSimulator::Seeder, :db do
     before { described_class.seed! }
 
     it "creates all 9 business types" do
-      expect(bt_model.count).to eq(9)
+      expect(bt_model.count).to eq(described_class::TOTAL_BUSINESS_TYPES)
     end
 
     it "creates all 38 categories" do
-      expect(cat_model.count).to eq(38)
+      expect(cat_model.count).to eq(described_class::TOTAL_CATEGORIES)
     end
 
     it "creates all 168 items" do
-      expect(item_model.count).to eq(168)
+      expect(item_model.count).to eq(described_class::TOTAL_ITEMS)
     end
 
     it "includes all expected business type keys" do
@@ -302,14 +307,30 @@ RSpec.describe CloverSandboxSimulator::Seeder, :db do
       result = described_class.seed!
 
       expect(result).to be_a(Hash)
-      expect(result[:business_types]).to eq(9)
-      expect(result[:categories]).to eq(38)
-      expect(result[:items]).to eq(168)
+      expect(result[:business_types]).to eq(described_class::TOTAL_BUSINESS_TYPES)
+      expect(result[:categories]).to eq(described_class::TOTAL_CATEGORIES)
+      expect(result[:items]).to eq(described_class::TOTAL_ITEMS)
+      expect(result[:created]).to be > 0
+      expect(result[:found]).to eq(0)
     end
 
     it "returns correct counts for selective seeding" do
       result = described_class.seed!(business_type: :salon_spa)
 
+      expect(result[:business_types]).to eq(1)
+      expect(result[:categories]).to eq(4)
+      expect(result[:items]).to eq(16)
+      expect(result[:created]).to eq(1 + 4 + 16)
+    end
+  end
+
+  # ── Database.seed! delegation ──────────────────────────────
+
+  describe "Database.seed! delegation" do
+    it "delegates to Seeder and returns the summary" do
+      result = CloverSandboxSimulator::Database.seed!(business_type: :salon_spa)
+
+      expect(result).to be_a(Hash)
       expect(result[:business_types]).to eq(1)
       expect(result[:categories]).to eq(4)
       expect(result[:items]).to eq(16)
