@@ -75,6 +75,19 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  # ── FactoryBot ──────────────────────────────────────────────
+  require "factory_bot"
+
+  config.include FactoryBot::Syntax::Methods
+
+  # Load factories from lib/ (shared between runtime and tests)
+  factories_path = File.expand_path("../lib/clover_sandbox_simulator/db/factories", __dir__)
+  unless FactoryBot.factories.any? { |f| f.name == :business_type }
+    FactoryBot.definition_file_paths = [factories_path]
+    FactoryBot.find_definitions
+  end
+
+  # ── Database & DatabaseCleaner ──────────────────────────────
   # Connect to test database if available.
   # Uses clover_simulator_test by default; specs that don't need DB still pass.
   test_db_url = CloverSandboxSimulator::Database.test_database_url
