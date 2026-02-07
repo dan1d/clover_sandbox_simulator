@@ -137,6 +137,9 @@ module CloverSandboxSimulator
         # Process refunds for some orders
         process_refunds(orders) if refund_percentage > 0
 
+        # Generate daily summary for audit trail
+        generate_daily_summary(date)
+
         print_summary
         orders
       end
@@ -185,6 +188,7 @@ module CloverSandboxSimulator
               @stats[:refunds][:full] += 1
               @stats[:refunds][:amount] += payment_amount
               logger.info "  💸 Full refund: Order #{order_id} - $#{'%.2f' % (payment_amount / 100.0)} (#{reason})"
+              track_refund(order_id)
             end
           rescue StandardError => e
             logger.warn "  Failed to refund order #{order_id}: #{e.message}"
@@ -205,6 +209,7 @@ module CloverSandboxSimulator
               @stats[:refunds][:partial] += 1
               @stats[:refunds][:amount] += refund_amount
               logger.info "  💸 Partial refund: Order #{order_id} - $#{'%.2f' % (refund_amount / 100.0)} of $#{'%.2f' % (payment_amount / 100.0)} (#{reason})"
+              track_refund(order_id)
             end
           rescue StandardError => e
             logger.warn "  Failed to partially refund order #{order_id}: #{e.message}"
@@ -255,6 +260,9 @@ module CloverSandboxSimulator
 
         # Process refunds for some orders
         process_refunds(orders) if refund_percentage > 0
+
+        # Generate daily summary for audit trail
+        generate_daily_summary(date)
 
         print_summary
         orders
@@ -529,6 +537,9 @@ module CloverSandboxSimulator
           modifier_amount: modifier_result[:modifier_amount],
           order_type: selected_order_type&.dig("label")
         }
+
+        # Track the order and its payments in the audit DB
+        track_simulated_order(final_order, period: period, dining: dining, date: order_time&.to_date || Date.today)
 
         final_order
       end
@@ -1394,6 +1405,93 @@ module CloverSandboxSimulator
         end
 
         [selected_ids, selected_prices]
+      end
+
+      # ── Audit Trail ──────────────────────────────────────────────
+
+      # Create a SimulatedOrder record (and SimulatedPayment children)
+      # for every order that was successfully created via the Clover API.
+      # No-ops silently when no DB is connected.
+      def track_simulated_order(order, period:, dining:, date:)
+        return unless Database.connected?
+
+        merchant_id = CloverSandboxSimulator.configuration.merchant_id
+        metadata    = order["_metadata"] || {}
+
+        sim_order = Models::SimulatedOrder.create!(
+          clover_order_id:   order["id"],
+          clover_merchant_id: merchant_id,
+          status:            order["state"] || "paid",
+          subtotal:          order["total"] || 0,
+          tax_amount:        metadata[:tax] || 0,
+          tip_amount:        metadata[:tip] || 0,
+          discount_amount:   order.dig("discounts", "elements")&.sum { |d| d["amount"] || 0 } || 0,
+          total:             (order["total"] || 0) + (metadata[:tax] || 0) + (metadata[:tip] || 0),
+          dining_option:     dining,
+          meal_period:       period.to_s,
+          business_date:     date || Date.today,
+          metadata:          {
+            party_size:      metadata[:party_size],
+            order_type:      metadata[:order_type],
+            discount_type:   metadata.dig(:discount_applied, :type),
+            modifier_count:  metadata[:modifier_count],
+            line_item_count: order.dig("lineItems", "elements")&.size || 0
+          }
+        )
+
+        # Track payments attached to this order
+        track_simulated_payments(order, sim_order)
+
+        sim_order
+      rescue StandardError => e
+        logger.debug "Order audit logging failed: #{e.message}"
+        nil
+      end
+
+      # Create SimulatedPayment records for each payment on the order.
+      def track_simulated_payments(order, sim_order)
+        payments = order.dig("payments", "elements") || []
+        return if payments.empty?
+
+        payments.each do |payment|
+          tender_label = payment.dig("tender", "label") || "Unknown"
+          tender_type  = tender_label.downcase.include?("cash") ? "cash" : "card"
+
+          Models::SimulatedPayment.create!(
+            simulated_order:  sim_order,
+            clover_payment_id: payment["id"],
+            tender_name:      tender_label,
+            amount:           payment["amount"] || 0,
+            tip_amount:       payment["tipAmount"] || 0,
+            tax_amount:       payment["taxAmount"] || 0,
+            status:           payment["result"] || "SUCCESS",
+            payment_type:     tender_type
+          )
+        end
+      rescue StandardError => e
+        logger.debug "Payment audit logging failed: #{e.message}"
+      end
+
+      # Update a SimulatedOrder's status to "refunded" after a refund
+      # is processed through the Clover API.
+      def track_refund(clover_order_id)
+        return unless Database.connected?
+
+        sim_order = Models::SimulatedOrder.find_by(clover_order_id: clover_order_id)
+        sim_order&.update!(status: "refunded")
+      rescue StandardError => e
+        logger.debug "Refund audit update failed: #{e.message}"
+      end
+
+      # Generate (or update) a DailySummary for the given date.
+      def generate_daily_summary(date)
+        return unless Database.connected?
+
+        merchant_id = CloverSandboxSimulator.configuration.merchant_id
+        Models::DailySummary.generate_for!(merchant_id, date)
+        logger.info "Daily summary generated for #{date}"
+      rescue StandardError => e
+        logger.debug "Daily summary generation failed: #{e.message}"
       end
     end
   end
