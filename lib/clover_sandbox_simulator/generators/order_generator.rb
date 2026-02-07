@@ -63,6 +63,9 @@ module CloverSandboxSimulator
         full_payment_chance: 60   # 60% of gift card payments cover full amount
       }.freeze
 
+      # Card payment distribution — roughly mirrors real-world POS mix
+      CARD_PAYMENT_CHANCE = 55    # 55% of orders pay by card when ecommerce is available
+
       # Refund reasons
       REFUND_REASONS = %w[customer_request quality_issue wrong_order duplicate_charge].freeze
 
@@ -274,8 +277,10 @@ module CloverSandboxSimulator
         items = services.inventory.get_items
         employees = services.employee.get_employees
         customers = services.customer.get_customers
-        tenders = services.tender.get_safe_tenders
+        # Use all tenders (including cards) when Ecommerce API is available
+        tenders = services.tender.get_all_payment_tenders
         discounts = services.discount.get_discounts
+        ecommerce_available = services.ecommerce_available?
 
         # Fetch modifier groups for item customization
         modifier_groups = begin
@@ -332,7 +337,8 @@ module CloverSandboxSimulator
           modifier_groups: modifier_groups,
           gift_cards: gift_cards,
           gift_card_tender: gift_card_tender,
-          order_types: order_types
+          order_types: order_types,
+          ecommerce_available: ecommerce_available
         }
       end
 
@@ -506,7 +512,7 @@ module CloverSandboxSimulator
         # If auto-gratuity was applied, tip is $0 (already included in service charge)
         tip_amount = service_charge_applied ? 0 : calculate_tip(subtotal, dining, party_size)
 
-        # Process payment (may use gift card ~10% of the time)
+        # Process payment (may use gift card ~10%, card ~55%, cash/check/other ~35%)
         process_order_payment(
           order_id: order_id,
           subtotal: subtotal,
@@ -517,7 +523,8 @@ module CloverSandboxSimulator
           dining: dining,
           party_size: party_size,
           gift_cards: data[:gift_cards] || [],
-          gift_card_tender: data[:gift_card_tender]
+          gift_card_tender: data[:gift_card_tender],
+          ecommerce_available: data[:ecommerce_available] || false
         )
 
         # Update order state to paid
@@ -906,7 +913,7 @@ module CloverSandboxSimulator
         end
       end
 
-      def process_order_payment(order_id:, subtotal:, tax_amount:, tip_amount:, employee_id:, tenders:, dining:, party_size:, gift_cards: [], gift_card_tender: nil)
+      def process_order_payment(order_id:, subtotal:, tax_amount:, tip_amount:, employee_id:, tenders:, dining:, party_size:, gift_cards: [], gift_card_tender: nil, ecommerce_available: false)
         # Ensure party_size is a valid number
         party_size = party_size.to_i
         party_size = 1 if party_size < 1
@@ -938,26 +945,41 @@ module CloverSandboxSimulator
         if rand < split_chance && tenders.size > 1
           num_splits = [party_size, 4, tenders.size].min
           num_splits = num_splits < 2 ? 2 : rand(2..num_splits)
-          splits = select_split_tenders(tenders, num_splits)
 
-          logger.debug "  Split payment: #{num_splits} ways"
+          # For split payments, use only non-card tenders (Platform API)
+          non_card_tenders = tenders.reject { |t| services.tender.card_tender?(t) }
+          if non_card_tenders.size > 1
+            splits = select_split_tenders(non_card_tenders, num_splits)
+            logger.debug "  Split payment: #{num_splits} ways"
 
-          services.payment.process_split_payment(
+            services.payment.process_split_payment(
+              order_id: order_id,
+              total_amount: subtotal,
+              tip_amount: tip_amount,
+              tax_amount: tax_amount,
+              employee_id: employee_id,
+              splits: splits
+            )
+            return
+          end
+          # Fall through to single payment if not enough non-card tenders
+        end
+
+        # Select tender — card payments (~55%) when ecommerce is available
+        tender = select_payment_tender(tenders, subtotal, ecommerce_available)
+
+        if services.tender.card_tender?(tender)
+          # Route card payments through Ecommerce API (tokenize → charge)
+          process_card_payment_via_ecommerce(
             order_id: order_id,
-            total_amount: subtotal,
-            tip_amount: tip_amount,
+            subtotal: subtotal,
             tax_amount: tax_amount,
+            tip_amount: tip_amount,
+            tender: tender,
             employee_id: employee_id,
-            splits: splits
+            tenders: tenders
           )
         else
-          # Cash more common for smaller orders
-          tender = if subtotal < 2000 && rand < 0.4
-                     tenders.find { |t| t["label"]&.downcase == "cash" } || tenders.sample
-                   else
-                     tenders.sample
-                   end
-
           services.payment.process_payment(
             order_id: order_id,
             amount: subtotal,
@@ -971,6 +993,82 @@ module CloverSandboxSimulator
           if tender["label"]&.downcase == "cash"
             record_cash_payment_event(employee_id: employee_id, amount: subtotal + tip_amount + tax_amount)
           end
+        end
+      end
+
+      # Select which tender to use for this payment
+      def select_payment_tender(tenders, subtotal, ecommerce_available)
+        card_tenders = tenders.select { |t| services.tender.card_tender?(t) }
+        non_card_tenders = tenders.reject { |t| services.tender.card_tender?(t) }
+
+        # Use card tender ~55% of the time when ecommerce is available
+        if ecommerce_available && card_tenders.any? && rand(100) < CARD_PAYMENT_CHANCE
+          card_tenders.sample
+        elsif subtotal < 2000 && rand < 0.4
+          # Cash more common for smaller orders
+          non_card_tenders.find { |t| t["label"]&.downcase == "cash" } || non_card_tenders.sample || tenders.sample
+        else
+          non_card_tenders.sample || tenders.sample
+        end
+      end
+
+      # Process a card payment via the Ecommerce API (tokenize → charge)
+      # Falls back to Platform API (Cash) if the charge fails.
+      def process_card_payment_via_ecommerce(order_id:, subtotal:, tax_amount:, tip_amount:, tender:, employee_id:, tenders:)
+        total_with_tip = subtotal + tip_amount + tax_amount
+        card_type = tender["label"]&.downcase&.include?("debit") ? :visa_debit : [:visa, :mastercard, :discover, :amex].sample
+
+        logger.info "  💳 Card payment via Ecommerce API: $#{'%.2f' % (total_with_tip / 100.0)} (#{card_type})"
+
+        begin
+          charge = services.payment.process_card_payment(
+            amount: total_with_tip,
+            card_type: card_type,
+            order_id: order_id
+          )
+
+          if charge && charge["id"]
+            # Ecommerce charge succeeded — also create a Platform API payment
+            # record so the order shows as paid with the correct tender
+            services.payment.process_payment(
+              order_id: order_id,
+              amount: subtotal,
+              tender_id: tender["id"],
+              employee_id: employee_id,
+              tip_amount: tip_amount,
+              tax_amount: tax_amount
+            )
+
+            @stats[:card_payments] ||= { count: 0, amount: 0 }
+            @stats[:card_payments][:count] += 1
+            @stats[:card_payments][:amount] += total_with_tip
+            logger.info "  💳 Card payment successful: #{charge['id']}"
+          else
+            logger.warn "  💳 Card charge returned nil — falling back to Cash"
+            fallback_to_cash(order_id: order_id, subtotal: subtotal, tax_amount: tax_amount, tip_amount: tip_amount, employee_id: employee_id, tenders: tenders)
+          end
+        rescue StandardError => e
+          logger.warn "  💳 Card payment failed (#{e.message}) — falling back to Cash"
+          fallback_to_cash(order_id: order_id, subtotal: subtotal, tax_amount: tax_amount, tip_amount: tip_amount, employee_id: employee_id, tenders: tenders)
+        end
+      end
+
+      # Fall back to a non-card tender when card payment fails
+      def fallback_to_cash(order_id:, subtotal:, tax_amount:, tip_amount:, employee_id:, tenders:)
+        cash = tenders.find { |t| t["label"]&.downcase == "cash" }
+        fallback = cash || tenders.reject { |t| services.tender.card_tender?(t) }.first || tenders.first
+
+        services.payment.process_payment(
+          order_id: order_id,
+          amount: subtotal,
+          tender_id: fallback["id"],
+          employee_id: employee_id,
+          tip_amount: tip_amount,
+          tax_amount: tax_amount
+        )
+
+        if fallback["label"]&.downcase == "cash"
+          record_cash_payment_event(employee_id: employee_id, amount: subtotal + tip_amount + tax_amount)
         end
       end
 
@@ -1223,6 +1321,14 @@ module CloverSandboxSimulator
           @stats[:by_order_type].each do |type, data|
             logger.info "  #{type.to_s.ljust(15)} #{data[:orders].to_s.rjust(3)} orders | $#{'%.2f' % (data[:revenue] / 100.0)}"
           end
+        end
+
+        # Print card payment stats
+        if @stats[:card_payments] && @stats[:card_payments][:count] > 0
+          logger.info ""
+          logger.info "CARD PAYMENTS (Ecommerce API):"
+          logger.info "  Transactions:  #{@stats[:card_payments][:count]}"
+          logger.info "  Total amount:  $#{'%.2f' % (@stats[:card_payments][:amount] / 100.0)}"
         end
 
         # Print cash event stats
