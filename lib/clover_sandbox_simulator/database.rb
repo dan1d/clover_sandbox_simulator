@@ -32,6 +32,62 @@ module CloverSandboxSimulator
     TEST_DATABASE = "clover_simulator_test"
 
     class << self
+      # Create the database specified in the connection URL.
+      #
+      # Connects to the `postgres` maintenance database, issues
+      # CREATE DATABASE, then disconnects.
+      #
+      # @param url [String] PostgreSQL connection URL
+      # @return [void]
+      def create!(url)
+        db_name = URI.parse(url).path.delete_prefix("/")
+        maintenance_url = url.sub(%r{/[^/]+\z}, "/postgres")
+
+        ActiveRecord::Base.establish_connection(maintenance_url)
+        ActiveRecord::Base.connection.create_database(db_name)
+        CloverSandboxSimulator.logger.info("Database created: #{db_name}")
+      rescue ActiveRecord::DatabaseAlreadyExists, ActiveRecord::StatementInvalid => e
+        if e.message.include?("already exists")
+          CloverSandboxSimulator.logger.info("Database already exists: #{db_name}")
+        else
+          raise
+        end
+      ensure
+        ActiveRecord::Base.connection_pool.disconnect!
+      end
+
+      # Drop the database specified in the connection URL.
+      #
+      # @param url [String] PostgreSQL connection URL
+      # @return [void]
+      def drop!(url)
+        db_name = URI.parse(url).path.delete_prefix("/")
+        maintenance_url = url.sub(%r{/[^/]+\z}, "/postgres")
+
+        ActiveRecord::Base.establish_connection(maintenance_url)
+        ActiveRecord::Base.connection.drop_database(db_name)
+        CloverSandboxSimulator.logger.info("Database dropped: #{db_name}")
+      rescue ActiveRecord::StatementInvalid => e
+        if e.message.include?("does not exist")
+          CloverSandboxSimulator.logger.info("Database does not exist: #{db_name}")
+        else
+          raise
+        end
+      ensure
+        ActiveRecord::Base.connection_pool.disconnect!
+      end
+
+      # Return the configured database URL from .env.json.
+      #
+      # @return [String] PostgreSQL URL
+      # @raise [Error] if no DATABASE_URL is configured
+      def database_url
+        url = Configuration.database_url_from_file
+        raise Error, "No DATABASE_URL found in .env.json" unless url
+
+        url
+      end
+
       # Establish a standalone ActiveRecord connection to PostgreSQL.
       #
       # @param url [String] A PostgreSQL connection URL
