@@ -675,4 +675,1165 @@ http_interactions:
       encoding: UTF-8
       string: 405 POST not allowed.
   recorded_at: Fri, 06 Feb 2026 23:39:37 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770425831549,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 00:57:12 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770425849515,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 00:57:30 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770425868177,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 00:57:48 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770425886105,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 00:58:06 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770429552363,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 01:59:13 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770430365345,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:12:46 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770430430826,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:13:51 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770430468741,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:14:29 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770430488202,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:14:48 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770430509118,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:15:09 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770430556463,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:15:57 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770430745876,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:19:06 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770430849902,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:20:50 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770430914592,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:21:55 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770430999097,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:23:19 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770432046763,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:40:47 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770432092866,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:41:33 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770432113851,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:41:54 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770432231775,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:43:52 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770432315268,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:45:15 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770432366162,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:46:06 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770432386694,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:46:27 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770432441867,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:47:22 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770432505134,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:48:25 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770432569128,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:49:29 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770432720591,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:52:01 GMT
+- request:
+    method: post
+    uri: https://sandbox.dev.clover.com/v3/merchants/<MERCHANT_1_ID>/cash_events
+    body:
+      encoding: UTF-8
+      string: '{"type":"OPEN","amountChange":20000,"employee":{"id":"R3TQ2FGG576SG"},"timestamp":1770432828752,"note":"Drawer
+        opened"}'
+    headers:
+      Accept:
+      - application/json
+      User-Agent:
+      - rest-client/2.1.0 (darwin24 arm64) ruby/3.4.7p58
+      Authorization:
+      - Bearer <MERCHANT_1_API_TOKEN>
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '119'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - sandbox.dev.clover.com
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Content-Length:
+      - '21'
+      Allow:
+      - GET, OPTIONS
+      X-Robots-Tag:
+      - none
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: 405 POST not allowed.
+  recorded_at: Sat, 07 Feb 2026 02:53:49 GMT
 recorded_with: VCR 6.4.0
