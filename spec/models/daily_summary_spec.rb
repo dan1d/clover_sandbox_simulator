@@ -51,8 +51,11 @@ RSpec.describe CloverSandboxSimulator::Models::DailySummary, :db do
     end
 
     it ".recent returns summaries within N days (default 7)" do
-      expect(described_class.recent.count).to eq(3)
-      expect(described_class.recent(1).count).to eq(3)
+      create(:daily_summary, merchant_id: "M3", business_date: 10.days.ago, total_revenue: 1000)
+
+      expect(described_class.recent.count).to eq(3)     # default 7 days excludes 10-day-old
+      expect(described_class.recent(1).count).to eq(3)   # today + yesterday within 1 day
+      expect(described_class.recent(15).count).to eq(4)  # 15 days includes all 4
     end
   end
 

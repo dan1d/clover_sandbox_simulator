@@ -28,7 +28,7 @@ RSpec.describe CloverSandboxSimulator::Models::BusinessType, :db do
     it "has_many categories with cascade delete" do
       bt = create(:business_type, :restaurant)
       create(:category, :appetizers, business_type: bt)
-      expect { bt.destroy }.to change { described_class.reflect_on_association(:categories).klass.count }.by(-1)
+      expect { bt.destroy }.to change { CloverSandboxSimulator::Models::Category.count }.by(-1)
     end
 
     it "has_many items through categories" do

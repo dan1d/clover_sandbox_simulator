@@ -21,6 +21,12 @@ RSpec.describe CloverSandboxSimulator::Models::SimulatedPayment, :db do
       expect(build(:simulated_payment, amount: 0)).to be_valid
       expect(build(:simulated_payment, amount: -100)).not_to be_valid
     end
+
+    it "rejects nil amount" do
+      payment = build(:simulated_payment, amount: nil)
+      expect(payment).not_to be_valid
+      expect(payment.errors[:amount]).to include("is not a number")
+    end
   end
 
   describe "associations" do

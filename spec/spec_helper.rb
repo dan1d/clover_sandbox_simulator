@@ -80,7 +80,9 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
 
-  # Load factories from lib/ (shared between runtime and tests)
+  # Load factories from lib/ (shared between runtime and tests).
+  # Uses `=` (not `<<`) to exclude the default spec/factories path — that
+  # directory contains factories_spec.rb which would trigger a circular load.
   factories_path = File.expand_path("../lib/clover_sandbox_simulator/db/factories", __dir__)
   unless FactoryBot.factories.any? { |f| f.name == :business_type }
     FactoryBot.definition_file_paths = [factories_path]

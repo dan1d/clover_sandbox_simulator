@@ -85,6 +85,7 @@ RSpec.describe CloverSandboxSimulator::Models::ApiRequest, :db do
       end
 
       it ".recent returns requests within N minutes" do
+        expect(described_class.recent.count).to eq(5)    # default 60 minutes
         expect(described_class.recent(60).count).to eq(5)
         expect(described_class.recent(0).count).to eq(0)
       end

@@ -68,6 +68,8 @@ RSpec.describe CloverSandboxSimulator::Models::SimulatedOrder, :db do
       create(:simulated_order, :paid, clover_merchant_id: "M1", meal_period: "lunch", dining_option: "HERE")
       create(:simulated_order, status: "open", clover_merchant_id: "M1", meal_period: "dinner", dining_option: "TO_GO")
       create(:simulated_order, :paid, clover_merchant_id: "M2", business_date: Date.yesterday, meal_period: "breakfast", dining_option: "DELIVERY")
+      # Override :refunded trait defaults (meal_period: "dinner", dining_option: "HERE")
+      # to nil so this order doesn't pollute the meal_period/dining_option scope assertions.
       create(:simulated_order, :refunded, clover_merchant_id: "M1", meal_period: nil, dining_option: nil)
     end
 
@@ -129,9 +131,9 @@ RSpec.describe CloverSandboxSimulator::Models::SimulatedOrder, :db do
 
   describe "#total_dollars / #subtotal_dollars" do
     it "converts cents to dollars" do
-      order = build(:simulated_order, :paid)
-      expect(order.total_dollars).to eq(31.72)
-      expect(order.subtotal_dollars).to eq(25.0)
+      order = build(:simulated_order, total: 1550, subtotal: 1200)
+      expect(order.total_dollars).to eq(15.50)
+      expect(order.subtotal_dollars).to eq(12.0)
     end
 
     it "handles nil" do

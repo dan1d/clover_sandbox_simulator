@@ -1,18 +1,11 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "factory_bot"
 
-# Load factories from lib/ (shared between runtime and tests).
-# Guarded to prevent "Factory already registered" if loaded elsewhere.
-unless FactoryBot.factories.any? { |f| f.name == :business_type }
-  factories_path = File.expand_path("../../lib/clover_sandbox_simulator/db/factories", __dir__)
-  FactoryBot.definition_file_paths = [factories_path]
-  FactoryBot.find_definitions
-end
+# Factories are loaded centrally by spec_helper.rb.
+# FactoryBot::Syntax::Methods is included globally via spec_helper.
 
 RSpec.describe "Factories", :db do
-  include FactoryBot::Syntax::Methods
 
   # ── BusinessType ─────────────────────────────────────────────
 
