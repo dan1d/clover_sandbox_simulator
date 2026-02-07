@@ -72,35 +72,18 @@ module CloverSandboxSimulator
 
       # Seed the database with realistic Clover data using FactoryBot.
       #
-      # Factories pull from the existing JSON data files to produce
-      # records that mirror what the Clover API returns.
+      # Delegates to {Seeder} which creates BusinessTypes, Categories,
+      # and Items using factory attributes. Idempotent — safe to call
+      # multiple times without creating duplicates.
       #
       # @param business_type [Symbol, String, nil] Optional business type
-      #   (e.g. :restaurant, :retail). Defaults to the configured type.
-      # @return [void]
-      #
-      # @note Seeding logic will be implemented once ActiveRecord models and
-      #   factories are defined in follow-up tickets. Currently loads factory
-      #   definitions only.
-      # TODO: Implement actual record creation once models exist (see TOS project backlog)
+      #   (e.g. :restaurant, :retail_clothing). Seeds all types if nil.
+      # @return [Hash] Summary counts (:business_types, :categories, :items)
       def seed!(business_type: nil)
         ensure_connected!
-
-        require "factory_bot"
-
-        business_type ||= CloverSandboxSimulator.configuration.business_type
-
-        CloverSandboxSimulator.logger.info("Seeding database (business_type: #{business_type})")
-
-        # Load factory definitions if not already loaded
         load_factories!
 
-        # TODO: Create records using FactoryBot once models are defined:
-        #   - Merchants, Categories, Items, ModifierGroups
-        #   - Tax rates, Discounts, Tenders
-        #   - Orders with line items and payments
-
-        CloverSandboxSimulator.logger.info("Seeding complete (factory definitions loaded)")
+        Seeder.seed!(business_type: business_type)
       end
 
       # Check whether a database connection is established and usable.
