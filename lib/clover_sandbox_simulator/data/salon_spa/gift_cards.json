@@ -1,0 +1,47 @@
+{
+  "gift_cards": [
+    {
+      "card_number": "7012345678901234",
+      "initial_balance": 5000,
+      "current_balance": 5000,
+      "status": "ACTIVE",
+      "description": "$50 Salon Gift Card - Full balance"
+    },
+    {
+      "card_number": "7023456789012345",
+      "initial_balance": 10000,
+      "current_balance": 10000,
+      "status": "ACTIVE",
+      "description": "$100 Salon Gift Card - Full balance"
+    },
+    {
+      "card_number": "7034567890123456",
+      "initial_balance": 15000,
+      "current_balance": 15000,
+      "status": "ACTIVE",
+      "description": "$150 Salon Gift Card - Full balance"
+    },
+    {
+      "card_number": "7045678901234567",
+      "initial_balance": 10000,
+      "current_balance": 4500,
+      "status": "ACTIVE",
+      "description": "$100 Salon Gift Card - Partially used ($45 remaining)"
+    },
+    {
+      "card_number": "7056789012345678",
+      "initial_balance": 20000,
+      "current_balance": 20000,
+      "status": "ACTIVE",
+      "description": "$200 Salon Gift Card - Full balance"
+    }
+  ],
+  "purchase_denominations": [
+    { "amount": 5000, "label": "$50 Salon Gift Card" },
+    { "amount": 10000, "label": "$100 Salon Gift Card" },
+    { "amount": 15000, "label": "$150 Salon Gift Card" },
+    { "amount": 20000, "label": "$200 Salon Gift Card" },
+    { "amount": 25000, "label": "$250 Salon Gift Card" }
+  ],
+  "note": "Salon gift cards — popular for gifts and celebrations"
+}

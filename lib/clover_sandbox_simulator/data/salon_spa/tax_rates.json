@@ -1,0 +1,17 @@
+{
+  "tax_rates": [
+    {
+      "name": "Service Tax",
+      "rate": 8.25,
+      "is_default": true,
+      "description": "Standard sales tax on salon and spa services"
+    }
+  ],
+  "category_tax_mapping": {
+    "Haircuts": ["Service Tax"],
+    "Color Services": ["Service Tax"],
+    "Spa Treatments": ["Service Tax"],
+    "Nail Services": ["Service Tax"],
+    "default": ["Service Tax"]
+  }
+}

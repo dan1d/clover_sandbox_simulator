@@ -1,0 +1,49 @@
+{
+  "modifier_groups": [
+    {
+      "name": "Stylist Level",
+      "min_required": 0,
+      "max_allowed": 1,
+      "modifiers": [
+        { "name": "Junior Stylist", "price": 0 },
+        { "name": "Senior Stylist", "price": 1500 },
+        { "name": "Master Stylist", "price": 3000 },
+        { "name": "Artistic Director", "price": 5000 }
+      ]
+    },
+    {
+      "name": "Add-On Treatments",
+      "min_required": 0,
+      "max_allowed": 3,
+      "modifiers": [
+        { "name": "Deep Conditioning Treatment", "price": 2500 },
+        { "name": "Scalp Treatment", "price": 2000 },
+        { "name": "Gloss Treatment", "price": 3500 },
+        { "name": "Olaplex Treatment", "price": 4500 },
+        { "name": "Keratin Treatment", "price": 8000 }
+      ]
+    },
+    {
+      "name": "Nail Art",
+      "min_required": 0,
+      "max_allowed": 1,
+      "modifiers": [
+        { "name": "Simple Design (2 nails)", "price": 500 },
+        { "name": "Full Art (all nails)", "price": 1500 },
+        { "name": "Chrome/Ombre Finish", "price": 1000 },
+        { "name": "French Tips", "price": 800 }
+      ]
+    },
+    {
+      "name": "Massage Upgrade",
+      "min_required": 0,
+      "max_allowed": 2,
+      "modifiers": [
+        { "name": "Aromatherapy", "price": 1000 },
+        { "name": "CBD Oil", "price": 1500 },
+        { "name": "Extended 30 min", "price": 5000 },
+        { "name": "Couples Room", "price": 2000 }
+      ]
+    }
+  ]
+}

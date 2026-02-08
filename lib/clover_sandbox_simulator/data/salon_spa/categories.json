@@ -1,0 +1,24 @@
+{
+  "categories": [
+    {
+      "name": "Haircuts",
+      "sort_order": 1,
+      "description": "Cuts and trims for all ages"
+    },
+    {
+      "name": "Color Services",
+      "sort_order": 2,
+      "description": "Color, highlights, and balayage"
+    },
+    {
+      "name": "Spa Treatments",
+      "sort_order": 3,
+      "description": "Massage and facials"
+    },
+    {
+      "name": "Nail Services",
+      "sort_order": 4,
+      "description": "Manicures and pedicures"
+    }
+  ]
+}

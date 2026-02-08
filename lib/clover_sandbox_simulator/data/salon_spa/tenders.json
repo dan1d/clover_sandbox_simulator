@@ -1,0 +1,41 @@
+{
+  "tenders": [
+    {
+      "label": "Cash",
+      "label_key": "com.clover.tender.cash",
+      "opens_cash_drawer": true,
+      "weight": 25
+    },
+    {
+      "label": "Check",
+      "label_key": "com.clover.tender.check",
+      "opens_cash_drawer": true,
+      "weight": 5
+    },
+    {
+      "label": "Gift Card",
+      "label_key": "com.clover.tender.external_gift_card",
+      "opens_cash_drawer": false,
+      "weight": 20
+    },
+    {
+      "label": "External Payment",
+      "label_key": "com.clover.tender.external_payment",
+      "opens_cash_drawer": false,
+      "weight": 10
+    },
+    {
+      "label": "Mobile Payment",
+      "label_key": "com.clover.tender.mobile_payment",
+      "opens_cash_drawer": false,
+      "weight": 20
+    },
+    {
+      "label": "Store Credit",
+      "label_key": "com.clover.tender.store_credit",
+      "opens_cash_drawer": false,
+      "weight": 10
+    }
+  ],
+  "note": "Credit Card and Debit Card are intentionally excluded - they are broken in Clover sandbox"
+}

@@ -1,0 +1,100 @@
+{
+  "items": [
+    {
+      "name": "Women's Haircut",
+      "price": 5500,
+      "category": "Haircuts",
+      "description": "Full haircut and style (45 min)"
+    },
+    {
+      "name": "Men's Haircut",
+      "price": 3000,
+      "category": "Haircuts",
+      "description": "Classic cut and finish (30 min)"
+    },
+    {
+      "name": "Children's Haircut",
+      "price": 2000,
+      "category": "Haircuts",
+      "description": "Kids cut, ages 12 and under (20 min)"
+    },
+    {
+      "name": "Bang Trim",
+      "price": 1500,
+      "category": "Haircuts",
+      "description": "Quick bang trim between cuts (15 min)"
+    },
+    {
+      "name": "Full Color",
+      "price": 12000,
+      "category": "Color Services",
+      "description": "All-over single process color (120 min)"
+    },
+    {
+      "name": "Highlights (Partial)",
+      "price": 9000,
+      "category": "Color Services",
+      "description": "Partial foil highlights (90 min)"
+    },
+    {
+      "name": "Highlights (Full)",
+      "price": 15000,
+      "category": "Color Services",
+      "description": "Full head foil highlights (120 min)"
+    },
+    {
+      "name": "Balayage",
+      "price": 18000,
+      "category": "Color Services",
+      "description": "Hand-painted color technique (150 min)"
+    },
+    {
+      "name": "Swedish Massage (60min)",
+      "price": 9500,
+      "category": "Spa Treatments",
+      "description": "Relaxation full-body massage"
+    },
+    {
+      "name": "Deep Tissue Massage (60min)",
+      "price": 11000,
+      "category": "Spa Treatments",
+      "description": "Therapeutic deep pressure massage"
+    },
+    {
+      "name": "Hot Stone Massage (60min)",
+      "price": 12000,
+      "category": "Spa Treatments",
+      "description": "Heated basalt stone therapy massage"
+    },
+    {
+      "name": "Facial (60min)",
+      "price": 8500,
+      "category": "Spa Treatments",
+      "description": "Customized facial with extractions"
+    },
+    {
+      "name": "Manicure",
+      "price": 2500,
+      "category": "Nail Services",
+      "description": "Classic manicure with polish (30 min)"
+    },
+    {
+      "name": "Pedicure",
+      "price": 3500,
+      "category": "Nail Services",
+      "description": "Classic pedicure with polish (45 min)"
+    },
+    {
+      "name": "Gel Manicure",
+      "price": 4000,
+      "category": "Nail Services",
+      "description": "Long-lasting gel polish manicure (45 min)"
+    },
+    {
+      "name": "Acrylic Full Set",
+      "price": 5500,
+      "category": "Nail Services",
+      "description": "Full set of acrylic nail extensions (60 min)"
+    }
+  ]
+}
