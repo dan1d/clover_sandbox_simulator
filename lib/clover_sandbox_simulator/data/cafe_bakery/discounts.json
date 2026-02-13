@@ -1,0 +1,113 @@
+{
+  "discounts": [
+    {
+      "id": "morning_rush",
+      "name": "Morning Rush",
+      "percentage": 10,
+      "description": "10% off before 8 AM",
+      "type": "time_based",
+      "time_rules": { "start_hour": 6, "end_hour": 8 },
+      "auto_apply": true
+    },
+    {
+      "id": "happy_hour_cafe",
+      "name": "Afternoon Happy Hour",
+      "percentage": 15,
+      "description": "15% off drinks from 2-4 PM",
+      "type": "time_based",
+      "time_rules": { "start_hour": 14, "end_hour": 16 },
+      "auto_apply": true
+    },
+    {
+      "id": "student_discount",
+      "name": "Student Discount",
+      "percentage": 10,
+      "description": "10% off with student ID",
+      "type": "customer",
+      "auto_apply": false
+    },
+    {
+      "id": "employee_discount",
+      "name": "Employee Discount",
+      "percentage": 30,
+      "description": "30% off for employees",
+      "type": "customer",
+      "auto_apply": false
+    },
+    {
+      "id": "two_off_pastry",
+      "name": "$2 Off Pastry",
+      "amount": 200,
+      "description": "$2 off any pastry with coffee purchase",
+      "type": "line_item",
+      "applicable_categories": ["Pastries & Baked Goods"],
+      "requires_category": ["Coffee & Espresso"],
+      "auto_apply": false
+    },
+    {
+      "id": "five_off",
+      "name": "$5 Off",
+      "amount": 500,
+      "description": "$5 off orders over $25",
+      "type": "threshold",
+      "min_order_amount": 2500,
+      "auto_apply": false
+    },
+    {
+      "id": "ten_off",
+      "name": "$10 Off",
+      "amount": 1000,
+      "description": "$10 off orders over $50",
+      "type": "threshold",
+      "min_order_amount": 5000,
+      "auto_apply": false
+    },
+    {
+      "id": "loyalty_bronze",
+      "name": "Loyalty - Bronze",
+      "percentage": 5,
+      "description": "5% off for 10+ visits",
+      "type": "loyalty",
+      "min_visits": 10,
+      "auto_apply": true
+    },
+    {
+      "id": "loyalty_silver",
+      "name": "Loyalty - Silver",
+      "percentage": 10,
+      "description": "10% off for 25+ visits",
+      "type": "loyalty",
+      "min_visits": 25,
+      "auto_apply": true
+    },
+    {
+      "id": "loyalty_gold",
+      "name": "Loyalty - Gold",
+      "percentage": 15,
+      "description": "15% off for 50+ visits",
+      "type": "loyalty",
+      "min_visits": 50,
+      "auto_apply": true
+    },
+    {
+      "id": "first_order",
+      "name": "First Order Discount",
+      "percentage": 15,
+      "description": "15% off your first order",
+      "type": "loyalty",
+      "min_visits": 0,
+      "max_visits": 1,
+      "auto_apply": true
+    },
+    {
+      "id": "smoothie_half_off",
+      "name": "Smoothie 50% Off",
+      "percentage": 50,
+      "description": "50% off any smoothie with breakfast purchase",
+      "type": "line_item",
+      "applicable_categories": ["Smoothies & Juices"],
+      "requires_category": ["Breakfast"],
+      "auto_apply": false
+    }
+  ]
+}

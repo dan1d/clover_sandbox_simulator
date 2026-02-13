@@ -1,0 +1,54 @@
+{
+  "categories": [
+    {
+      "name": "Coffee & Espresso",
+      "sort_order": 1,
+      "description": "Hot and cold coffee drinks"
+    },
+    {
+      "name": "Pastries & Baked Goods",
+      "sort_order": 2,
+      "description": "Freshly baked daily"
+    },
+    {
+      "name": "Breakfast",
+      "sort_order": 3,
+      "description": "Morning plates and bowls"
+    },
+    {
+      "name": "Sandwiches & Wraps",
+      "sort_order": 4,
+      "description": "Lunch staples"
+    },
+    {
+      "name": "Smoothies & Juices",
+      "sort_order": 5,
+      "description": "Blended drinks and fresh-pressed juices"
+    },
+    {
+      "name": "Coffee & Espresso",
+      "sort_order": 6,
+      "description": "More coffee drinks (duplicate category)"
+    },
+    {
+      "name": "Pastries & Baked Goods",
+      "sort_order": 7,
+      "description": "Pastries imported from integration"
+    },
+    {
+      "name": "Breakfast",
+      "sort_order": 8,
+      "description": "Weekend brunch specials (stale copy)"
+    },
+    {
+      "name": "Drinks",
+      "sort_order": 9,
+      "description": "All drinks catch-all"
+    },
+    {
+      "name": "Grab & Go",
+      "sort_order": 10,
+      "description": "Pre-packaged items for takeout"
+    }
+  ]
+}

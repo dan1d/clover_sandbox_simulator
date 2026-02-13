@@ -1,0 +1,33 @@
+{
+  "combos": [
+    {
+      "id": "coffee_pastry_combo",
+      "name": "Coffee & Pastry Combo",
+      "description": "Any coffee + any pastry for $5.99",
+      "combo_price": 599,
+      "required_categories": ["Coffee & Espresso", "Pastries & Baked Goods"],
+      "max_items_per_category": 1,
+      "active": true
+    },
+    {
+      "id": "breakfast_combo",
+      "name": "Breakfast Combo",
+      "description": "Any breakfast plate + any coffee or juice for $12.99",
+      "combo_price": 1299,
+      "required_categories": ["Breakfast", "Coffee & Espresso"],
+      "alternative_categories": { "Coffee & Espresso": ["Smoothies & Juices"] },
+      "max_items_per_category": 1,
+      "active": true
+    },
+    {
+      "id": "lunch_combo",
+      "name": "Lunch Deal",
+      "description": "Any sandwich + any drink for $13.99",
+      "combo_price": 1399,
+      "required_categories": ["Sandwiches & Wraps", "Drinks"],
+      "alternative_categories": { "Drinks": ["Smoothies & Juices", "Coffee & Espresso"] },
+      "max_items_per_category": 1,
+      "active": true
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "modifier_groups": [
+    {
+      "name": "Milk Choice",
+      "min_required": 0,
+      "max_allowed": 1,
+      "modifiers": [
+        { "name": "Whole Milk", "price": 0 },
+        { "name": "Oat Milk", "price": 75 },
+        { "name": "Almond Milk", "price": 75 },
+        { "name": "Soy Milk", "price": 50 },
+        { "name": "Coconut Milk", "price": 75 }
+      ]
+    },
+    {
+      "name": "Espresso Shots",
+      "min_required": 0,
+      "max_allowed": 3,
+      "modifiers": [
+        { "name": "Extra Shot", "price": 100 },
+        { "name": "Double Shot", "price": 200 },
+        { "name": "Decaf Shot", "price": 0 }
+      ]
+    },
+    {
+      "name": "Flavor Add-Ins",
+      "min_required": 0,
+      "max_allowed": 3,
+      "modifiers": [
+        { "name": "Vanilla Syrup", "price": 75 },
+        { "name": "Caramel Syrup", "price": 75 },
+        { "name": "Hazelnut Syrup", "price": 75 },
+        { "name": "Mocha Syrup", "price": 75 },
+        { "name": "Lavender Syrup", "price": 100 },
+        { "name": "Sugar-Free Vanilla", "price": 75 }
+      ]
+    },
+    {
+      "name": "Size",
+      "min_required": 1,
+      "max_allowed": 1,
+      "modifiers": [
+        { "name": "Small (8oz)", "price": 0 },
+        { "name": "Medium (12oz)", "price": 50 },
+        { "name": "Large (16oz)", "price": 100 }
+      ]
+    },
+    {
+      "name": "Bread Choice",
+      "min_required": 1,
+      "max_allowed": 1,
+      "modifiers": [
+        { "name": "Sourdough", "price": 0 },
+        { "name": "Multigrain", "price": 0 },
+        { "name": "Ciabatta", "price": 0 },
+        { "name": "Gluten-Free Bread", "price": 150 },
+        { "name": "Croissant", "price": 100 }
+      ]
+    },
+    {
+      "name": "Smoothie Boosts",
+      "min_required": 0,
+      "max_allowed": 3,
+      "modifiers": [
+        { "name": "Protein Powder", "price": 150 },
+        { "name": "Chia Seeds", "price": 75 },
+        { "name": "Flax Seeds", "price": 75 },
+        { "name": "Spirulina", "price": 100 },
+        { "name": "Collagen Peptides", "price": 150 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "items": [
+    { "name": "House Drip Coffee", "price": 299, "category": "Coffee & Espresso", "category_sort_order": 1, "sku": "CAFE-COF-001" },
+    { "name": "Espresso", "price": 349, "category": "Coffee & Espresso", "category_sort_order": 1, "sku": "CAFE-COF-002" },
+    { "name": "Cappuccino", "price": 499, "category": "Coffee & Espresso", "category_sort_order": 1, "sku": "CAFE-COF-003" },
+    { "name": "Latte", "price": 549, "category": "Coffee & Espresso", "category_sort_order": 1, "sku": "CAFE-COF-004" },
+    { "name": "Cold Brew", "price": 499, "category": "Coffee & Espresso", "category_sort_order": 1, "sku": "CAFE-COF-005" },
+
+    { "name": "Butter Croissant", "price": 399, "category": "Pastries & Baked Goods", "category_sort_order": 2, "sku": "CAFE-PAS-001" },
+    { "name": "Blueberry Muffin", "price": 349, "category": "Pastries & Baked Goods", "category_sort_order": 2, "sku": "CAFE-PAS-002" },
+    { "name": "Cinnamon Roll", "price": 449, "category": "Pastries & Baked Goods", "category_sort_order": 2, "sku": "CAFE-PAS-003" },
+    { "name": "Chocolate Chip Cookie", "price": 299, "category": "Pastries & Baked Goods", "category_sort_order": 2, "sku": "CAFE-PAS-004" },
+
+    { "name": "Avocado Toast", "price": 999, "category": "Breakfast", "category_sort_order": 3, "sku": "CAFE-BRK-001" },
+    { "name": "Breakfast Burrito", "price": 899, "category": "Breakfast", "category_sort_order": 3, "sku": "CAFE-BRK-002" },
+    { "name": "Açaí Bowl", "price": 1199, "category": "Breakfast", "category_sort_order": 3, "sku": "CAFE-BRK-003" },
+    { "name": "Yogurt Parfait", "price": 699, "category": "Breakfast", "category_sort_order": 3, "sku": "CAFE-BRK-004" },
+
+    { "name": "Turkey Club", "price": 1099, "category": "Sandwiches & Wraps", "category_sort_order": 4, "sku": "CAFE-SAN-001" },
+    { "name": "Caprese Panini", "price": 999, "category": "Sandwiches & Wraps", "category_sort_order": 4, "sku": "CAFE-SAN-002" },
+    { "name": "Chicken Caesar Wrap", "price": 1049, "category": "Sandwiches & Wraps", "category_sort_order": 4, "sku": "CAFE-SAN-003" },
+    { "name": "BLT", "price": 899, "category": "Sandwiches & Wraps", "category_sort_order": 4, "sku": "CAFE-SAN-004" },
+
+    { "name": "Berry Blast Smoothie", "price": 699, "category": "Smoothies & Juices", "category_sort_order": 5, "sku": "CAFE-SMO-001" },
+    { "name": "Green Detox Juice", "price": 749, "category": "Smoothies & Juices", "category_sort_order": 5, "sku": "CAFE-SMO-002" },
+    { "name": "Mango Tango Smoothie", "price": 699, "category": "Smoothies & Juices", "category_sort_order": 5, "sku": "CAFE-SMO-003" },
+    { "name": "Fresh-Squeezed OJ", "price": 499, "category": "Smoothies & Juices", "category_sort_order": 5, "sku": "CAFE-SMO-004" },
+
+    { "name": "House Drip Coffee", "price": 350, "category": "Coffee & Espresso", "category_sort_order": 6, "sku": "CAFE-COF2-001" },
+    { "name": "Latte", "price": 599, "category": "Coffee & Espresso", "category_sort_order": 6, "sku": "CAFE-COF2-002" },
+    { "name": "Iced Latte", "price": 599, "category": "Coffee & Espresso", "category_sort_order": 6, "sku": "CAFE-COF2-003" },
+    { "name": "Matcha Latte", "price": 649, "category": "Coffee & Espresso", "category_sort_order": 6, "sku": "CAFE-COF2-004" },
+
+    { "name": "Butter Croissant", "price": 450, "category": "Pastries & Baked Goods", "category_sort_order": 7, "sku": "CAFE-PAS2-001" },
+    { "name": "Blueberry Muffin", "price": 349, "category": "Pastries & Baked Goods", "category_sort_order": 7, "sku": "CAFE-PAS2-002" },
+    { "name": "Almond Croissant", "price": 499, "category": "Pastries & Baked Goods", "category_sort_order": 7, "sku": "CAFE-PAS2-003" },
+    { "name": "Banana Bread", "price": 399, "category": "Pastries & Baked Goods", "category_sort_order": 7, "sku": "CAFE-PAS2-004" },
+
+    { "name": "Avocado Toast", "price": 1099, "category": "Breakfast", "category_sort_order": 8, "sku": "CAFE-BRK2-001" },
+    { "name": "Eggs Benedict", "price": 1399, "category": "Breakfast", "category_sort_order": 8, "sku": "CAFE-BRK2-002" },
+    { "name": "French Toast", "price": 1199, "category": "Breakfast", "category_sort_order": 8, "sku": "CAFE-BRK2-003" },
+
+    { "name": "House Drip Coffee", "price": 275, "category": "Drinks", "category_sort_order": 9, "sku": "CAFE-DRK-001" },
+    { "name": "Iced Tea", "price": 349, "category": "Drinks", "category_sort_order": 9, "sku": "CAFE-DRK-002" },
+    { "name": "Lemonade", "price": 399, "category": "Drinks", "category_sort_order": 9, "sku": "CAFE-DRK-003" },
+    { "name": "Hot Chocolate", "price": 449, "category": "Drinks", "category_sort_order": 9, "sku": "CAFE-DRK-004" },
+    { "name": "Berry Blast Smoothie", "price": 749, "category": "Drinks", "category_sort_order": 9, "sku": "CAFE-DRK-005" },
+
+    { "name": "Butter Croissant", "price": 399, "category": "Grab & Go", "category_sort_order": 10, "sku": "CAFE-GNG-001" },
+    { "name": "Blueberry Muffin", "price": 399, "category": "Grab & Go", "category_sort_order": 10, "sku": "CAFE-GNG-002" },
+    { "name": "BLT", "price": 899, "category": "Grab & Go", "category_sort_order": 10, "sku": "CAFE-GNG-003" },
+    { "name": "Yogurt Parfait", "price": 599, "category": "Grab & Go", "category_sort_order": 10, "sku": "CAFE-GNG-004" },
+    { "name": "Cold Brew", "price": 499, "category": "Grab & Go", "category_sort_order": 10, "sku": "CAFE-GNG-005" }
+  ]
+}

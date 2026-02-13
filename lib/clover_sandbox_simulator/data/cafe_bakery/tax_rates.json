@@ -1,0 +1,26 @@
+{
+  "tax_rates": [
+    {
+      "name": "Sales Tax",
+      "rate": 8.875,
+      "is_default": true,
+      "description": "Standard sales tax on prepared food and beverages"
+    },
+    {
+      "name": "Prepared Food Tax",
+      "rate": 8.875,
+      "is_default": false,
+      "description": "Tax on prepared/heated food items"
+    }
+  ],
+  "category_tax_mapping": {
+    "Coffee & Espresso": ["Sales Tax"],
+    "Pastries & Baked Goods": ["Sales Tax"],
+    "Breakfast": ["Sales Tax"],
+    "Sandwiches & Wraps": ["Sales Tax"],
+    "Smoothies & Juices": ["Sales Tax"],
+    "Drinks": ["Sales Tax"],
+    "Grab & Go": ["Sales Tax"],
+    "default": ["Sales Tax"]
+  }
+}

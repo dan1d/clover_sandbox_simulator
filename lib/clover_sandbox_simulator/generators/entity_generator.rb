@@ -52,18 +52,28 @@ module CloverSandboxSimulator
         results
       end
 
-      # Create categories from data file
+      # Create categories from data file.
+      # Supports duplicate category names (common in real Clover merchants).
+      # Uses (name, sortOrder) pair for idempotent matching so each duplicate
+      # category instance is created separately on Clover.
       def setup_categories
         logger.info "Setting up categories..."
 
         existing = services.inventory.get_categories
-        existing_names = existing.map { |c| c["name"]&.downcase }
+
+        # Build a set of (name_lower, sortOrder) for idempotent matching.
+        # This allows multiple categories with the same name but different
+        # sort orders — exactly how duplicates appear in real Clover data.
+        existing_keys = existing.map { |c| [c["name"]&.downcase, c["sortOrder"]].join("|") }.to_set
 
         created = []
         data.categories.each do |cat_data|
-          if existing_names.include?(cat_data["name"]&.downcase)
-            logger.debug "Category '#{cat_data["name"]}' already exists, skipping"
-            created << existing.find { |c| c["name"] == cat_data["name"] }
+          key = [cat_data["name"]&.downcase, cat_data["sort_order"]].join("|")
+
+          if existing_keys.include?(key)
+            logger.debug "Category '#{cat_data["name"]}' (sort: #{cat_data["sort_order"]}) already exists, skipping"
+            match = existing.find { |c| c["name"] == cat_data["name"] && c["sortOrder"] == cat_data["sort_order"] }
+            created << match if match
           else
             cat = services.inventory.create_category(
               name: cat_data["name"],
@@ -77,34 +87,62 @@ module CloverSandboxSimulator
         created
       end
 
-      # Create items from data file
+      # Create items from data file.
+      # Supports duplicate item names (common in real Clover merchants).
+      # Uses SKU for idempotent matching when available, falling back to name.
+      # Uses category_sort_order (when present) to assign items to the correct
+      # category instance, even when multiple categories share the same name.
       def setup_items
         logger.info "Setting up menu items..."
 
-        # Build category lookup
+        # Fetch current categories from Clover
         categories = services.inventory.get_categories
-        category_lookup = categories.each_with_object({}) do |cat, hash|
+
+        # Build category lookup by sort_order → Clover ID (supports duplicates)
+        category_by_sort_order = categories.each_with_object({}) do |cat, hash|
+          hash[cat["sortOrder"]] = cat["id"] if cat["sortOrder"]
+        end
+
+        # Fallback: category lookup by name (last match wins — fine for non-dup data)
+        category_by_name = categories.each_with_object({}) do |cat, hash|
           hash[cat["name"]] = cat["id"]
         end
 
+        # Fetch existing items from Clover for idempotent matching
         existing = services.inventory.get_items
-        existing_names = existing.map { |i| i["name"]&.downcase }
+        existing_skus = existing.each_with_object({}) do |item, hash|
+          hash[item["sku"]&.downcase] = item if item["sku"].present?
+        end
+        existing_names = existing.map { |i| i["name"]&.downcase }.to_set
 
         created = []
         data.items.each do |item_data|
-          if existing_names.include?(item_data["name"]&.downcase)
-            logger.debug "Item '#{item_data["name"]}' already exists, skipping"
-            created << existing.find { |i| i["name"] == item_data["name"] }
-          else
-            category_id = category_lookup[item_data["category"]]
+          sku = item_data["sku"]
 
-            item = services.inventory.create_item(
-              name: item_data["name"],
-              price: item_data["price"],
-              category_id: category_id
-            )
-            created << item if item
+          # Check idempotency: prefer SKU match, fall back to name-only for legacy data
+          if sku.present? && existing_skus.key?(sku.downcase)
+            logger.debug "Item '#{item_data["name"]}' (SKU: #{sku}) already exists, skipping"
+            created << existing_skus[sku.downcase]
+            next
+          elsif sku.blank? && existing_names.include?(item_data["name"]&.downcase)
+            logger.debug "Item '#{item_data["name"]}' already exists, skipping"
+            created << existing.find { |i| i["name"]&.downcase == item_data["name"]&.downcase }
+            next
           end
+
+          # Resolve category: prefer sort_order (handles duplicates), fall back to name
+          category_id = if item_data["category_sort_order"]
+                          category_by_sort_order[item_data["category_sort_order"]]
+                        end
+          category_id ||= category_by_name[item_data["category"]]
+
+          item = services.inventory.create_item(
+            name: item_data["name"],
+            price: item_data["price"],
+            category_id: category_id,
+            sku: sku
+          )
+          created << item if item
         end
 
         logger.info "Items ready: #{created.size}"
