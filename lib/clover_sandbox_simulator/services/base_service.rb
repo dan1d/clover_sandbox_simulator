@@ -157,7 +157,7 @@ module CloverSandboxSimulator
       def audit_api_request(http_method:, url:, request_payload: nil, response_status: nil, response_payload: nil, duration_ms: nil, error_message: nil, resource_type: nil, resource_id: nil)
         return unless Database.connected?
 
-        Models::ApiRequest.create!(
+        attrs = {
           http_method: http_method,
           url: url,
           request_payload: request_payload || {},
@@ -167,7 +167,14 @@ module CloverSandboxSimulator
           error_message: error_message,
           resource_type: resource_type,
           resource_id: resource_id
-        )
+        }
+
+        # Tag with the current merchant when the column exists
+        if config&.merchant_id.present? && Models::ApiRequest.column_names.include?("clover_merchant_id")
+          attrs[:clover_merchant_id] = config.merchant_id
+        end
+
+        Models::ApiRequest.create!(attrs)
       rescue StandardError => e
         logger.debug "Audit logging failed: #{e.message}"
       end
