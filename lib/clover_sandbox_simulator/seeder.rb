@@ -33,7 +33,13 @@ module CloverSandboxSimulator
         pastries: %i[croissant blueberry_muffin cinnamon_roll chocolate_chip_cookie],
         breakfast: %i[avocado_toast breakfast_burrito acai_bowl yogurt_parfait],
         sandwiches: %i[turkey_club caprese_panini chicken_caesar_wrap blt],
-        smoothies: %i[berry_blast_smoothie green_detox_juice mango_tango_smoothie fresh_oj]
+        smoothies: %i[berry_blast_smoothie green_detox_juice mango_tango_smoothie fresh_oj],
+        # ── Intentional duplicates (mirrors real Clover messiness) ──
+        coffee_espresso_dup: %i[house_drip_coffee_dup latte_dup iced_latte matcha_latte],
+        pastries_dup: %i[croissant_dup blueberry_muffin_dup almond_croissant banana_bread],
+        breakfast_dup: %i[avocado_toast_dup eggs_benedict french_toast],
+        cafe_drinks: %i[cafe_drip_coffee cafe_iced_tea cafe_lemonade cafe_hot_chocolate berry_blast_smoothie_dup],
+        cafe_grab_and_go: %i[gg_croissant gg_muffin gg_blt gg_yogurt_parfait gg_cold_brew]
       },
       bar_nightclub: {
         draft_beer: %i[house_lager ipa stout wheat_beer],
@@ -168,30 +174,69 @@ module CloverSandboxSimulator
       [record, record.previously_new_record?]
     end
 
+    # Traits that represent intentional duplicates — always create
+    # a new record instead of reusing an existing one.
+    DUPLICATE_CATEGORY_TRAITS = %i[
+      coffee_espresso_dup pastries_dup breakfast_dup cafe_drinks cafe_grab_and_go
+    ].freeze
+
+    DUPLICATE_ITEM_TRAITS = %i[
+      house_drip_coffee_dup latte_dup iced_latte matcha_latte
+      croissant_dup blueberry_muffin_dup almond_croissant banana_bread
+      avocado_toast_dup eggs_benedict french_toast
+      cafe_drip_coffee cafe_iced_tea cafe_lemonade cafe_hot_chocolate berry_blast_smoothie_dup
+      gg_croissant gg_muffin gg_blt gg_yogurt_parfait gg_cold_brew
+    ].freeze
+
     # Find or create a category using factory attributes.
+    # Duplicate traits always create a new record (mirroring Clover's
+    # real-world data where merchants have multiple categories with the same name).
     #
     # @param trait [Symbol]
     # @param business_type [Models::BusinessType]
     # @return [Array(Models::Category, Boolean)] record and whether it was newly created
     def seed_category(trait, business_type)
       attrs = FactoryBot.attributes_for(:category, trait)
-      record = Models::Category.find_or_create_by!(name: attrs[:name], business_type: business_type) do |cat|
-        cat.assign_attributes(attrs.except(:business_type_id))
+
+      if DUPLICATE_CATEGORY_TRAITS.include?(trait)
+        # Check by SKU-like hint (sort_order) to be idempotent even for dupes
+        existing = Models::Category.find_by(
+          name: attrs[:name], business_type: business_type, sort_order: attrs[:sort_order]
+        )
+        return [existing, false] if existing
+
+        record = Models::Category.create!(attrs.merge(business_type: business_type).except(:business_type_id))
+        [record, true]
+      else
+        record = Models::Category.find_or_create_by!(name: attrs[:name], business_type: business_type) do |cat|
+          cat.assign_attributes(attrs.except(:business_type_id))
+        end
+        [record, record.previously_new_record?]
       end
-      [record, record.previously_new_record?]
     end
 
     # Find or create an item using factory attributes.
+    # Duplicate traits always create a new record.
     #
     # @param trait [Symbol]
     # @param category [Models::Category]
     # @return [Array(Models::Item, Boolean)] record and whether it was newly created
     def seed_item(trait, category)
       attrs = FactoryBot.attributes_for(:item, trait)
-      record = Models::Item.find_or_create_by!(name: attrs[:name], category: category) do |item|
-        item.assign_attributes(attrs.except(:category_id))
+
+      if DUPLICATE_ITEM_TRAITS.include?(trait)
+        # Idempotent by SKU — each duplicate has a unique SKU
+        existing = Models::Item.find_by(sku: attrs[:sku])
+        return [existing, false] if existing
+
+        record = Models::Item.create!(attrs.merge(category: category).except(:category_id))
+        [record, true]
+      else
+        record = Models::Item.find_or_create_by!(name: attrs[:name], category: category) do |item|
+          item.assign_attributes(attrs.except(:category_id))
+        end
+        [record, record.previously_new_record?]
       end
-      [record, record.previously_new_record?]
     end
   end
 end

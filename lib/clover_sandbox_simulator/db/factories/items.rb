@@ -368,6 +368,169 @@ FactoryBot.define do
     end
 
     # ═══════════════════════════════════════════════════════════
+    #  CAFÉ & BAKERY — DUPLICATES (mirrors real Clover messiness)
+    #  Same item names appearing in multiple categories, same names
+    #  with different prices, items cross-listed in overlapping categories.
+    # ═══════════════════════════════════════════════════════════
+
+    # ── Duplicate Coffee & Espresso (2nd category, same item names, different prices) ──
+
+    trait :house_drip_coffee_dup do
+      name { "House Drip Coffee" }        # Same name as original!
+      price { 350 }                        # Different price ($3.50 vs $2.99)
+      sku { "CAFE-COF2-001" }
+      association :category, factory: [:category, :coffee_espresso_dup]
+    end
+
+    trait :latte_dup do
+      name { "Latte" }                    # Same name as original!
+      price { 599 }                        # Different price ($5.99 vs $5.49)
+      sku { "CAFE-COF2-002" }
+      association :category, factory: [:category, :coffee_espresso_dup]
+    end
+
+    trait :iced_latte do
+      name { "Iced Latte" }               # New item only in duplicate category
+      price { 599 }
+      sku { "CAFE-COF2-003" }
+      association :category, factory: [:category, :coffee_espresso_dup]
+    end
+
+    trait :matcha_latte do
+      name { "Matcha Latte" }
+      price { 649 }
+      sku { "CAFE-COF2-004" }
+      association :category, factory: [:category, :coffee_espresso_dup]
+    end
+
+    # ── Duplicate Pastries (2nd category, some same item names) ──
+
+    trait :croissant_dup do
+      name { "Butter Croissant" }          # Same name as original!
+      price { 450 }                         # Higher price ($4.50 vs $3.99)
+      sku { "CAFE-PAS2-001" }
+      association :category, factory: [:category, :pastries_dup]
+    end
+
+    trait :blueberry_muffin_dup do
+      name { "Blueberry Muffin" }          # Same name as original!
+      price { 349 }                         # Same price
+      sku { "CAFE-PAS2-002" }
+      association :category, factory: [:category, :pastries_dup]
+    end
+
+    trait :almond_croissant do
+      name { "Almond Croissant" }          # New item
+      price { 499 }
+      sku { "CAFE-PAS2-003" }
+      association :category, factory: [:category, :pastries_dup]
+    end
+
+    trait :banana_bread do
+      name { "Banana Bread" }
+      price { 399 }
+      sku { "CAFE-PAS2-004" }
+      association :category, factory: [:category, :pastries_dup]
+    end
+
+    # ── Duplicate Breakfast (2nd category, same + different items) ──
+
+    trait :avocado_toast_dup do
+      name { "Avocado Toast" }             # Same name as original!
+      price { 1099 }                        # Higher price ($10.99 vs $9.99)
+      sku { "CAFE-BRK2-001" }
+      association :category, factory: [:category, :breakfast_dup]
+    end
+
+    trait :eggs_benedict do
+      name { "Eggs Benedict" }
+      price { 1399 }
+      sku { "CAFE-BRK2-002" }
+      association :category, factory: [:category, :breakfast_dup]
+    end
+
+    trait :french_toast do
+      name { "French Toast" }
+      price { 1199 }
+      sku { "CAFE-BRK2-003" }
+      association :category, factory: [:category, :breakfast_dup]
+    end
+
+    # ── Drinks (catch-all that overlaps Coffee & Smoothies) ──
+
+    trait :cafe_drip_coffee do
+      name { "House Drip Coffee" }          # Same name AGAIN (3rd occurrence!)
+      price { 275 }                          # Yet another price ($2.75)
+      sku { "CAFE-DRK-001" }
+      association :category, factory: [:category, :cafe_drinks]
+    end
+
+    trait :cafe_iced_tea do
+      name { "Iced Tea" }
+      price { 349 }
+      sku { "CAFE-DRK-002" }
+      association :category, factory: [:category, :cafe_drinks]
+    end
+
+    trait :cafe_lemonade do
+      name { "Lemonade" }
+      price { 399 }
+      sku { "CAFE-DRK-003" }
+      association :category, factory: [:category, :cafe_drinks]
+    end
+
+    trait :cafe_hot_chocolate do
+      name { "Hot Chocolate" }
+      price { 449 }
+      sku { "CAFE-DRK-004" }
+      association :category, factory: [:category, :cafe_drinks]
+    end
+
+    trait :berry_blast_smoothie_dup do
+      name { "Berry Blast Smoothie" }       # Same name as in Smoothies!
+      price { 749 }                          # Different price ($7.49 vs $6.99)
+      sku { "CAFE-DRK-005" }
+      association :category, factory: [:category, :cafe_drinks]
+    end
+
+    # ── Grab & Go (cross-listed items from other categories) ──
+
+    trait :gg_croissant do
+      name { "Butter Croissant" }           # 3rd occurrence of this item name!
+      price { 399 }
+      sku { "CAFE-GNG-001" }
+      association :category, factory: [:category, :cafe_grab_and_go]
+    end
+
+    trait :gg_muffin do
+      name { "Blueberry Muffin" }           # 3rd occurrence
+      price { 399 }
+      sku { "CAFE-GNG-002" }
+      association :category, factory: [:category, :cafe_grab_and_go]
+    end
+
+    trait :gg_blt do
+      name { "BLT" }                        # Same as in Sandwiches
+      price { 899 }
+      sku { "CAFE-GNG-003" }
+      association :category, factory: [:category, :cafe_grab_and_go]
+    end
+
+    trait :gg_yogurt_parfait do
+      name { "Yogurt Parfait" }             # Same as in Breakfast
+      price { 599 }                          # Lower price ($5.99 vs $6.99)
+      sku { "CAFE-GNG-004" }
+      association :category, factory: [:category, :cafe_grab_and_go]
+    end
+
+    trait :gg_cold_brew do
+      name { "Cold Brew" }                  # Same as in Coffee & Espresso
+      price { 499 }
+      sku { "CAFE-GNG-005" }
+      association :category, factory: [:category, :cafe_grab_and_go]
+    end
+
+    # ═══════════════════════════════════════════════════════════
     #  BAR & NIGHTCLUB  (5 categories, 20 items)
     # ═══════════════════════════════════════════════════════════
 

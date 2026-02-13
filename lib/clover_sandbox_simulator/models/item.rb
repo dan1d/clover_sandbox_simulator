@@ -5,9 +5,9 @@ module CloverSandboxSimulator
     class Item < Record
       belongs_to :category
 
-      # Validations
-      validates :name, presence: true,
-                       uniqueness: { scope: :category_id }
+      # Validations — no uniqueness constraint; real Clover merchants
+      # can have items with the same name in the same category.
+      validates :name, presence: true
       validates :price, presence: true,
                         numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 

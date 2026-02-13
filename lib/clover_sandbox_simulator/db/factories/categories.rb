@@ -49,6 +49,8 @@ FactoryBot.define do
     end
 
     # ── Café & Bakery ─────────────────────────────────────────
+    # NOTE: Intentional duplicates to mirror real Clover merchants!
+    # Many categories share names, and items appear in multiple places.
 
     trait :coffee_espresso do
       name { "Coffee & Espresso" }
@@ -87,6 +89,52 @@ FactoryBot.define do
       sort_order { 5 }
       description { "Blended drinks and fresh-pressed juices" }
       tax_group { "beverage" }
+      association :business_type, factory: [:business_type, :cafe_bakery]
+    end
+
+    # ── Café & Bakery DUPLICATES (mirrors real Clover mess) ─
+    # Duplicate "Coffee & Espresso" category — employee created a second one
+    trait :coffee_espresso_dup do
+      name { "Coffee & Espresso" }
+      sort_order { 6 }
+      description { "More coffee drinks (duplicate category)" }
+      tax_group { "beverage" }
+      association :business_type, factory: [:business_type, :cafe_bakery]
+    end
+
+    # Duplicate "Pastries & Baked Goods" — imported via Clover integration
+    trait :pastries_dup do
+      name { "Pastries & Baked Goods" }
+      sort_order { 7 }
+      description { "Pastries imported from integration" }
+      tax_group { "food" }
+      association :business_type, factory: [:business_type, :cafe_bakery]
+    end
+
+    # "Breakfast" appears again — seasonal menu never cleaned up
+    trait :breakfast_dup do
+      name { "Breakfast" }
+      sort_order { 8 }
+      description { "Weekend brunch specials (stale copy)" }
+      tax_group { "food" }
+      association :business_type, factory: [:business_type, :cafe_bakery]
+    end
+
+    # Generic "Drinks" that overlaps with both Coffee and Smoothies
+    trait :cafe_drinks do
+      name { "Drinks" }
+      sort_order { 9 }
+      description { "All drinks catch-all" }
+      tax_group { "beverage" }
+      association :business_type, factory: [:business_type, :cafe_bakery]
+    end
+
+    # "Grab & Go" has items that also exist in Pastries and Sandwiches
+    trait :cafe_grab_and_go do
+      name { "Grab & Go" }
+      sort_order { 10 }
+      description { "Pre-packaged items for takeout" }
+      tax_group { "food" }
       association :business_type, factory: [:business_type, :cafe_bakery]
     end
 
